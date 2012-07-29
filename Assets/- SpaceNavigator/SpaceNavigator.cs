@@ -38,7 +38,7 @@ public class SpaceNavigator {
 	public bool HasNewData;
 	public Transform Target;
 	public CoordinateSystem CoordinateSystem;
-	public float TranslationSensitivity = 0.001f, RotationSensitivity = 0.001f;
+	public float TranslationSensitivity = 0.0005f, RotationSensitivity = 0.005f;
 	public int ReadIntervalMs = 40;	// 25Hz
 
 	// Device reading properties.
