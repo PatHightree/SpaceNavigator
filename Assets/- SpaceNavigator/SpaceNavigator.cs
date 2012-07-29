@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using MonoLibUsb;
-using MonoLibUsb.Profile;
 using Usb = MonoLibUsb.MonoUsbApi;
 using UnityEngine;
 
@@ -23,6 +22,7 @@ public class SpaceNavigator {
 		_quit = true;
 	}
 
+	// Public API.
 	public Vector3 Translation {
 		get {
 			return (_translation);
@@ -36,11 +36,12 @@ public class SpaceNavigator {
 	}
 	private Vector3 _rotation;
 	public bool HasNewData;
+	public Transform Target;
+	public CoordinateSystem CoordinateSystem;
+	public float TranslationSensitivity = 0.001f, RotationSensitivity = 0.001f;
+	public int ReadIntervalMs = 40;	// 25Hz
 
-	// Threading properties.
-	private readonly Thread _workerThread;
-	private bool _quit;
-
+	// Device reading properties.
 	public MonoUsbSessionHandle Session {
 		get {
 			if (ReferenceEquals(_sessionHandle, null))
@@ -50,34 +51,18 @@ public class SpaceNavigator {
 	}
 	private MonoUsbSessionHandle _sessionHandle;
 	private MonoUsbDeviceHandle _deviceHandle;
+	private readonly Thread _workerThread;
+	private bool _quit;
+	private const int ReadBufferLen = 64;
+	private readonly byte[] _readBuffer = new byte[ReadBufferLen];
+	private const int Timeout = 10;
 
-	// ReSharper disable InconsistentNaming
-	private const int READ_BUFFER_LEN = 64;
-	private const int MY_TIMEOUT = 10;
-	// ReSharper restore InconsistentNaming
-
-	private MonoUsbProfileList _profileList;
-
-	public Transform Target;
-	public CoordinateSystem CoordinateSystem;
-	public float TranslationSensitivity = 0.001f, RotationSensitivity = 0.001f;
-	public int ReadIntervalMs = 40;	// 25Hz
-	private readonly byte[] _readBuffer = new byte[READ_BUFFER_LEN];
-
-	#region - Device parameters -
-	// ReSharper disable InconsistentNaming
-	private const int MY_CONFIG = 1;
-	private const byte MY_EP_READ = 0x81;
-	private const byte MY_EP_WRITE = 0x01;
-	private const int MY_INTERFACE = 0;
-	private const short MY_PID = 1133;
-	private const short MY_VID = -14810;
-	//private const int SpaceNavigatorVendorID = 0x046d;
-	//private const int SpaceNavigatorProductID = 0xc626;
-	private const short SpaceNavigatorVendorID = 1133;
-	private const short SpaceNavigatorProductID = -14810;
-	// ReSharper restore InconsistentNaming
-	#endregion - Device parameters -
+	// Device parameters.
+	private const int Config = 1;
+	private const byte Endpoint = 0x81;
+	private const int Interface = 0;
+	private const short SpaceNavigatorVendorID = 0x046d;
+	private const short SpaceNavigatorProductID = -14810;	// Should be 0xc626, which only fits in an unsigned short but MonoUsbApi.OpenDeviceWithVidPid doesn't take that.
 
 	/// <summary>
 	/// Worker thread to read data from SpaceNavigator.
@@ -102,11 +87,11 @@ public class SpaceNavigator {
 		if ((_deviceHandle == null) || _deviceHandle.IsInvalid) return false;
 
 		// Set configuration
-		int r = MonoUsbApi.SetConfiguration(_deviceHandle, MY_CONFIG);
+		int r = MonoUsbApi.SetConfiguration(_deviceHandle, Config);
 		if (r != 0) return false;
 
 		// Claim interface
-		MonoUsbApi.ClaimInterface(_deviceHandle, MY_INTERFACE);
+		MonoUsbApi.ClaimInterface(_deviceHandle, Interface);
 		return true;
 	}
 	/// <summary>
@@ -116,11 +101,11 @@ public class SpaceNavigator {
 		int transferred;
 
 		int r = MonoUsbApi.BulkTransfer(_deviceHandle,
-										MY_EP_READ,
+										Endpoint,
 										_readBuffer,
-										READ_BUFFER_LEN,
+										ReadBufferLen,
 										out transferred,
-										MY_TIMEOUT);
+										Timeout);
 		if (r == (int)MonoUsbError.ErrorTimeout) {
 			// Timeout, this is considered normal operation
 			_translation = Vector3.zero;
@@ -159,7 +144,7 @@ public class SpaceNavigator {
 		// Free and close resources
 		if (_deviceHandle != null) {
 			if (!_deviceHandle.IsInvalid) {
-				MonoUsbApi.ReleaseInterface(_deviceHandle, MY_INTERFACE);
+				MonoUsbApi.ReleaseInterface(_deviceHandle, Interface);
 				_deviceHandle.Close();
 			}
 		}
