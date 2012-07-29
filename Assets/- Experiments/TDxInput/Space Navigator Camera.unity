@@ -2233,7 +2233,7 @@ MonoBehaviour:
   m_Name: 
   Target: {fileID: 946653450}
   CoordinateSystem: 1
-  TranslationSensitivity: 9.99999975e-05
+  TranslationSensitivity: .00100000005
   RotationSensitivity: .00100000005
   Translation: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0}

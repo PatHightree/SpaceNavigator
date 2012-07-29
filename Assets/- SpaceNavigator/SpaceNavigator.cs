@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 using MonoLibUsb;
 using MonoLibUsb.Profile;
-using MonoLibUsb.Transfer;
 using Usb = MonoLibUsb.MonoUsbApi;
 using UnityEngine;
 
@@ -18,7 +16,6 @@ public class SpaceNavigator {
 	/// </summary>
 	private SpaceNavigator() {
 		_translation = _rotation = Vector3.zero;
-		Lock = new object();
 		_workerThread = new Thread(SpaceNavigatorThread);
 		_workerThread.Start();
 	}
@@ -28,26 +25,20 @@ public class SpaceNavigator {
 
 	public Vector3 Translation {
 		get {
-			//lock(Lock) {
-				return (_translation);
-			//}
+			return (_translation);
 		}
 	}
 	private Vector3 _translation;
-	//private bool _gotTranslation;
 	public Vector3 Rotation{
 		get {
-			//lock (Lock) {
-				return (_rotation);
-			//}
+			return (_rotation);
 		}
 	}
 	private Vector3 _rotation;
-	//private bool _gotRotation;
-	public object Lock;
+	public bool HasNewData;
 
 	// Threading properties.
-	private Thread _workerThread;
+	private readonly Thread _workerThread;
 	private bool _quit;
 
 	public MonoUsbSessionHandle Session {
@@ -61,9 +52,8 @@ public class SpaceNavigator {
 	private MonoUsbDeviceHandle _deviceHandle;
 
 	// ReSharper disable InconsistentNaming
-	private const int TEST_READ_LEN = 64;
-	private const int TEST_WRITE_LEN = 8;
-	private const int MY_TIMEOUT = 2000;
+	private const int READ_BUFFER_LEN = 64;
+	private const int MY_TIMEOUT = 10;
 	// ReSharper restore InconsistentNaming
 
 	private MonoUsbProfileList _profileList;
@@ -72,7 +62,7 @@ public class SpaceNavigator {
 	public CoordinateSystem CoordinateSystem;
 	public float TranslationSensitivity = 0.001f, RotationSensitivity = 0.001f;
 	public int ReadIntervalMs = 40;	// 25Hz
-	public byte[] ReadBuffer = new byte[TEST_READ_LEN];
+	private readonly byte[] _readBuffer = new byte[READ_BUFFER_LEN];
 
 	#region - Device parameters -
 	// ReSharper disable InconsistentNaming
@@ -89,18 +79,24 @@ public class SpaceNavigator {
 	// ReSharper restore InconsistentNaming
 	#endregion - Device parameters -
 
+	/// <summary>
+	/// Worker thread to read data from SpaceNavigator.
+	/// </summary>
 	private void SpaceNavigatorThread() {
 		if (!InitializeSpaceNavigator()) return;
 
 		while (!_quit) {
-			//lock (Lock) {
-				ReadSpaceNavigator(ref _translation, ref _rotation, ref ReadBuffer);
-			//}
+			ReadSpaceNavigator();
 			Thread.Sleep(ReadIntervalMs);
 		}
 
 		CloseSpaceNavigator();
 	}
+
+	/// <summary>
+	/// Initializes the SpaceNavigator.
+	/// </summary>
+	/// <returns></returns>
 	private bool InitializeSpaceNavigator() {
 		_deviceHandle = MonoUsbApi.OpenDeviceWithVidPid(Session, SpaceNavigatorVendorID, SpaceNavigatorProductID);
 		if ((_deviceHandle == null) || _deviceHandle.IsInvalid) return false;
@@ -113,49 +109,52 @@ public class SpaceNavigator {
 		MonoUsbApi.ClaimInterface(_deviceHandle, MY_INTERFACE);
 		return true;
 	}
-
-	private void ReadSpaceNavigator(ref Vector3 translation, ref Vector3 rotation, ref byte[] readBuffer) {
+	/// <summary>
+	/// Reads data from the SpaceNavigator (blocking).
+	/// </summary>
+	private void ReadSpaceNavigator() {
 		int transferred;
 
 		int r = MonoUsbApi.BulkTransfer(_deviceHandle,
 										MY_EP_READ,
-										readBuffer,
-										TEST_READ_LEN,
+										_readBuffer,
+										READ_BUFFER_LEN,
 										out transferred,
 										MY_TIMEOUT);
 		if (r == (int)MonoUsbError.ErrorTimeout) {
-			// This is considered normal operation
-			//D.log("Read Timed Out. {0} packet(s) read ({1} bytes)", PacketCount, TransferredTotal);
+			// Timeout, this is considered normal operation
+			_translation = Vector3.zero;
+			_rotation = Vector3.zero;
+			HasNewData = false;
 		} else {
 			if (r != 0) {
 				// An error, other than ErrorTimeout was received. 
-				D.log("Read failed:{0}", (MonoUsbError)r);
+				D.error("Read failed:{0}", (MonoUsbError)r);
 			} else {
-				switch (readBuffer[0]) {
+				HasNewData = true;
+				switch (_readBuffer[0]) {
 					case 0x01:
 						if (transferred != 7) break; // something is wrong
-						translation.x = (readBuffer[1] + (sbyte)readBuffer[2] * 256);
-						translation.z = (readBuffer[3] + (sbyte)readBuffer[4] * 256) * -1;
-						translation.y = (readBuffer[5] + (sbyte)readBuffer[6] * 256) * -1;
-						translation *= TranslationSensitivity;
-						//_gotTranslation = true;
+						_translation.x = (_readBuffer[1] + (sbyte)_readBuffer[2] * 256);
+						_translation.z = (_readBuffer[3] + (sbyte)_readBuffer[4] * 256) * -1;
+						_translation.y = (_readBuffer[5] + (sbyte)_readBuffer[6] * 256) * -1;
+						_translation *= TranslationSensitivity;
 						break;
 					case 0x02:
 						if (transferred != 7) break; // something is wrong
-						rotation.x = (readBuffer[1] + (sbyte)readBuffer[2] * 256) * -1;
-						rotation.z = (readBuffer[3] + (sbyte)readBuffer[4] * 256);
-						rotation.y = (readBuffer[5] + (sbyte)readBuffer[6] * 256);
-						rotation *= RotationSensitivity;
-						//_gotRotation = true;
-						break;
-					default:
+						_rotation.x = (_readBuffer[1] + (sbyte)_readBuffer[2] * 256) * -1;
+						_rotation.z = (_readBuffer[3] + (sbyte)_readBuffer[4] * 256);
+						_rotation.y = (_readBuffer[5] + (sbyte)_readBuffer[6] * 256);
+						_rotation *= RotationSensitivity;
 						break;
 				}
 			}
 		}
 		GC.Collect();
 	}
-
+	/// <summary>
+	/// Closes the SpaceNavigator session and frees resources.
+	/// </summary>
 	private void CloseSpaceNavigator() {
 		// Free and close resources
 		if (_deviceHandle != null) {
@@ -166,12 +165,5 @@ public class SpaceNavigator {
 		}
 		if (Session != null)
 			Session.Close();
-	}
-
-	// This function originated from bulk_transfer_cb()
-	// in sync.c of the Libusb-1.0 source code.
-	private static void bulkTransferCB(MonoUsbTransfer transfer) {
-		Marshal.WriteInt32(transfer.PtrUserData, 1);
-		/* caller interprets results and frees transfer */
 	}
 }

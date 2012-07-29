@@ -34,7 +34,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
 		
-		if (_doViewportUpdate) {
+		if (_doViewportUpdate && SpaceNavigator.Instance.HasNewData) {
 			Vector3 worldSpaceTranslation = SpaceNavigator.Instance.Translation.x*sceneView.camera.transform.right +
 			                                SpaceNavigator.Instance.Translation.y*sceneView.camera.transform.up +
 			                                SpaceNavigator.Instance.Translation.z*sceneView.camera.transform.forward;
