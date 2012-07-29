@@ -1,0 +1,24 @@
+MonoLibUsb
+This dll actually succeeded in getting data from the space navigator.
+For this to work, its dependency libusb-1.0.dll had to be copied to project root dir or the Unity executable dir (plugins folder doesn't work).
+Implemented a worker thread to read data.
+Implemented editor scene view navigation.
+Still has some issues: 
+- Can't find the right spot to zero the data, resulting in drifting when user stops navigating.
+- Editor scene view rotation is simply setting the quaternion, so roll axis is active and no helicopter-mode.
+
+TDx
+This method uses COM, which isn't supported in mono.
+
+HID
+This method uses Windows Forms, which is supported in mono, but not the version that Unity uses.
+
+3DxWare joystick mapping
+The 3DxWare driver contains an USB joystick proxy device.
+This driver is configured according to which application has focus.
+So far there is data coming in, but there's a couple of issues :
+- Only positive values are received, regardless of which direction the device is moved.
+- In rest position the values are not zeroed.
+
+smcs.rsp, this file should make unsafe code easier to use, haven't seen any change.
+(blog post by Dave Buchhofer)
