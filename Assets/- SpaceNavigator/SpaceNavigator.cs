@@ -5,11 +5,18 @@ using Usb = MonoLibUsb.MonoUsbApi;
 using UnityEngine;
 
 public class SpaceNavigator {
+	public enum CoordSys {
+		World, Camera, Self,
+	}
+
 	// Singleton stuff.
 	public static SpaceNavigator Instance {
 		get { return _instance ?? (_instance = new SpaceNavigator()); }
 	}
 	private static SpaceNavigator _instance;
+	public static bool HasInstance {
+		get { return _instance != null; }
+	}
 	/// <summary>
 	/// Prevents a default instance of the <see cref="SpaceNavigator" /> class from being created.
 	/// </summary>
@@ -37,7 +44,7 @@ public class SpaceNavigator {
 	private Vector3 _rotation;
 	public bool HasNewData;
 	public Transform Target;
-	public CoordinateSystem CoordinateSystem;
+	public CoordSys CoordinateSystem;
 	public float TranslationSensitivity = 0.0005f, RotationSensitivity = 0.005f;
 	public int ReadIntervalMs = 40;	// 25Hz
 

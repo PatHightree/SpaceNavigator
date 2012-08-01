@@ -4,6 +4,7 @@ using UnityEditor;
 
 public class SpaceNavigatorWindow : EditorWindow {
 	private bool _doViewportUpdate = true;
+	private bool _receivedNewData, _receivedNewDataChanged;
 
 	private const string TransSensKey = "Translation sensitivity";
 	private const string RotSensKey = "Rotation sensitivity";
@@ -65,9 +66,15 @@ public class SpaceNavigatorWindow : EditorWindow {
 		if (!sceneView) return;
 
 		if (_doViewportUpdate && SpaceNavigator.Instance.HasNewData) {
-			//MoveSceneCameraWithPivotDummy(sceneView);
 			MoveSceneCameraWithDummyRig(sceneView);
+			//MoveSceneCameraWithPivotDummy(sceneView);
 		}
+
+		// Indicate in EditorWindow whether new data has been received.
+		_receivedNewDataChanged = _receivedNewData != SpaceNavigator.Instance.HasNewData;
+		_receivedNewData = SpaceNavigator.Instance.HasNewData;
+		if (_receivedNewData || _receivedNewDataChanged)
+			Repaint();
 	}
 
 	/// <summary>
@@ -98,7 +105,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.rotation = _pivotDummy.rotation;
 		sceneView.Repaint();
 	}
-
 	private void MoveSceneCameraWithPivotDummy(SceneView sceneView) {
 		_pivotDummy.position = sceneView.pivot;
 		_pivotDummy.rotation = sceneView.rotation;
@@ -151,12 +157,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	/// <summary>
-	/// Draws the window's GUI.
+	/// Draws the EditorWindow's GUI.
 	/// </summary>
 	public void OnGUI() {
 		GUILayout.BeginVertical();
 
 		_doViewportUpdate = GUILayout.Toggle(_doViewportUpdate, "SpaceNavigator viewport control");
+		GUILayout.Toggle(_receivedNewData, "Received new data");
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (GUILayout.Button("Reset")) {
@@ -202,7 +209,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// Writes the settings.
 	/// </summary>
 	private static void WriteSettings() {
-		PlayerPrefs.SetFloat(TransSensKey, SpaceNavigator.Instance.TranslationSensitivity);
-		PlayerPrefs.SetFloat(RotSensKey, SpaceNavigator.Instance.RotationSensitivity);
+		if (SpaceNavigator.HasInstance) {
+			PlayerPrefs.SetFloat(TransSensKey, SpaceNavigator.Instance.TranslationSensitivity);
+			PlayerPrefs.SetFloat(RotSensKey, SpaceNavigator.Instance.RotationSensitivity);
+		}
 	}
 }

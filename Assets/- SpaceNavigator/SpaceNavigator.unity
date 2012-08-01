@@ -2132,51 +2132,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1793337878}
   m_GameObject: {fileID: 896337731}
   m_Mesh: {fileID: 4300012, guid: 6f08347f46f069447a29379e6afb5fdc, type: 3}
---- !u!1 &898569301
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 898569302}
-  - 114: {fileID: 898569303}
-  m_Layer: 0
-  m_Name: Experiment
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &898569302
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 898569301}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
---- !u!114 &898569303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 898569301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325b5fa01c54dbe41868ff6c44a9c0b3, type: 1}
-  m_Name: 
-  Target: {fileID: 946653450}
-  CoordinateSystem: 1
-  TranslationSensitivity: 9.99999975e-05
-  RotationSensitivity: .00100000005
-  Translation: {x: 0, y: 0, z: 0}
-  Rotation: {x: 0, y: 0, z: 0}
-  ReadIntervalMs: 10
-  ReadBuffer: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &922206667
 GameObject:
   m_ObjectHideFlags: 0
