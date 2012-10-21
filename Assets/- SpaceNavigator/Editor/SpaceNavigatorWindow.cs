@@ -1,27 +1,35 @@
-using System;
-using System.Collections;
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
 using System.Runtime.InteropServices;
 using TDx.TDxInput;
 using UnityEngine;
 using UnityEditor;
 
-
 public class SpaceNavigatorWindow : EditorWindow {
 	// Device variables
-	private Sensor _sensor;
-	private Device _device;
-	//private Keyboard _keyboard;
+	protected Sensor Sensor;
+	protected Device Device;
+	protected Keyboard Keyboard;
 
 	// Rig components
 	private GameObject _pivotGO, _cameraGO;
 	private Transform _pivot, _camera;
 
 	// Settings
-	public float TranslationSensitivity, RotationSensitivity;
+	public float TranslationSensitivity { get { return _translationSensitivity * TranslationSensitivityScale; }	}
+	private float _translationSensitivity;
+	public float RotationSensitivity { get { return _rotationSensitivity * RotationSensitivityScale; } }
+	private float _rotationSensitivity;
 	public bool NavigationMode;
-	private bool _doViewportUpdate;
+	
+	// Setting defaults
+	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 1;
+	public const float TranslationSensitivityDefault = 1f, RotationSensitivityDefault = 1;
+	public const int NavigationModeDefault = 1;
 
-	private const float TranslationUpdateThreshold = 0.001f;
+	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
 	private const string RotSensKey = "Rotation sensitivity";
 	private const string ModeKey = "Navigation mode";
@@ -51,55 +59,55 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 	private void InitSpaceNavigator() {
 		try {
-			if (_device == null) {
-				_device = new DeviceClass();
-				_sensor = _device.Sensor;
-				//_keyboard = _device.Keyboard;
-				_device.LoadPreferences("Unity");
+			if (Device == null) {
+				Device = new DeviceClass();
+				Sensor = Device.Sensor;
+				Keyboard = Device.Keyboard;
+				Device.LoadPreferences("Unity");
 			}
-			if (!_device.IsConnected)
-				_device.Connect();
+			if (!Device.IsConnected)
+				Device.Connect();
 		}
 		catch (COMException ex) {
-			Debug.Log(ex.ToString());
+			D.error(ex.ToString());
 		}
-		Debug.Log("Initialized");
+		D.log("Initialized");
 	}
 
 	public void DisposeSpaceNavigator() {
 		try {
-			if (_device != null && _device.IsConnected) {
-				_device.Disconnect();
+			if (Device != null && Device.IsConnected) {
+				Device.Disconnect();
 
-				Debug.Log("Disconnected");
+				D.log("Disconnected");
 			}
 		}
 		catch (COMException ex) {
-			Debug.Log(ex.ToString());
+			D.error(ex.ToString());
 		}
 	}
 
 	public Vector3 TranslationInWorldSpace {
 		get {
-			return (_sensor == null ?
+			return (Sensor == null ?
 				Vector3.zero :
 				new Vector3(
-					(float)_sensor.Translation.X,
-					(float)_sensor.Translation.Y,
-					-(float)_sensor.Translation.Z) *
+					(float)Sensor.Translation.X,
+					(float)Sensor.Translation.Y,
+					-(float)Sensor.Translation.Z) *
 					TranslationSensitivity);
 		}
 	}
 	public Quaternion RotationInWorldSpace {
 		get {
-			return (_sensor == null ?
+			return (Sensor == null ?
 				Quaternion.identity :
 				Quaternion.AngleAxis(
-					(float)_sensor.Rotation.Angle * RotationSensitivity,
+					(float)Sensor.Rotation.Angle * RotationSensitivity,
 					new Vector3(
-						-(float)_sensor.Rotation.X,
-						-(float)_sensor.Rotation.Y,
-						(float)_sensor.Rotation.Z)));
+						-(float)Sensor.Rotation.X,
+						-(float)Sensor.Rotation.Y,
+						(float)Sensor.Rotation.Z)));
 		}
 	}
 	public Quaternion RotationInLocalCoordSys(Transform coordSys) {
@@ -164,6 +172,12 @@ public class SpaceNavigatorWindow : EditorWindow {
 				transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
 			}
 		}
+
+		//// Detect keyboard clicks (not working).
+		//if (Keyboard.IsKeyDown(1))
+		//	Debug.Log("Button 0 pressed");
+		//if (Keyboard.IsKeyDown(2))
+		//	Debug.Log("Button 1 pressed");
 	}
 
 	private void Navigate(SceneView sceneView) {
@@ -196,91 +210,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	/// <summary>
-	/// Moves the scene camera by using the dummy rig.
-	/// </summary>
-	/// <param name="sceneView">The scene view.</param>
-	private void MoveSceneCameraWithDummyRig(SceneView sceneView) {
-		InitCameraRig();
-
-		// Position camera dummy where you'd like the scene camera to be.
-		// The pivot dummy ends up where the pivot needs to go.
-
-		// Perform translation.
-		_camera.Translate(TranslationInWorldSpace, Space.Self);
-
-		// Perform azimuth in world coordinates.
-		Vector3 euler = _camera.rotation.eulerAngles;
-		euler.y += RotationInWorldSpace.y;
-		_camera.rotation = Quaternion.Euler(euler);
-
-		// Perform pitch in local coordinates.
-		Vector3 localEuler = _camera.localRotation.eulerAngles;
-		localEuler.x += RotationInWorldSpace.x;
-		_camera.localRotation = Quaternion.Euler(localEuler);
-
-		// Update the SceneView.
-		sceneView.pivot = _pivot.position;
-		sceneView.rotation = _pivot.rotation;
-		sceneView.Repaint();
-	}
-	private void MoveSceneCameraWithPivotDummy(SceneView sceneView) {
-		_pivot.position = sceneView.pivot;
-		_pivot.rotation = sceneView.rotation;
-
-		// Perform translation.
-		_pivot.Translate(TranslationInWorldSpace, Space.Self);
-
-		// Perform azimuth in world coordinates.
-		Vector3 euler = _pivot.rotation.eulerAngles;
-		euler.y += RotationInWorldSpace.y;
-		_pivot.rotation = Quaternion.Euler(euler);
-
-		// Perform pitch in local coordinates.
-		Vector3 localEuler = _pivot.localRotation.eulerAngles;
-		localEuler.x += RotationInWorldSpace.x;
-		_pivot.localRotation = Quaternion.Euler(localEuler);
-
-		// Update the SceneView.
-		sceneView.pivot = _pivot.position;
-		sceneView.rotation = _pivot.rotation;
-		sceneView.Repaint();
-
-		//Transform camera = sceneView.camera.transform;
-		//Vector3 worldSpaceTranslation = Translation.x * sceneView.camera.transform.right +
-		//								Translation.y * sceneView.camera.transform.up +
-		//								Translation.z * sceneView.camera.transform.forward;
-		//sceneView.pivot += worldSpaceTranslation;
-
-		//Quaternion oldRot = sceneView.rotation;
-		//Quaternion azimuth = Quaternion.Euler(0, Rotation.y, 0);
-		//Vector3 right = Vector3.right;
-		//right = oldRot * right;
-		//Quaternion pitch = Quaternion.AngleAxis(Rotation.x, right);
-		//sceneView.rotation *= azimuth;
-		//sceneView.rotation *= pitch;
-
-		//// Move pivot by moving camera.
-		//Vector3 oldPos = camera.position;
-		//camera.Translate(Translation, Space.Self);
-		//Vector3 deltaPos = camera.position - oldPos;
-		//sceneView.pivot += deltaPos;
-
-		//Quaternion oldRot = camera.rotation;
-		//camera.RotateAround(camera.position, Vector3.up, Rotation.y);
-		////camera.RotateAroundLocal();
-		//Quaternion deltaRot = camera.rotation*Quaternion.Inverse(oldRot);
-		////sceneView.rotation *= deltaRot;
-
-		//sceneView.LookAtDirect(camera.position, Quaternion.identity);
-	}
-
-	/// <summary>
 	/// Draws the EditorWindow's GUI.
 	/// </summary>
 	public void OnGUI() {
 		GUILayout.BeginVertical();
 
-		_doViewportUpdate = GUILayout.Toggle(_doViewportUpdate, "SpaceNavigator viewport control");
 		NavigationMode = GUILayout.Toggle(NavigationMode, "Operate in navigation mode");
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
@@ -302,13 +236,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 		}
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(string.Format("T Sens {0:0.00000}", TranslationSensitivity));
-		TranslationSensitivity = GUILayout.HorizontalSlider(TranslationSensitivity, 0.001f, 1f);
+		GUILayout.Label(string.Format("T Sens {0:0.00000}", _translationSensitivity));
+		_translationSensitivity = GUILayout.HorizontalSlider(_translationSensitivity, 0.001f, 5f);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(string.Format("R Sens {0:0.00000}", RotationSensitivity));
-		RotationSensitivity = GUILayout.HorizontalSlider(RotationSensitivity, 0.001f, 1f);
+		GUILayout.Label(string.Format("R Sens {0:0.00000}", _rotationSensitivity));
+		_rotationSensitivity = GUILayout.HorizontalSlider(_rotationSensitivity, 0.001f, 5f);
 		GUILayout.EndHorizontal();
 
 		GUILayout.EndVertical();
@@ -318,16 +252,16 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// Reads the settings.
 	/// </summary>
 	private void ReadSettings() {
-		TranslationSensitivity = EditorPrefs.GetFloat(TransSensKey);
-		RotationSensitivity = EditorPrefs.GetFloat(RotSensKey);
-		NavigationMode = EditorPrefs.GetInt(ModeKey) == 1;
+		_translationSensitivity = EditorPrefs.GetFloat(TransSensKey, TranslationSensitivityDefault);
+		_rotationSensitivity = EditorPrefs.GetFloat(RotSensKey, RotationSensitivityDefault);
+		NavigationMode = EditorPrefs.GetInt(ModeKey, NavigationModeDefault) == 1;
 	}
 	/// <summary>
 	/// Writes the settings.
 	/// </summary>
 	private void WriteSettings() {
-		EditorPrefs.SetFloat(TransSensKey, TranslationSensitivity);
-		EditorPrefs.SetFloat(RotSensKey, RotationSensitivity);
+		EditorPrefs.SetFloat(TransSensKey, _translationSensitivity);
+		EditorPrefs.SetFloat(RotSensKey, _rotationSensitivity);
 		EditorPrefs.SetInt(ModeKey, NavigationMode ? 1 : 0);
 	}
 }
