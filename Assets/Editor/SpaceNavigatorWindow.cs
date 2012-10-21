@@ -1,7 +1,8 @@
-#define DEBUG_LEVEL_LOG
-#define DEBUG_LEVEL_WARN
-#define DEBUG_LEVEL_ERROR
+//#define DEBUG_LEVEL_LOG
+//#define DEBUG_LEVEL_WARN
+//#define DEBUG_LEVEL_ERROR
 
+using System;
 using System.Runtime.InteropServices;
 using TDx.TDxInput;
 using UnityEngine;
@@ -22,12 +23,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private float _translationSensitivity;
 	public float RotationSensitivity { get { return _rotationSensitivity * RotationSensitivityScale; } }
 	private float _rotationSensitivity;
-	public bool NavigationMode;
+	public enum OperationMode { Navigation, FreeMove, GrabMove }
+	public OperationMode NavigationMode;
 	
 	// Setting defaults
 	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 0.05f;
 	public const float TranslationSensitivityDefault = 1f, RotationSensitivityDefault = 1;
-	public const int NavigationModeDefault = 1;
+	public const OperationMode NavigationModeDefault = OperationMode.Navigation;
 
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
@@ -156,28 +158,47 @@ public class SpaceNavigatorWindow : EditorWindow {
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
 
-		if (NavigationMode) {
-			// Navigation mode.
-			Navigate(sceneView);
-		} else {
-			// Manipulation mode.
-			foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-				// Translate the selected object in camera-space.
-				Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(TranslationInWorldSpace) -
-											sceneView.camera.transform.position;
-				if (worldTranslation != Vector3.zero)
-					transform.Translate(worldTranslation, Space.World);
+		switch (NavigationMode) {
+			case OperationMode.Navigation:
+				Navigate(sceneView);
+				break;
+			case OperationMode.FreeMove:
+				// Manipulate the object free from the camera.
+				foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
+					// Translate the selected object in camera-space.
+					Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(TranslationInWorldSpace) -
+												sceneView.camera.transform.position;
+					if (worldTranslation != Vector3.zero)
+						transform.Translate(worldTranslation, Space.World);
 
-				// Rotate the selected object in camera-space.
-				transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
-			}
+					// Rotate the selected object in camera-space.
+					transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
+				}
+				break;
+			case OperationMode.GrabMove:
+				// Manipulate the object free from the camera.
+				foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
+					// Translate the selected object in camera-space.
+					Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(TranslationInWorldSpace) -
+												sceneView.camera.transform.position;
+					if (worldTranslation != Vector3.zero)
+						transform.Translate(worldTranslation, Space.World);
+
+					// Rotate the selected object in camera-space.
+					//transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
+				}
+
+				Navigate(sceneView);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 
 		//// Detect keyboard clicks (not working).
 		//if (Keyboard.IsKeyDown(1))
-		//	Debug.Log("Button 0 pressed");
+		//	D.log("Button 0 pressed");
 		//if (Keyboard.IsKeyDown(2))
-		//	Debug.Log("Button 1 pressed");
+		//	D.log("Button 1 pressed");
 	}
 
 	private void Navigate(SceneView sceneView) {
@@ -210,40 +231,37 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// </summary>
 	public void OnGUI() {
 		GUILayout.BeginVertical();
-
-		NavigationMode = GUILayout.Toggle(NavigationMode, "Operate in navigation mode");
+		GUILayout.Label("Operation mode");
+		string[] buttons = new string[3] {"Navigate", "Free move", "Grab move"};
+		NavigationMode = (OperationMode) GUILayout.SelectionGrid((int) NavigationMode, buttons, 3);
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
-		if (GUILayout.Button("Reset")) {
+		if (GUILayout.Button("Reset camera")) {
 			if (sceneView) {
 				sceneView.pivot = new Vector3(0, 0, 0);
 				sceneView.rotation = Quaternion.identity;
 				sceneView.Repaint();
 			}
 		}
-		if (sceneView && _pivot) {
-			GUILayout.Label(string.Format("Scene cam pos\t{0}", SceneView.lastActiveSceneView.camera.transform.position));
-			GUILayout.Label(string.Format("Scene pivot dummy lpos\t{0}", _pivot.localPosition));
-			GUILayout.Label(string.Format("Scene pivot pos\t{0}", SceneView.lastActiveSceneView.pivot));
-		} else {
-			GUILayout.Label(string.Format("Scene cam pos\t{0}", Vector3.zero.ToString()));
-			GUILayout.Label(string.Format("Scene pivot dummy lpos\t{0}", Vector3.zero.ToString()));
-			GUILayout.Label(string.Format("Scene pivot pos\t{0}", Vector3.zero.ToString()));
-		}
 
-		if (GUILayout.Button("Reset sensitivity")) {
-			_translationSensitivity = 1;
-			_rotationSensitivity = 1;
-		}
+		GUILayout.Space(10);
+		GUILayout.Label("Sensitivity");
+		GUILayout.Space(4);
+
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(string.Format("T Sens {0:0.00000}", _translationSensitivity));
+		GUILayout.Label(string.Format("Translation\t {0:0.00000}", _translationSensitivity));
 		_translationSensitivity = GUILayout.HorizontalSlider(_translationSensitivity, 0.001f, 5f);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(string.Format("R Sens {0:0.00000}", _rotationSensitivity));
+		GUILayout.Label(string.Format("Rotation\t\t {0:0.00000}", _rotationSensitivity));
 		_rotationSensitivity = GUILayout.HorizontalSlider(_rotationSensitivity, 0.001f, 5f);
 		GUILayout.EndHorizontal();
+
+		if (GUILayout.Button("Reset")) {
+			_translationSensitivity = 1;
+			_rotationSensitivity = 1;
+		}
 
 		GUILayout.EndVertical();
 	}
@@ -254,7 +272,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void ReadSettings() {
 		_translationSensitivity = EditorPrefs.GetFloat(TransSensKey, TranslationSensitivityDefault);
 		_rotationSensitivity = EditorPrefs.GetFloat(RotSensKey, RotationSensitivityDefault);
-		NavigationMode = EditorPrefs.GetInt(ModeKey, NavigationModeDefault) == 1;
+		NavigationMode = (OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
 	}
 	/// <summary>
 	/// Writes the settings.
@@ -262,6 +280,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void WriteSettings() {
 		EditorPrefs.SetFloat(TransSensKey, _translationSensitivity);
 		EditorPrefs.SetFloat(RotSensKey, _rotationSensitivity);
-		EditorPrefs.SetInt(ModeKey, NavigationMode ? 1 : 0);
+		EditorPrefs.SetInt(ModeKey, (int)NavigationMode);
 	}
 }
