@@ -25,7 +25,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public bool NavigationMode;
 	
 	// Setting defaults
-	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 1;
+	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 0.05f;
 	public const float TranslationSensitivityDefault = 1f, RotationSensitivityDefault = 1;
 	public const int NavigationModeDefault = 1;
 
@@ -195,13 +195,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// This method keeps the horizon horizontal at all times.
 		// Perform azimuth in world coordinates.
-		Vector3 euler = _camera.rotation.eulerAngles;
-		euler.y += RotationInWorldSpace.y;
-		_camera.rotation = Quaternion.Euler(euler);
+		_camera.RotateAround(Vector3.up, RotationInWorldSpace.y);
 		// Perform pitch in local coordinates.
-		Vector3 localEuler = _camera.localRotation.eulerAngles;
-		localEuler.x += RotationInWorldSpace.x;
-		_camera.localRotation = Quaternion.Euler(localEuler);
+		_camera.RotateAround(_camera.right, RotationInWorldSpace.x);
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -235,6 +231,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 			GUILayout.Label(string.Format("Scene pivot pos\t{0}", Vector3.zero.ToString()));
 		}
 
+		if (GUILayout.Button("Reset sensitivity")) {
+			_translationSensitivity = 1;
+			_rotationSensitivity = 1;
+		}
 		GUILayout.BeginHorizontal();
 		GUILayout.Label(string.Format("T Sens {0:0.00000}", _translationSensitivity));
 		_translationSensitivity = GUILayout.HorizontalSlider(_translationSensitivity, 0.001f, 5f);
