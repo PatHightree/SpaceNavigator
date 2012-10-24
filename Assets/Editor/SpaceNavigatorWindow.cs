@@ -167,7 +167,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 				FreeMove(sceneView);
 				break;
 			case OperationMode.GrabMove:
-				GrabMoveByMatrixXform(sceneView);
+				GrabMove(sceneView);
 				//// Manipulate the object together with the camera.
 				//foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
 				//	Vector3 cameraPos = sceneView.camera.transform.position;
@@ -196,40 +196,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 		//	D.log("Button 0 pressed");
 		//if (Keyboard.IsKeyDown(2))
 		//	D.log("Button 1 pressed");
-	}
-
-	/// <summary>
-	/// This method calculates the transformation matrix between before and after the navigation.
-	/// This difference matrix is then applied to all selected transforms.
-	/// </summary>
-	/// <param name="sceneView">The scene view.</param>
-	private void GrabMoveByMatrixXform(SceneView sceneView) {
-		// Note: this method does not work properly yet.
-		// the result is performed around the origin, instead of around the camera.
-
-		Matrix4x4 before = _camera.worldToLocalMatrix;
-		Navigate(sceneView);
-		Matrix4x4 after = _camera.worldToLocalMatrix;
-		Matrix4x4 xform = Matrix4x4.Inverse(before) * after;
-		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-			// Transform to camera coord sys.
-			transform.position = _camera.InverseTransformPoint(transform.position);
-			// Apply transform.
-			//transform.position = xform.inverse * transform.position;	// this one seems to work horizontally, but inverted vertically
-			transform.position = xform.MultiplyPoint(transform.position);
-			// Transform back to world coords.
-			transform.position = _camera.TransformPoint(transform.position);
-
-			// Rotate the selected object in-place in camera-space.
-			//transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
-
-			// Translate the selected object in camera-space.
-			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(TranslationInWorldSpace) -
-									   sceneView.camera.transform.position;
-			if (worldTranslation != Vector3.zero)
-				transform.Translate(worldTranslation, Space.World);
-		
-		}
 	}
 
 	private void Navigate(SceneView sceneView) {
@@ -267,6 +233,19 @@ public class SpaceNavigatorWindow : EditorWindow {
 			// Rotate the selected object in camera-space.
 			transform.rotation = RotationInLocalCoordSys(sceneView.camera.transform)*transform.rotation;
 		}
+	}
+	private void GrabMove(SceneView sceneView) {
+		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
+			Vector3 euler = RotationInWorldSpace.eulerAngles;
+			// This code works but the target flashes on/off for some strange reason.
+			transform.RotateAround(_camera.position, Vector3.up, euler.y * 0.5f);		// No idea why this needs to rotate only halfway...
+			transform.RotateAround(_camera.position, _camera.right, euler.x * 0.5f);	// No idea why this needs to rotate only halfway...
+			
+			// It works great with fake input though.
+			//transform.RotateAround(_camera.position, Vector3.up, _fakeRotationInput.x * 0.5f);
+			//transform.RotateAround(_camera.position, sceneView.camera.transform.right, _fakeRotationInput.y * 0.5f);
+		}
+		Navigate(sceneView);
 	}
 
 	/// <summary>
