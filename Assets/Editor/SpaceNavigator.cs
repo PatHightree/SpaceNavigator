@@ -59,10 +59,12 @@ public class SpaceNavigator : IDisposable {
 		return coordSys.rotation * RotationInWorldSpace * Quaternion.Inverse(coordSys.rotation);
 	}
 
-	// Development
+#if USE_FAKE_INPUT
+	// For development without SpaceNavigator.
 	private Vector2 _fakeRotationInput;
 	private Vector3 _fakeTranslationInput;
 	private const float FakeInputThreshold = 0.1f;
+#endif
 
 	#region - Singleton stuff -
 	/// <summary>
@@ -120,6 +122,26 @@ public class SpaceNavigator : IDisposable {
 		GUILayout.Label(String.Format("Fake rotation y {0:0.00000}", _fakeRotationInput.y));
 		_fakeRotationInput.y = GUILayout.HorizontalSlider(_fakeRotationInput.y, -1, 1);
 		GUILayout.EndHorizontal();
+
+		GUILayout.Space(5);
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label(String.Format("Fake translation x {0:0.00000}", _fakeTranslationInput.x));
+		_fakeTranslationInput.x = GUILayout.HorizontalSlider(_fakeTranslationInput.x, -0.05f, 0.05f);
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label(String.Format("Fake translation y {0:0.00000}", _fakeTranslationInput.y));
+		_fakeTranslationInput.y = GUILayout.HorizontalSlider(_fakeTranslationInput.y, -0.05f, 0.05f);
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label(String.Format("Fake translation z {0:0.00000}", _fakeTranslationInput.z));
+		_fakeTranslationInput.z = GUILayout.HorizontalSlider(_fakeTranslationInput.z, -0.05f, 0.05f);
+		GUILayout.EndHorizontal();
+
+		if (GUILayout.Button("Stop")) {
+			_fakeRotationInput = Vector2.zero;
+			_fakeTranslationInput = Vector3.zero;
+		}
 
 		if (Mathf.Abs(_fakeRotationInput.x) < FakeInputThreshold)
 			_fakeRotationInput.x = 0;
