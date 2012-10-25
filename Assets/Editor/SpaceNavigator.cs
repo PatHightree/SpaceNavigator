@@ -15,7 +15,6 @@ public class SpaceNavigator : IDisposable {
 	// Settings
 	public float TranslationSensitivity;
 	public float RotationSensitivity;
-	public enum OperationMode { Navigation, FreeMove, GrabMove }
 
 	// Setting defaults
 	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 0.05f;
@@ -25,38 +24,38 @@ public class SpaceNavigator : IDisposable {
 	private const string TransSensKey = "Translation sensitivity";
 	private const string RotSensKey = "Rotation sensitivity";
 
-	public Vector3 TranslationInWorldSpace {
+	public static Vector3 TranslationInWorldSpace {
 		get {
 #if USE_FAKE_INPUT
-			return _fakeTranslationInput;
+			return Instance._fakeTranslationInput;
 #else
-			return (Sensor == null ?
+			return (Instance.Sensor == null ?
 				Vector3.zero :
 				new Vector3(
-					(float)Sensor.Translation.X,
-					(float)Sensor.Translation.Y,
-					-(float)Sensor.Translation.Z) *
-					TranslationSensitivity * TranslationSensitivityScale);
+					(float)Instance.Sensor.Translation.X,
+					(float)Instance.Sensor.Translation.Y,
+					-(float)Instance.Sensor.Translation.Z) *
+					Instance.TranslationSensitivity * TranslationSensitivityScale);
 #endif
 		}
 	}
-	public Quaternion RotationInWorldSpace {
+	public static Quaternion RotationInWorldSpace {
 		get {
 #if USE_FAKE_INPUT
-			return Quaternion.Euler(_fakeRotationInput.y, _fakeRotationInput.x, 0);
+			return Quaternion.Euler(Instance._fakeRotationInput.y, Instance._fakeRotationInput.x, 0);
 #else
-			return (Sensor == null ?
+			return (Instance.Sensor == null ?
 				Quaternion.identity :
 				Quaternion.AngleAxis(
-					(float)Sensor.Rotation.Angle * RotationSensitivity * RotationSensitivityScale,
+					(float)Instance.Sensor.Rotation.Angle * Instance.RotationSensitivity * RotationSensitivityScale,
 					new Vector3(
-						-(float)Sensor.Rotation.X,
-						-(float)Sensor.Rotation.Y,
-						(float)Sensor.Rotation.Z)));
+						-(float)Instance.Sensor.Rotation.X,
+						-(float)Instance.Sensor.Rotation.Y,
+						(float)Instance.Sensor.Rotation.Z)));
 #endif
 		}
 	}
-	public Quaternion RotationInLocalCoordSys(Transform coordSys) {
+	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
 		return coordSys.rotation * RotationInWorldSpace * Quaternion.Inverse(coordSys.rotation);
 	}
 

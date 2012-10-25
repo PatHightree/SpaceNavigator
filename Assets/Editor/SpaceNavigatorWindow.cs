@@ -7,7 +7,9 @@ using UnityEngine;
 using UnityEditor;
 
 public class SpaceNavigatorWindow : EditorWindow {
-	public SpaceNavigator.OperationMode NavigationMode;
+	public enum OperationMode { Navigation, FreeMove, GrabMove }
+
+	public OperationMode NavigationMode;
 
 	// Rig components
 	private GameObject _pivotGO, _cameraGO;
@@ -15,7 +17,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 	// Settings
 	private const string ModeKey = "Navigation mode";
-	public const SpaceNavigator.OperationMode NavigationModeDefault = SpaceNavigator.OperationMode.Navigation;
+	public const OperationMode NavigationModeDefault = OperationMode.Navigation;
 
 	/// <summary>
 	/// Initializes the window.
@@ -40,7 +42,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 	
 	public void ReadSettings() {
-		NavigationMode = (SpaceNavigator.OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
+		NavigationMode = (OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
 		
 		SpaceNavigator.Instance.ReadSettings();
 	}
@@ -93,14 +95,14 @@ public class SpaceNavigatorWindow : EditorWindow {
 		if (!sceneView) return;
 
 		switch (NavigationMode) {
-			case SpaceNavigator.OperationMode.Navigation:
+			case OperationMode.Navigation:
 				Navigate(sceneView);
 				break;
-			case SpaceNavigator.OperationMode.FreeMove:
+			case OperationMode.FreeMove:
 				// Manipulate the object free from the camera.
 				FreeMove(sceneView);
 				break;
-			case SpaceNavigator.OperationMode.GrabMove:
+			case OperationMode.GrabMove:
 				// Manipulate the object together with the camera.
 				GrabMove(sceneView);
 				break;
@@ -116,13 +118,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	private void Navigate(SceneView sceneView) {
-		if (SpaceNavigator.Instance.TranslationInWorldSpace == Vector3.zero && 
-			SpaceNavigator.Instance.RotationInWorldSpace == Quaternion.identity) 
+		if (SpaceNavigator.TranslationInWorldSpace == Vector3.zero && 
+			SpaceNavigator.RotationInWorldSpace == Quaternion.identity) 
 			return;
 
 		SyncRigWithScene();
 
-		_camera.Translate(SpaceNavigator.Instance.TranslationInWorldSpace, Space.Self);
+		_camera.Translate(SpaceNavigator.TranslationInWorldSpace, Space.Self);
 
 		//// Default rotation method, applies the whole quaternion to the camera.
 		//Quaternion sceneCamera = sceneView.camera.transform.rotation;
@@ -132,9 +134,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// This method keeps the horizon horizontal at all times.
 		// Perform azimuth in world coordinates.
-		_camera.RotateAround(Vector3.up, SpaceNavigator.Instance.RotationInWorldSpace.y);
+		_camera.RotateAround(Vector3.up, SpaceNavigator.RotationInWorldSpace.y);
 		// Perform pitch in local coordinates.
-		_camera.RotateAround(_camera.right, SpaceNavigator.Instance.RotationInWorldSpace.x);
+		_camera.RotateAround(_camera.right, SpaceNavigator.RotationInWorldSpace.x);
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -144,18 +146,18 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void FreeMove(SceneView sceneView) {
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
 			// Translate the selected object in camera-space.
-			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.Instance.TranslationInWorldSpace) -
+			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.TranslationInWorldSpace) -
 			                           sceneView.camera.transform.position;
 			if (worldTranslation != Vector3.zero)
 				transform.Translate(worldTranslation, Space.World);
 
 			// Rotate the selected object in camera-space.
-			transform.rotation = SpaceNavigator.Instance.RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
+			transform.rotation = SpaceNavigator.RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-			Vector3 euler = SpaceNavigator.Instance.RotationInWorldSpace.eulerAngles;
+			Vector3 euler = SpaceNavigator.RotationInWorldSpace.eulerAngles;
 
 			// This code works but the target flashes on/off for some strange reason.
 			transform.RotateAround(_camera.position, Vector3.up, euler.y * 0.5f);		// No idea why this needs to rotate only halfway...
@@ -171,7 +173,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Operation mode");
 		string[] buttons = new string[] {"Navigate", "Free move", "Grab move"};
-		NavigationMode = (SpaceNavigator.OperationMode) GUILayout.SelectionGrid((int) NavigationMode, buttons, 3);
+		NavigationMode = (OperationMode) GUILayout.SelectionGrid((int) NavigationMode, buttons, 3);
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (GUILayout.Button("Reset camera")) {
