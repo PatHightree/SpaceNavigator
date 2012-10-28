@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class SpaceNavigator : IDisposable {
 	// Device variables
-	protected Sensor Sensor;
-	protected Device Device;
-	protected Keyboard Keyboard;
+	private Sensor _sensor;
+	private Device _device;
+	private Keyboard _keyboard;
 
 	// Settings
 	public float TranslationSensitivity;
@@ -24,17 +24,18 @@ public class SpaceNavigator : IDisposable {
 	private const string TransSensKey = "Translation sensitivity";
 	private const string RotSensKey = "Rotation sensitivity";
 
+	// Public API
 	public static Vector3 TranslationInWorldSpace {
 		get {
 #if USE_FAKE_INPUT
 			return Instance._fakeTranslationInput;
 #else
-			return (Instance.Sensor == null ?
+			return (Instance._sensor == null ?
 				Vector3.zero :
 				new Vector3(
-					(float)Instance.Sensor.Translation.X,
-					(float)Instance.Sensor.Translation.Y,
-					-(float)Instance.Sensor.Translation.Z) *
+					LockTranslationX ? 0: (float)Instance._sensor.Translation.X,
+					LockTranslationY ? 0 : (float)Instance._sensor.Translation.Y,
+					LockTranslationZ ? 0 : -(float)Instance._sensor.Translation.Z) *
 					Instance.TranslationSensitivity * TranslationSensitivityScale);
 #endif
 		}
@@ -44,21 +45,22 @@ public class SpaceNavigator : IDisposable {
 #if USE_FAKE_INPUT
 			return Quaternion.Euler(Instance._fakeRotationInput.y, Instance._fakeRotationInput.x, 0);
 #else
-			return (Instance.Sensor == null ?
+			return (Instance._sensor == null ?
 				Quaternion.identity :
 				Quaternion.AngleAxis(
-					(float)Instance.Sensor.Rotation.Angle * Instance.RotationSensitivity * RotationSensitivityScale,
+					(float)Instance._sensor.Rotation.Angle * Instance.RotationSensitivity * RotationSensitivityScale,
 					new Vector3(
-						-(float)Instance.Sensor.Rotation.X,
-						-(float)Instance.Sensor.Rotation.Y,
-						(float)Instance.Sensor.Rotation.Z)));
+						LockRotationX ? 0 : -(float)Instance._sensor.Rotation.X,
+						LockRotationY ? 0 : -(float)Instance._sensor.Rotation.Y,
+						LockRotationZ ? 0 : (float)Instance._sensor.Rotation.Z)));
 #endif
 		}
 	}
 	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
 		return coordSys.rotation * RotationInWorldSpace * Quaternion.Inverse(coordSys.rotation);
 	}
-
+	public static bool LockTranslationX, LockTranslationY, LockTranslationZ;
+	public static bool LockRotationX, LockRotationY, LockRotationZ;
 #if USE_FAKE_INPUT
 	// For development without SpaceNavigator.
 	private Vector2 _fakeRotationInput;
@@ -72,13 +74,13 @@ public class SpaceNavigator : IDisposable {
 	/// </summary>
 	private SpaceNavigator() {
 		try {
-			if (Device == null) {
-				Device = new DeviceClass();
-				Sensor = Device.Sensor;
-				Keyboard = Device.Keyboard;
+			if (_device == null) {
+				_device = new DeviceClass();
+				_sensor = _device.Sensor;
+				_keyboard = _device.Keyboard;
 			}
-			if (!Device.IsConnected)
-				Device.Connect();
+			if (!_device.IsConnected)
+				_device.Connect();
 		}
 		catch (COMException ex) {
 			Debug.LogError(ex.ToString());
@@ -97,8 +99,8 @@ public class SpaceNavigator : IDisposable {
 	#region - IDisposable -
 	public void Dispose() {
 		try {
-			if (Device != null && Device.IsConnected) {
-				Device.Disconnect();
+			if (_device != null && _device.IsConnected) {
+				_device.Disconnect();
 				_instance = null;
 				GC.Collect();
 			}
@@ -145,6 +147,23 @@ public class SpaceNavigator : IDisposable {
 		if (Mathf.Abs(_fakeRotationInput.y) < FakeInputThreshold)
 			_fakeRotationInput.y = 0;
 #endif
+
+		GUILayout.Space(10);
+		GUILayout.Label("Lock");
+		GUILayout.Space(4);
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Translation\t");
+		LockTranslationX = GUILayout.Toggle(LockTranslationX, "X");
+		LockTranslationY = GUILayout.Toggle(LockTranslationY, "Y");
+		LockTranslationZ = GUILayout.Toggle(LockTranslationZ, "Z");
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Rotation\t\t");
+		LockRotationX = GUILayout.Toggle(LockRotationX, "X");
+		LockRotationY = GUILayout.Toggle(LockRotationY, "Y");
+		LockRotationZ = GUILayout.Toggle(LockRotationZ, "Z");
+		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
 		GUILayout.Label("Sensitivity");
