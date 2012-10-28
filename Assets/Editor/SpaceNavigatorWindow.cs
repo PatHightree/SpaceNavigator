@@ -6,13 +6,16 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
+[Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
 	public enum OperationMode { Navigation, FreeMove, GrabMove }
 
 	public OperationMode NavigationMode;
 
 	// Rig components
+	[SerializeField]
 	private GameObject _pivotGO, _cameraGO;
+	[SerializeField]
 	private Transform _pivot, _camera;
 
 	// Settings
@@ -28,9 +31,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		if (window) {
 			window.Show();
-			window.ReadSettings();
-			window.InitCameraRig();
 		}
+	}
+	public void OnEnable() {
+		ReadSettings();
+		InitCameraRig();
 	}
 	/// <summary>
 	/// Called when window is closed.
@@ -40,7 +45,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		DisposeCameraRig();
 		SpaceNavigator.Instance.Dispose();
 	}
-	
+	public void OnDisable() {
+		WriteSettings();
+		SpaceNavigator.Instance.Dispose();
+	}
+
 	public void ReadSettings() {
 		NavigationMode = (OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
 		

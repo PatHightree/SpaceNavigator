@@ -76,15 +76,13 @@ public class SpaceNavigator : IDisposable {
 				Device = new DeviceClass();
 				Sensor = Device.Sensor;
 				Keyboard = Device.Keyboard;
-				Device.LoadPreferences("Unity");
 			}
 			if (!Device.IsConnected)
 				Device.Connect();
 		}
 		catch (COMException ex) {
-			D.error(ex.ToString());
+			Debug.LogError(ex.ToString());
 		}
-		D.log("Initialized");
 	}
 
 	public static SpaceNavigator Instance {
@@ -103,11 +101,10 @@ public class SpaceNavigator : IDisposable {
 				Device.Disconnect();
 				_instance = null;
 				GC.Collect();
-				D.log("Disconnected");
 			}
 		}
 		catch (COMException ex) {
-			D.error(ex.ToString());
+			Debug.LogError(ex.ToString());
 		}
 	}
 	#endregion - IDisposable -

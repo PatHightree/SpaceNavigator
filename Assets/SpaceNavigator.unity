@@ -2543,6 +2543,32 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1793337878}
   m_GameObject: {fileID: 1104183886}
   m_Mesh: {fileID: 4300060, guid: 6f08347f46f069447a29379e6afb5fdc, type: 3}
+--- !u!1 &1119700076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 1119700077}
+  m_Layer: 0
+  m_Name: Scene camera pivot dummy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1119700077
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1119700076}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.0755988e-08, y: -1.03992388e-08, z: 2.85788465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1738867823}
 --- !u!1 &1160349743
 GameObject:
   m_ObjectHideFlags: 0
@@ -3892,6 +3918,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1793337878}
   m_GameObject: {fileID: 1728618604}
   m_Mesh: {fileID: 4300020, guid: 6f08347f46f069447a29379e6afb5fdc, type: 3}
+--- !u!1 &1738867822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 1738867823}
+  m_Layer: 0
+  m_Name: Scene camera dummy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1738867823
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1738867822}
+  m_LocalRotation: {x: .0830818042, y: -.857473433, z: .146532953, w: .486173719}
+  m_LocalPosition: {x: 4.07874489, y: 2.83576894, z: 3.31414318}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1119700077}
+  m_Father: {fileID: 0}
 --- !u!1 &1739248233
 GameObject:
   m_ObjectHideFlags: 0
