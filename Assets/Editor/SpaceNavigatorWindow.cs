@@ -103,6 +103,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
 
+		// Return if device is idle.
+		if (SpaceNavigator.TranslationInWorldSpace == Vector3.zero &&
+			SpaceNavigator.RotationInWorldSpace == Quaternion.identity)
+			return;
+
 		switch (NavigationMode) {
 			case OperationMode.Navigation:
 				Navigate(sceneView);
@@ -127,10 +132,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	private void Navigate(SceneView sceneView) {
-		if (SpaceNavigator.TranslationInWorldSpace == Vector3.zero && 
-			SpaceNavigator.RotationInWorldSpace == Quaternion.identity) 
-			return;
-
 		SyncRigWithScene();
 
 		_camera.Translate(SpaceNavigator.TranslationInWorldSpace, Space.Self);
