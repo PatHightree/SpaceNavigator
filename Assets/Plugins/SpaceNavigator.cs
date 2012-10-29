@@ -33,9 +33,9 @@ public class SpaceNavigator : IDisposable {
 			return (Instance._sensor == null ?
 				Vector3.zero :
 				new Vector3(
-					LockTranslationX ? 0: (float)Instance._sensor.Translation.X,
-					LockTranslationY ? 0 : (float)Instance._sensor.Translation.Y,
-					LockTranslationZ ? 0 : -(float)Instance._sensor.Translation.Z) *
+					LockTranslationX || LockTranslationAll ? 0: (float)Instance._sensor.Translation.X,
+					LockTranslationY || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.Y,
+					LockTranslationZ || LockTranslationAll ? 0 : -(float)Instance._sensor.Translation.Z) *
 					Instance.TranslationSensitivity * TranslationSensitivityScale);
 #endif
 		}
@@ -50,17 +50,17 @@ public class SpaceNavigator : IDisposable {
 				Quaternion.AngleAxis(
 					(float)Instance._sensor.Rotation.Angle * Instance.RotationSensitivity * RotationSensitivityScale,
 					new Vector3(
-						LockRotationX ? 0 : -(float)Instance._sensor.Rotation.X,
-						LockRotationY ? 0 : -(float)Instance._sensor.Rotation.Y,
-						LockRotationZ ? 0 : (float)Instance._sensor.Rotation.Z)));
+						LockRotationX || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.X,
+						LockRotationY || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.Y,
+						LockRotationZ || LockRotationAll ? 0 : (float)Instance._sensor.Rotation.Z)));
 #endif
 		}
 	}
 	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
 		return coordSys.rotation * RotationInWorldSpace * Quaternion.Inverse(coordSys.rotation);
 	}
-	public static bool LockTranslationX, LockTranslationY, LockTranslationZ;
-	public static bool LockRotationX, LockRotationY, LockRotationZ;
+	public static bool LockTranslationX, LockTranslationY, LockTranslationZ, LockTranslationAll;
+	public static bool LockRotationX, LockRotationY, LockRotationZ, LockRotationAll;
 #if USE_FAKE_INPUT
 	// For development without SpaceNavigator.
 	private Vector2 _fakeRotationInput;
@@ -68,7 +68,7 @@ public class SpaceNavigator : IDisposable {
 	private const float FakeInputThreshold = 0.1f;
 #endif
 
-	#region - Singleton stuff -
+	#region - Singleton -
 	/// <summary>
 	/// Private constructor, prevents a default instance of the <see cref="SpaceNavigator" /> class from being created.
 	/// </summary>
@@ -154,15 +154,22 @@ public class SpaceNavigator : IDisposable {
 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Translation\t");
+		GUI.enabled = !LockTranslationAll;
 		LockTranslationX = GUILayout.Toggle(LockTranslationX, "X");
 		LockTranslationY = GUILayout.Toggle(LockTranslationY, "Y");
 		LockTranslationZ = GUILayout.Toggle(LockTranslationZ, "Z");
+		GUI.enabled = true;
+		LockTranslationAll = GUILayout.Toggle(LockTranslationAll, "All");
 		GUILayout.EndHorizontal();
+
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Rotation\t\t");
+		GUI.enabled = !LockRotationAll;
 		LockRotationX = GUILayout.Toggle(LockRotationX, "X");
 		LockRotationY = GUILayout.Toggle(LockRotationY, "Y");
 		LockRotationZ = GUILayout.Toggle(LockRotationZ, "Z");
+		GUI.enabled = true;
+		LockRotationAll = GUILayout.Toggle(LockRotationAll, "All");
 		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
