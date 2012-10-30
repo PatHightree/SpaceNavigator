@@ -9,8 +9,9 @@ using UnityEditor;
 [Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
 	public enum OperationMode { Navigation, FreeMove, GrabMove }
-
 	public OperationMode NavigationMode;
+	public enum CoordinateSystem { Camera, World, Parent, Local }
+	public static CoordinateSystem CoordSys;
 
 	// Rig components
 	[SerializeField]
@@ -154,15 +155,37 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void FreeMove(SceneView sceneView) {
+		Transform reference;
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-			// Translate the selected object in camera-space.
-			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.TranslationInWorldSpace) -
-			                           sceneView.camera.transform.position;
-			if (worldTranslation != Vector3.zero)
+			switch (CoordSys) {
+				case CoordinateSystem.Camera:
+					reference = sceneView.camera.transform;
+					break;
+				case CoordinateSystem.World:
+					reference = null;
+					break;
+				case CoordinateSystem.Parent:
+					reference = transform.parent;
+					break;
+				case CoordinateSystem.Local:
+					reference = transform;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			if (reference == null) {
+				transform.Translate(SpaceNavigator.TranslationInWorldSpace, Space.World);
+				transform.rotation = SpaceNavigator.RotationInWorldSpace * transform.rotation;
+			} else {
+				// Translate the selected object in reference coordinate system.
+				Vector3 worldTranslation = reference.TransformPoint(SpaceNavigator.TranslationInWorldSpace) -
+										   reference.position;
 				transform.Translate(worldTranslation, Space.World);
 
-			// Rotate the selected object in camera-space.
-			transform.rotation = SpaceNavigator.RotationInLocalCoordSys(sceneView.camera.transform) * transform.rotation;
+				// Rotate the selected object in reference coordinate system.
+				transform.rotation = SpaceNavigator.RotationInLocalCoordSys(reference) * transform.rotation;
+			}
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
@@ -193,6 +216,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 				sceneView.Repaint();
 			}
 		}
+
+		GUILayout.Label("Coordinate system");
+		buttons = new string[] { "Camera", "World", "Parent", "Local" };
+		CoordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)CoordSys, buttons, 4);
+
 
 		SpaceNavigator.Instance.OnGUI();
 
