@@ -3,6 +3,7 @@
 //#define DEBUG_LEVEL_ERROR
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -18,6 +19,14 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private GameObject _pivotGO, _cameraGO;
 	[SerializeField]
 	private Transform _pivot, _camera;
+
+	// Snapping
+	private Dictionary<Transform, Quaternion> _unsnappedRotations = new Dictionary<Transform, Quaternion>();
+	private Dictionary<Transform, Vector3> _unsnappedTranslations = new Dictionary<Transform, Vector3>();
+	private bool _snapRotation;
+	public int SnapAngle = 45;
+	private bool _snapTranslation;
+	public float SnapDistance = 0.1f;
 
 	// Settings
 	private const string ModeKey = "Navigation mode";
@@ -37,6 +46,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public void OnEnable() {
 		ReadSettings();
 		InitCameraRig();
+		StoreSelection();
 	}
 	/// <summary>
 	/// Called when window is closed.
@@ -50,10 +60,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 		WriteSettings();
 		SpaceNavigator.Instance.Dispose();
 	}
+	public void OnSelectionChange() {
+		StoreSelection();
+	}
 
 	public void ReadSettings() {
 		NavigationMode = (OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
-		
+
 		SpaceNavigator.Instance.ReadSettings();
 	}
 	private void WriteSettings() {
@@ -71,10 +84,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void InitCameraRig() {
 		// Create camera rig if one is not already present.
 		if (!_pivotGO) {
-			_cameraGO = new GameObject("Scene camera dummy") {hideFlags = HideFlags.HideAndDontSave};
+			_cameraGO = new GameObject("Scene camera dummy") { hideFlags = HideFlags.HideAndDontSave };
 			_camera = _cameraGO.transform;
 
-			_pivotGO = new GameObject("Scene camera pivot dummy") {hideFlags = HideFlags.HideAndDontSave};
+			_pivotGO = new GameObject("Scene camera pivot dummy") { hideFlags = HideFlags.HideAndDontSave };
 			_pivot = _pivotGO.transform;
 			_pivot.parent = _camera;
 		}
@@ -105,10 +118,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 		if (!sceneView) return;
 
 		// Return if device is idle.
-		if (SpaceNavigator.TranslationInWorldSpace == Vector3.zero &&
-			SpaceNavigator.RotationInWorldSpace == Quaternion.identity)
+		if (SpaceNavigator.Translation == Vector3.zero &&
+			SpaceNavigator.Rotation == Quaternion.identity)
 			return;
-
+	
 		switch (NavigationMode) {
 			case OperationMode.Navigation:
 				Navigate(sceneView);
@@ -135,7 +148,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void Navigate(SceneView sceneView) {
 		SyncRigWithScene();
 
-		_camera.Translate(SpaceNavigator.TranslationInWorldSpace, Space.Self);
+		_camera.Translate(SpaceNavigator.Translation, Space.Self);
 
 		//// Default rotation method, applies the whole quaternion to the camera.
 		//Quaternion sceneCamera = sceneView.camera.transform.rotation;
@@ -145,9 +158,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// This method keeps the horizon horizontal at all times.
 		// Perform azimuth in world coordinates.
-		_camera.RotateAround(Vector3.up, SpaceNavigator.RotationInWorldSpace.y);
+		_camera.RotateAround(Vector3.up, Yaw(SpaceNavigator.Rotation));
 		// Perform pitch in local coordinates.
-		_camera.RotateAround(_camera.right, SpaceNavigator.RotationInWorldSpace.x);
+		_camera.RotateAround(_camera.right, Pitch(SpaceNavigator.Rotation));
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -174,28 +187,40 @@ public class SpaceNavigatorWindow : EditorWindow {
 					throw new ArgumentOutOfRangeException();
 			}
 
+			if (!_unsnappedRotations.ContainsKey(transform)) return;
+
 			if (reference == null) {
-				transform.Translate(SpaceNavigator.TranslationInWorldSpace, Space.World);
-				transform.rotation = SpaceNavigator.RotationInWorldSpace * transform.rotation;
+				// Translate the object in world coordinates.
+				transform.Translate(SpaceNavigator.Translation, Space.World);
+
+				// Calculate the rotation in world coordinates.
+				_unsnappedRotations[transform] = SpaceNavigator.Rotation*_unsnappedRotations[transform];
 			} else {
 				// Translate the selected object in reference coordinate system.
-				Vector3 worldTranslation = reference.TransformPoint(SpaceNavigator.TranslationInWorldSpace) -
+				Vector3 worldTranslation = reference.TransformPoint(SpaceNavigator.Translation) -
 										   reference.position;
 				transform.Translate(worldTranslation, Space.World);
 
-				// Rotate the selected object in reference coordinate system.
-				transform.rotation = SpaceNavigator.RotationInLocalCoordSys(reference) * transform.rotation;
+				// Calculate the rotation in the reference coordinate system.
+				_unsnappedRotations[transform] = SpaceNavigator.RotationInLocalCoordSys(reference) * _unsnappedRotations[transform];
 			}
+
+			// Perform rotation with or without snapping.
+			transform.rotation = _snapRotation ? SnapRotation(_unsnappedRotations[transform], SnapAngle) : _unsnappedRotations[transform];
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-			Vector3 euler = SpaceNavigator.RotationInWorldSpace.eulerAngles;
-
-			// This code works but the target flashes on/off for some strange reason.
-			transform.RotateAround(_camera.position, Vector3.up, euler.y * 0.5f);		// No idea why this needs to rotate only halfway...
-			transform.RotateAround(_camera.position, _camera.right, euler.x * 0.5f);	// No idea why this needs to rotate only halfway...
+			// Rotate yaw around world Y axis.
+			transform.RotateAround(_camera.position, Vector3.up, Yaw(SpaceNavigator.Rotation) * Mathf.Rad2Deg);
+			// Rotate pitch around camera right axis.
+			transform.RotateAround(_camera.position, _camera.right, Pitch(SpaceNavigator.Rotation) * Mathf.Rad2Deg);
+			// Translate in camera space.
+			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.Translation) -
+										sceneView.camera.transform.position;
+			transform.Translate(worldTranslation, Space.World);
 		}
+
 		Navigate(sceneView);
 	}
 
@@ -205,8 +230,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public void OnGUI() {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Operation mode");
-		string[] buttons = new string[] {"Navigate", "Free move", "Grab move"};
-		NavigationMode = (OperationMode) GUILayout.SelectionGrid((int) NavigationMode, buttons, 3);
+		string[] buttons = new string[] { "Navigate", "Free move", "Grab move" };
+		NavigationMode = (OperationMode)GUILayout.SelectionGrid((int)NavigationMode, buttons, 3);
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (GUILayout.Button("Reset camera")) {
@@ -221,9 +246,63 @@ public class SpaceNavigatorWindow : EditorWindow {
 		buttons = new string[] { "Camera", "World", "Parent", "Local" };
 		CoordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)CoordSys, buttons, 4);
 
+		GUILayout.BeginHorizontal();
+		_snapRotation = GUILayout.Toggle(_snapRotation, "Angle snapping");
+		string angleText = GUILayout.TextField(SnapAngle.ToString());
+		int newSnapAngle;
+		if (int.TryParse(angleText, out newSnapAngle)) {
+			SnapAngle = newSnapAngle;
+		}
+		GUILayout.EndHorizontal();
+
+		//GUILayout.BeginHorizontal();
+		//_snapTranslation = GUILayout.Toggle(_snapTranslation, "Distance snapping");
+		//string distanceText = GUILayout.TextField(SnapDistance.ToString());
+		//int newSnapDistance;
+		//if (int.TryParse(distanceText, out newSnapDistance)) {
+		//	SnapDistance = newSnapDistance;
+		//}
+		//GUILayout.EndHorizontal();
 
 		SpaceNavigator.Instance.OnGUI();
 
 		GUILayout.EndVertical();
 	}
+
+	#region - Snapping -
+	public void StoreSelection() {
+		_unsnappedRotations.Clear();
+		_unsnappedTranslations.Clear();
+		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
+			_unsnappedRotations.Add(transform, transform.rotation);
+			_unsnappedTranslations.Add(transform, transform.position);
+		}
+	}
+	private Quaternion SnapRotation(Quaternion q, float snap) {
+		Vector3 euler = q.eulerAngles;
+		return Quaternion.Euler(
+			Mathf.RoundToInt(euler.x / snap) * snap,
+			Mathf.RoundToInt(euler.y / snap) * snap,
+			Mathf.RoundToInt(euler.z / snap) * snap);
+	}
+	private Vector3 SnapTranslation(Vector3 v, float snap) {
+		return new Vector3(
+			Mathf.RoundToInt(v.x / snap) * snap,
+			Mathf.RoundToInt(v.y / snap) * snap,
+			Mathf.RoundToInt(v.z / snap) * snap);
+	}
+	#endregion - Snapping -
+
+	#region - Quaternion helpers -
+	// Found this code online: http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
+	float Pitch(Quaternion q) {
+		return Mathf.Atan2(2 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+	}
+	float Yaw(Quaternion q) {
+		return Mathf.Asin(-2 * (q.x * q.z - q.w * q.y));
+	}
+	float Roll(Quaternion q) {
+		return Mathf.Atan2(2 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
+	}
+	#endregion - Quaternion helpers -
 }

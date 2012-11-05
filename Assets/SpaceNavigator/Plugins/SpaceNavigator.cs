@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class SpaceNavigator : IDisposable {
 	// Public API
-	public static Vector3 TranslationInWorldSpace {
+	public static Vector3 Translation {
 		get {
 #if USE_FAKE_INPUT
 			return new Vector3(
@@ -19,14 +19,14 @@ public class SpaceNavigator : IDisposable {
 			return (Instance._sensor == null ?
 				Vector3.zero :
 				new Vector3(
-					LockTranslationX || LockTranslationAll ? 0: (float)Instance._sensor.Translation.X,
+					LockTranslationX || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.X,
 					LockTranslationY || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.Y,
 					LockTranslationZ || LockTranslationAll ? 0 : -(float)Instance._sensor.Translation.Z) *
 					Instance.TranslationSensitivity * TranslationSensitivityScale);
 #endif
 		}
 	}
-	public static Quaternion RotationInWorldSpace {
+	public static Quaternion Rotation {
 		get {
 #if USE_FAKE_INPUT
 			return Quaternion.Euler(
@@ -46,7 +46,7 @@ public class SpaceNavigator : IDisposable {
 		}
 	}
 	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
-		return coordSys.rotation * RotationInWorldSpace * Quaternion.Inverse(coordSys.rotation);
+		return coordSys.rotation * Rotation * Quaternion.Inverse(coordSys.rotation);
 	}
 	public static bool LockTranslationX, LockTranslationY, LockTranslationZ, LockTranslationAll;
 	public static bool LockRotationX, LockRotationY, LockRotationZ, LockRotationAll;
