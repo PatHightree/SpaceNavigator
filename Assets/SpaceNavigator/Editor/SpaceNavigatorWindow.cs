@@ -26,7 +26,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// <summary>
 	/// Initializes the window.
 	/// </summary>
-	[MenuItem("Window/Space Navigator")]
+	[MenuItem("Window/Space Navigator &s")]
 	public static void Init() {
 		SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 
