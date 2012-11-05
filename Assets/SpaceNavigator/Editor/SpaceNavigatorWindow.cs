@@ -1,7 +1,3 @@
-//#define DEBUG_LEVEL_LOG
-//#define DEBUG_LEVEL_WARN
-//#define DEBUG_LEVEL_ERROR
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -168,8 +164,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void FreeMove(SceneView sceneView) {
-		Transform reference;
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
+			if (!_unsnappedRotations.ContainsKey(transform)) continue;
+
+			Transform reference;
 			switch (CoordSys) {
 				case CoordinateSystem.Camera:
 					reference = sceneView.camera.transform;
@@ -187,26 +185,21 @@ public class SpaceNavigatorWindow : EditorWindow {
 					throw new ArgumentOutOfRangeException();
 			}
 
-			if (!_unsnappedRotations.ContainsKey(transform)) return;
-
 			if (reference == null) {
-				// Translate the object in world coordinates.
-				transform.Translate(SpaceNavigator.Translation, Space.World);
-
-				// Calculate the rotation in world coordinates.
+				// Move the object in world coordinates.
+				_unsnappedTranslations[transform] += SpaceNavigator.Translation;
 				_unsnappedRotations[transform] = SpaceNavigator.Rotation*_unsnappedRotations[transform];
 			} else {
-				// Translate the selected object in reference coordinate system.
+				// Move the object in the reference coordinate system.
 				Vector3 worldTranslation = reference.TransformPoint(SpaceNavigator.Translation) -
 										   reference.position;
-				transform.Translate(worldTranslation, Space.World);
-
-				// Calculate the rotation in the reference coordinate system.
+				_unsnappedTranslations[transform] += worldTranslation;
 				_unsnappedRotations[transform] = SpaceNavigator.RotationInLocalCoordSys(reference) * _unsnappedRotations[transform];
 			}
 
 			// Perform rotation with or without snapping.
 			transform.rotation = _snapRotation ? SnapRotation(_unsnappedRotations[transform], SnapAngle) : _unsnappedRotations[transform];
+			transform.position = _snapTranslation ? SnapTranslation(_unsnappedTranslations[transform], SnapDistance) : _unsnappedTranslations[transform];
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
@@ -255,14 +248,14 @@ public class SpaceNavigatorWindow : EditorWindow {
 		}
 		GUILayout.EndHorizontal();
 
-		//GUILayout.BeginHorizontal();
-		//_snapTranslation = GUILayout.Toggle(_snapTranslation, "Distance snapping");
-		//string distanceText = GUILayout.TextField(SnapDistance.ToString());
-		//int newSnapDistance;
-		//if (int.TryParse(distanceText, out newSnapDistance)) {
-		//	SnapDistance = newSnapDistance;
-		//}
-		//GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		_snapTranslation = GUILayout.Toggle(_snapTranslation, "Distance snapping");
+		string distanceText = GUILayout.TextField(SnapDistance.ToString());
+		int newSnapDistance;
+		if (int.TryParse(distanceText, out newSnapDistance)) {
+			SnapDistance = newSnapDistance;
+		}
+		GUILayout.EndHorizontal();
 
 		SpaceNavigator.Instance.OnGUI();
 
@@ -294,7 +287,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	#endregion - Snapping -
 
 	#region - Quaternion helpers -
-	// Found this code online: http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
+	// Math by Minahito: http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 	float Pitch(Quaternion q) {
 		return Mathf.Atan2(2 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
 	}
