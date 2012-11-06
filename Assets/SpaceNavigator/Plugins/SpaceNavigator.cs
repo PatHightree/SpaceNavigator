@@ -22,7 +22,7 @@ public class SpaceNavigator : IDisposable {
 					LockTranslationX || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.X,
 					LockTranslationY || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.Y,
 					LockTranslationZ || LockTranslationAll ? 0 : -(float)Instance._sensor.Translation.Z) *
-					Instance.TranslationSensitivity * TranslationSensitivityScale);
+					Instance.TransSens * TransSensScale);
 #endif
 		}
 	}
@@ -37,7 +37,7 @@ public class SpaceNavigator : IDisposable {
 			return (Instance._sensor == null ?
 				Quaternion.identity :
 				Quaternion.AngleAxis(
-					(float)Instance._sensor.Rotation.Angle * Instance.RotationSensitivity * RotationSensitivityScale,
+					(float)Instance._sensor.Rotation.Angle * Instance.RotSens * RotSensScale,
 					new Vector3(
 						LockRotationX || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.X,
 						LockRotationY || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.Y,
@@ -56,17 +56,20 @@ public class SpaceNavigator : IDisposable {
 	private Device _device;
 	private Keyboard _keyboard;
 
-	// Settings
-	public float TranslationSensitivity;
-	public float RotationSensitivity;
-
-	// Setting defaults
-	public const float TranslationSensitivityScale = 0.001f, RotationSensitivityScale = 0.05f;
-	public const float TranslationSensitivityDefault = 1f, RotationSensitivityDefault = 1;
+	// Sensitivity settings
+	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
+	public const float TransSensDefault = 1f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 5f;
+	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
+	public float TransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
+	public float RotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
 
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
+	private const string TransSensMinKey = "Translation sensitivity minimum";
+	private const string TransSensMaxKey = "Translation sensitivity maximum";
 	private const string RotSensKey = "Rotation sensitivity";
+	private const string RotSensMinKey = "Rotation sensitivity minimum";
+	private const string RotSensMaxKey = "Rotation sensitivity maximum";
 
 #if USE_FAKE_INPUT
 	// For development without SpaceNavigator.
@@ -145,20 +148,38 @@ public class SpaceNavigator : IDisposable {
 		GUILayout.Label("Sensitivity");
 		GUILayout.Space(4);
 
+		string input;
+		float newValue;
+
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Translation\t {0:0.00000}", TranslationSensitivity));
-		TranslationSensitivity = GUILayout.HorizontalSlider(TranslationSensitivity, 0.001f, 5f);
+		GUILayout.Label(String.Format("Translation\t {0:0.00000}", TransSens));
+		#region Textfield minimum
+		input = GUILayout.TextField(TransSensMin.ToString());
+		if (float.TryParse(input, out newValue))
+			TransSensMin = newValue;
+		#endregion Textfield minimum
+		TransSens = GUILayout.HorizontalSlider(TransSens, TransSensMin, TransSensMax);
+		#region Textfield maximum
+		input = GUILayout.TextField(TransSensMax.ToString());
+		if (float.TryParse(input, out newValue))
+			TransSensMax = newValue;
+		#endregion Textfield maximum
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Rotation\t\t {0:0.00000}", RotationSensitivity));
-		RotationSensitivity = GUILayout.HorizontalSlider(RotationSensitivity, 0.001f, 5f);
+		GUILayout.Label(String.Format("Rotation\t\t {0:0.00000}", RotSens));
+		#region Textfield minimum
+		input = GUILayout.TextField(RotSensMin.ToString());
+		if (float.TryParse(input, out newValue))
+			RotSensMin = newValue;
+		#endregion Textfield minimum
+		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, 5f);
+		#region Textfield maximum
+		input = GUILayout.TextField(RotSensMax.ToString());
+		if (float.TryParse(input, out newValue))
+			RotSensMax = newValue;
+		#endregion Textfield maximum
 		GUILayout.EndHorizontal();
-
-		if (GUILayout.Button("Reset")) {
-			TranslationSensitivity = 1;
-			RotationSensitivity = 1;
-		}
 
 #if USE_FAKE_INPUT
 		GUILayout.Space(10);
@@ -207,15 +228,25 @@ public class SpaceNavigator : IDisposable {
 	/// Reads the settings.
 	/// </summary>
 	public void ReadSettings() {
-		TranslationSensitivity = PlayerPrefs.GetFloat(TransSensKey, TranslationSensitivityDefault);
-		RotationSensitivity = PlayerPrefs.GetFloat(RotSensKey, RotationSensitivityDefault);
+		TransSens = PlayerPrefs.GetFloat(TransSensKey, TransSensDefault);
+		TransSensMin = PlayerPrefs.GetFloat(TransSensMinKey, TransSensMinDefault);
+		TransSensMax = PlayerPrefs.GetFloat(TransSensMaxKey, TransSensMaxDefault);
+
+		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
+		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
+		RotSensMax = PlayerPrefs.GetFloat(RotSensMaxKey, RotSensMaxDefault);
 	}
 	/// <summary>
 	/// Writes the settings.
 	/// </summary>
 	public void WriteSettings() {
-		PlayerPrefs.SetFloat(TransSensKey, TranslationSensitivity);
-		PlayerPrefs.SetFloat(RotSensKey, RotationSensitivity);
+		PlayerPrefs.SetFloat(TransSensKey, TransSens);
+		PlayerPrefs.SetFloat(TransSensMinKey, TransSensMin);
+		PlayerPrefs.SetFloat(TransSensMaxKey, TransSensMax);
+
+		PlayerPrefs.SetFloat(RotSensKey, RotSens);
+		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
+		PlayerPrefs.SetFloat(RotSensMaxKey, RotSensMax);
 	}
 	#endregion - Settings -
 }
