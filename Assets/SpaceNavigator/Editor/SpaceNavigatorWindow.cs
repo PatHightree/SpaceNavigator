@@ -54,12 +54,12 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	public void ReadSettings() {
-		NavigationMode = (OperationMode)EditorPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
+		NavigationMode = (OperationMode)PlayerPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
 
 		SpaceNavigator.Instance.ReadSettings();
 	}
 	private void WriteSettings() {
-		EditorPrefs.SetInt(ModeKey, (int)NavigationMode);
+		PlayerPrefs.SetInt(ModeKey, (int)NavigationMode);
 
 		SpaceNavigator.Instance.WriteSettings();
 	}

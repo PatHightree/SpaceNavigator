@@ -207,15 +207,15 @@ public class SpaceNavigator : IDisposable {
 	/// Reads the settings.
 	/// </summary>
 	public void ReadSettings() {
-		TranslationSensitivity = EditorPrefs.GetFloat(TransSensKey, TranslationSensitivityDefault);
-		RotationSensitivity = EditorPrefs.GetFloat(RotSensKey, RotationSensitivityDefault);
+		TranslationSensitivity = PlayerPrefs.GetFloat(TransSensKey, TranslationSensitivityDefault);
+		RotationSensitivity = PlayerPrefs.GetFloat(RotSensKey, RotationSensitivityDefault);
 	}
 	/// <summary>
 	/// Writes the settings.
 	/// </summary>
 	public void WriteSettings() {
-		EditorPrefs.SetFloat(TransSensKey, TranslationSensitivity);
-		EditorPrefs.SetFloat(RotSensKey, RotationSensitivity);
+		PlayerPrefs.SetFloat(TransSensKey, TranslationSensitivity);
+		PlayerPrefs.SetFloat(RotSensKey, RotationSensitivity);
 	}
 	#endregion - Settings -
 }
