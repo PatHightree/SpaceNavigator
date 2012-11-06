@@ -44,16 +44,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 		InitCameraRig();
 		StoreSelection();
 	}
-	/// <summary>
-	/// Called when window is closed.
-	/// </summary>
-	public void OnDestroy() {
-		WriteSettings();
-		DisposeCameraRig();
-		SpaceNavigator.Instance.Dispose();
-	}
 	public void OnDisable() {
 		WriteSettings();
+		DisposeCameraRig();
 		SpaceNavigator.Instance.Dispose();
 	}
 	public void OnSelectionChange() {
