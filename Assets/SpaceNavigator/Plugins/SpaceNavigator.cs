@@ -3,7 +3,6 @@
 using System;
 using System.Runtime.InteropServices;
 using TDx.TDxInput;
-using UnityEditor;
 using UnityEngine;
 
 public class SpaceNavigator : IDisposable {
@@ -54,11 +53,11 @@ public class SpaceNavigator : IDisposable {
 	// Device variables
 	private Sensor _sensor;
 	private Device _device;
-	private Keyboard _keyboard;
+	//private Keyboard _keyboard;
 
 	// Sensitivity settings
 	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
-	public const float TransSensDefault = 1f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 5f;
+	public const float TransSensDefault = 1f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
 	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
 	public float TransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
 	public float RotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
@@ -87,7 +86,7 @@ public class SpaceNavigator : IDisposable {
 			if (_device == null) {
 				_device = new DeviceClass();
 				_sensor = _device.Sensor;
-				_keyboard = _device.Keyboard;
+				//_keyboard = _device.Keyboard;
 			}
 			if (!_device.IsConnected)
 				_device.Connect();

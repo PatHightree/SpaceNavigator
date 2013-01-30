@@ -17,7 +17,7 @@ PlayerSettings:
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
-  m_RenderingPath: 1
+  m_RenderingPath: 2
   m_ActiveColorSpace: 0
   m_MTRendering: 1
   iosShowActivityIndicatorOnLoading: -1
@@ -81,6 +81,7 @@ PlayerSettings:
   uIStatusBarStyle: 0
   iPhoneSplashScreen: {fileID: 0}
   iPhoneHighResSplashScreen: {fileID: 0}
+  iPhoneTallHighResSplashScreen: {fileID: 0}
   iPadPortraitSplashScreen: {fileID: 0}
   iPadHighResPortraitSplashScreen: {fileID: 0}
   iPadLandscapeSplashScreen: {fileID: 0}
@@ -130,6 +131,7 @@ PlayerSettings:
   ps3BootCheckMaxSaveGameSizeKB: 128
   ps3TrophyCommSig: 
   ps3SaveGameSlots: 1
+  ps3EDATKeyFilePath: 
   ps3TrialMode: 0
   flashStrippingLevel: 2
   firstStreamedLevelWithResources: 0

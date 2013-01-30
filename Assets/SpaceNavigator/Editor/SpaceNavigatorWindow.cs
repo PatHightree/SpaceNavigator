@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEditor;
 
 [Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
-	public enum OperationMode { Navigation, FreeMove, GrabMove }
+	public enum OperationMode { Fly, Telekinesis, GrabMove }
 	public OperationMode NavigationMode;
 	public enum CoordinateSystem { Camera, World, Parent, Local }
 	public static CoordinateSystem CoordSys;
@@ -26,7 +27,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 	// Settings
 	private const string ModeKey = "Navigation mode";
-	public const OperationMode NavigationModeDefault = OperationMode.Navigation;
+	public const OperationMode NavigationModeDefault = OperationMode.Fly;
 
 	/// <summary>
 	/// Initializes the window.
@@ -42,7 +43,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public void OnEnable() {
 		ReadSettings();
 		InitCameraRig();
-		StoreSelection();
+		StoreSelectionTransforms();
 	}
 	public void OnDisable() {
 		WriteSettings();
@@ -50,7 +51,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		SpaceNavigator.Instance.Dispose();
 	}
 	public void OnSelectionChange() {
-		StoreSelection();
+		StoreSelectionTransforms();
 	}
 
 	public void ReadSettings() {
@@ -112,10 +113,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 			return;
 	
 		switch (NavigationMode) {
-			case OperationMode.Navigation:
+			case OperationMode.Fly:
 				Navigate(sceneView);
 				break;
-			case OperationMode.FreeMove:
+			case OperationMode.Telekinesis:
 				// Manipulate the object free from the camera.
 				FreeMove(sceneView);
 				break;
@@ -216,37 +217,40 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public void OnGUI() {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Operation mode");
-		string[] buttons = new string[] { "Navigate", "Free move", "Grab move" };
+		string[] buttons = new string[] { "Fly", "Telekinesis", "Grab Move" };
 		NavigationMode = (OperationMode)GUILayout.SelectionGrid((int)NavigationMode, buttons, 3);
 
-		SceneView sceneView = SceneView.lastActiveSceneView;
-		if (GUILayout.Button("Reset camera")) {
-			if (sceneView) {
-				sceneView.pivot = new Vector3(0, 0, 0);
-				sceneView.rotation = Quaternion.identity;
-				sceneView.Repaint();
-			}
-		}
+		//SceneView sceneView = SceneView.lastActiveSceneView;
+		//if (GUILayout.Button("Reset camera")) {
+		//	if (sceneView) {
+		//		sceneView.pivot = new Vector3(0, 0, 0);
+		//		sceneView.rotation = Quaternion.identity;
+		//		sceneView.Repaint();
+		//	}
+		//}
 
 		GUILayout.Label("Coordinate system");
 		buttons = new string[] { "Camera", "World", "Parent", "Local" };
 		CoordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)CoordSys, buttons, 4);
 
+		GUILayout.Space(10);
+		GUILayout.Label("Snapping");
+		GUILayout.Space(4);
 		GUILayout.BeginHorizontal();
-		_snapRotation = GUILayout.Toggle(_snapRotation, "Angle snapping");
-		string angleText = GUILayout.TextField(SnapAngle.ToString());
-		int newSnapAngle;
-		if (int.TryParse(angleText, out newSnapAngle)) {
-			SnapAngle = newSnapAngle;
-		}
-		GUILayout.EndHorizontal();
-
-		GUILayout.BeginHorizontal();
-		_snapTranslation = GUILayout.Toggle(_snapTranslation, "Distance snapping");
+		_snapTranslation = GUILayout.Toggle(_snapTranslation, "Grid snap");
 		string distanceText = GUILayout.TextField(SnapDistance.ToString());
 		int newSnapDistance;
 		if (int.TryParse(distanceText, out newSnapDistance)) {
 			SnapDistance = newSnapDistance;
+		}
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		_snapRotation = GUILayout.Toggle(_snapRotation, "Angle snap");
+		string angleText = GUILayout.TextField(SnapAngle.ToString());
+		int newSnapAngle;
+		if (int.TryParse(angleText, out newSnapAngle)) {
+			SnapAngle = newSnapAngle;
 		}
 		GUILayout.EndHorizontal();
 
@@ -256,7 +260,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 
 	#region - Snapping -
-	public void StoreSelection() {
+	public void StoreSelectionTransforms() {
 		_unsnappedRotations.Clear();
 		_unsnappedTranslations.Clear();
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
@@ -292,3 +296,4 @@ public class SpaceNavigatorWindow : EditorWindow {
 	}
 	#endregion - Quaternion helpers -
 }
+#endif
