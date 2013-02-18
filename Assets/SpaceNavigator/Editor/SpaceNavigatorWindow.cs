@@ -153,9 +153,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// This method keeps the horizon horizontal at all times.
 		// Perform azimuth in world coordinates.
-		_camera.RotateAround(Vector3.up, Yaw(SpaceNavigator.Rotation));
+		_camera.RotateAround(Vector3.up, SpaceNavigator.Rotation.Yaw());
 		// Perform pitch in local coordinates.
-		_camera.RotateAround(_camera.right, Pitch(SpaceNavigator.Rotation));
+		_camera.RotateAround(_camera.right, SpaceNavigator.Rotation.Pitch());
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -208,9 +208,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void GrabMove(SceneView sceneView) {
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
 			// Rotate yaw around world Y axis.
-			transform.RotateAround(_camera.position, Vector3.up, Yaw(SpaceNavigator.Rotation) * Mathf.Rad2Deg);
+			transform.RotateAround(_camera.position, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
 			// Rotate pitch around camera right axis.
-			transform.RotateAround(_camera.position, _camera.right, Pitch(SpaceNavigator.Rotation) * Mathf.Rad2Deg);
+			transform.RotateAround(_camera.position, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
 			// Translate in camera space.
 			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.Translation) -
 										sceneView.camera.transform.position;
@@ -291,18 +291,5 @@ public class SpaceNavigatorWindow : EditorWindow {
 			Mathf.RoundToInt(v.z / snap) * snap);
 	}
 	#endregion - Snapping -
-
-	#region - Quaternion helpers -
-	// Math by Minahito: http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
-	float Pitch(Quaternion q) {
-		return Mathf.Atan2(2 * (q.y * q.z + q.w * q.x), q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
-	}
-	float Yaw(Quaternion q) {
-		return Mathf.Asin(-2 * (q.x * q.z - q.w * q.y));
-	}
-	float Roll(Quaternion q) {
-		return Mathf.Atan2(2 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
-	}
-	#endregion - Quaternion helpers -
 }
 #endif
