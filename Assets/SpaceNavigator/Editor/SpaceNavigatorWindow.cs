@@ -24,6 +24,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public int SnapAngle = 45;
 	private bool _snapTranslation;
 	public float SnapDistance = 0.1f;
+	private bool _wasIdle;
 
 	// Settings
 	private const string ModeKey = "Navigation mode";
@@ -109,9 +110,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// Return if device is idle.
 		if (SpaceNavigator.Translation == Vector3.zero &&
-			SpaceNavigator.Rotation == Quaternion.identity)
+			SpaceNavigator.Rotation == Quaternion.identity) {
+			_wasIdle = true;
 			return;
-	
+		}
+
 		switch (NavigationMode) {
 			case OperationMode.Fly:
 				Navigate(sceneView);
@@ -133,6 +136,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		//	D.log("Button 0 pressed");
 		//if (Keyboard.IsKeyDown(2))
 		//	D.log("Button 1 pressed");
+
+		_wasIdle = false;
 	}
 
 	private void Navigate(SceneView sceneView) {
@@ -158,6 +163,10 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void FreeMove(SceneView sceneView) {
+		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
+		if (_wasIdle)
+			StoreSelectionTransforms();
+
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
 			if (!_unsnappedRotations.ContainsKey(transform)) continue;
 
