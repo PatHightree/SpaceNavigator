@@ -7,9 +7,9 @@ using UnityEditor;
 [Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
 	public enum OperationMode { Fly, Telekinesis, GrabMove }
-	public OperationMode NavigationMode;
+	private OperationMode _operationMode;
 	public enum CoordinateSystem { Camera, World, Parent, Local }
-	public static CoordinateSystem CoordSys;
+	private static CoordinateSystem _coordSys;
 
 	// Rig components
 	[SerializeField]
@@ -21,14 +21,14 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private Dictionary<Transform, Quaternion> _unsnappedRotations = new Dictionary<Transform, Quaternion>();
 	private Dictionary<Transform, Vector3> _unsnappedTranslations = new Dictionary<Transform, Vector3>();
 	private bool _snapRotation;
-	public int SnapAngle = 45;
+	private int _snapAngle = 45;
 	private bool _snapTranslation;
-	public float SnapDistance = 0.1f;
+	private float _snapDistance = 0.1f;
 	private bool _wasIdle;
 
 	// Settings
 	private const string ModeKey = "Navigation mode";
-	public const OperationMode NavigationModeDefault = OperationMode.Fly;
+	private const OperationMode OperationModeDefault = OperationMode.Fly;
 
 	/// <summary>
 	/// Initializes the window.
@@ -55,13 +55,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 		StoreSelectionTransforms();
 	}
 
-	public void ReadSettings() {
-		NavigationMode = (OperationMode)PlayerPrefs.GetInt(ModeKey, (int)NavigationModeDefault);
+	private void ReadSettings() {
+		_operationMode = (OperationMode)PlayerPrefs.GetInt(ModeKey, (int)OperationModeDefault);
 
 		SpaceNavigator.Instance.ReadSettings();
 	}
 	private void WriteSettings() {
-		PlayerPrefs.SetInt(ModeKey, (int)NavigationMode);
+		PlayerPrefs.SetInt(ModeKey, (int)_operationMode);
 
 		SpaceNavigator.Instance.WriteSettings();
 	}
@@ -115,13 +115,13 @@ public class SpaceNavigatorWindow : EditorWindow {
 			return;
 		}
 
-		switch (NavigationMode) {
+		switch (_operationMode) {
 			case OperationMode.Fly:
-				Navigate(sceneView);
+				Fly(sceneView);
 				break;
 			case OperationMode.Telekinesis:
 				// Manipulate the object free from the camera.
-				FreeMove(sceneView);
+				Telekinesis(sceneView);
 				break;
 			case OperationMode.GrabMove:
 				// Manipulate the object together with the camera.
@@ -140,7 +140,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		_wasIdle = false;
 	}
 
-	private void Navigate(SceneView sceneView) {
+	private void Fly(SceneView sceneView) {
 		SyncRigWithScene();
 
 		_camera.Translate(SpaceNavigator.Translation, Space.Self);
@@ -162,7 +162,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.rotation = _pivot.rotation;
 		sceneView.Repaint();
 	}
-	private void FreeMove(SceneView sceneView) {
+	private void Telekinesis(SceneView sceneView) {
 		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 		if (_wasIdle)
 			StoreSelectionTransforms();
@@ -171,7 +171,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 			if (!_unsnappedRotations.ContainsKey(transform)) continue;
 
 			Transform reference;
-			switch (CoordSys) {
+			switch (_coordSys) {
 				case CoordinateSystem.Camera:
 					reference = sceneView.camera.transform;
 					break;
@@ -201,8 +201,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 			}
 
 			// Perform rotation with or without snapping.
-			transform.rotation = _snapRotation ? SnapRotation(_unsnappedRotations[transform], SnapAngle) : _unsnappedRotations[transform];
-			transform.position = _snapTranslation ? SnapTranslation(_unsnappedTranslations[transform], SnapDistance) : _unsnappedTranslations[transform];
+			transform.rotation = _snapRotation ? SnapRotation(_unsnappedRotations[transform], _snapAngle) : _unsnappedRotations[transform];
+			transform.position = _snapTranslation ? SnapTranslation(_unsnappedTranslations[transform], _snapDistance) : _unsnappedTranslations[transform];
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
@@ -217,7 +217,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 			transform.Translate(worldTranslation, Space.World);
 		}
 
-		Navigate(sceneView);
+		Fly(sceneView);
 	}
 
 	/// <summary>
@@ -227,7 +227,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Operation mode");
 		string[] buttons = new string[] { "Fly", "Telekinesis", "Grab Move" };
-		NavigationMode = (OperationMode)GUILayout.SelectionGrid((int)NavigationMode, buttons, 3);
+		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, buttons, 3);
 
 		//SceneView sceneView = SceneView.lastActiveSceneView;
 		//if (GUILayout.Button("Reset camera")) {
@@ -240,26 +240,26 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		GUILayout.Label("Coordinate system");
 		buttons = new string[] { "Camera", "World", "Parent", "Local" };
-		CoordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)CoordSys, buttons, 4);
+		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, buttons, 4);
 
 		GUILayout.Space(10);
 		GUILayout.Label("Snapping");
 		GUILayout.Space(4);
 		GUILayout.BeginHorizontal();
 		_snapTranslation = GUILayout.Toggle(_snapTranslation, "Grid snap");
-		string distanceText = GUILayout.TextField(SnapDistance.ToString());
+		string distanceText = GUILayout.TextField(_snapDistance.ToString());
 		int newSnapDistance;
 		if (int.TryParse(distanceText, out newSnapDistance)) {
-			SnapDistance = newSnapDistance;
+			_snapDistance = newSnapDistance;
 		}
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 		_snapRotation = GUILayout.Toggle(_snapRotation, "Angle snap");
-		string angleText = GUILayout.TextField(SnapAngle.ToString());
+		string angleText = GUILayout.TextField(_snapAngle.ToString());
 		int newSnapAngle;
 		if (int.TryParse(angleText, out newSnapAngle)) {
-			SnapAngle = newSnapAngle;
+			_snapAngle = newSnapAngle;
 		}
 		GUILayout.EndHorizontal();
 
