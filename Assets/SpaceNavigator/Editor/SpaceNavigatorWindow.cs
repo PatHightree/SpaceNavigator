@@ -229,15 +229,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 		string[] buttons = new string[] { "Fly", "Telekinesis", "Grab Move" };
 		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, buttons, 3);
 
-		//SceneView sceneView = SceneView.lastActiveSceneView;
-		//if (GUILayout.Button("Reset camera")) {
-		//	if (sceneView) {
-		//		sceneView.pivot = new Vector3(0, 0, 0);
-		//		sceneView.rotation = Quaternion.identity;
-		//		sceneView.Repaint();
-		//	}
-		//}
-
 		GUILayout.Label("Coordinate system");
 		buttons = new string[] { "Camera", "World", "Parent", "Local" };
 		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, buttons, 4);
