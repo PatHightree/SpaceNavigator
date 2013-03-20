@@ -33,7 +33,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// <summary>
 	/// Initializes the window.
 	/// </summary>
-	[MenuItem("Window/Space Navigator &s")]
+	[MenuItem("Window/SpaceNavigator &s")]
 	public static void Init() {
 		SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 
@@ -226,12 +226,18 @@ public class SpaceNavigatorWindow : EditorWindow {
 	public void OnGUI() {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Operation mode");
-		string[] buttons = new string[] { "Fly", "Telekinesis", "Grab Move" };
-		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, buttons, 3);
+		GUIContent[] modes = new GUIContent[] {
+			new GUIContent("Fly", "Where do you want to fly today?"),
+			new GUIContent("Telekinesis", "Watch where you're levitating that piano!"),
+			new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
+		};
+		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 3);
 
+		// Disable the coordsys and constraint controls in Fly mode.
+		GUI.enabled = _operationMode != OperationMode.Fly;
 		GUILayout.Label("Coordinate system");
-		buttons = new string[] { "Camera", "World", "Parent", "Local" };
-		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, buttons, 4);
+		string[] coordSystems = new string[] { "Camera", "World", "Parent", "Local" };
+		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, coordSystems, 4);
 
 		GUILayout.Space(10);
 		GUILayout.Label("Snapping");
@@ -253,6 +259,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 			_snapAngle = newSnapAngle;
 		}
 		GUILayout.EndHorizontal();
+
+		// Re-enable gui.
+		GUI.enabled = true;
 
 		SpaceNavigator.Instance.OnGUI();
 
