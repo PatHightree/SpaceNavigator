@@ -1,48 +1,13 @@
-﻿//#define USE_FAKE_INPUT
-
-using System;
-using System.Runtime.InteropServices;
-using TDx.TDxInput;
+﻿using System;
 using UnityEngine;
 
-public class SpaceNavigator : IDisposable {
+public abstract class SpaceNavigator : IDisposable {
 	// Public API
 	public static Vector3 Translation {
-		get {
-#if USE_FAKE_INPUT
-			return new Vector3(
-				LockTranslationX || LockTranslationAll ? 0 : Instance._fakeTranslationInput.x,
-				LockTranslationY || LockTranslationAll ? 0 : Instance._fakeTranslationInput.y,
-				LockTranslationZ || LockTranslationAll ? 0 : Instance._fakeTranslationInput.z);
-#else
-			return (Instance._sensor == null ?
-				Vector3.zero :
-				new Vector3(
-					LockTranslationX || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.X,
-					LockTranslationY || LockTranslationAll ? 0 : (float)Instance._sensor.Translation.Y,
-					LockTranslationZ || LockTranslationAll ? 0 : -(float)Instance._sensor.Translation.Z) *
-					Instance.TransSens * TransSensScale);
-#endif
-		}
+		get { return Instance.GetTranslation(); }
 	}
 	public static Quaternion Rotation {
-		get {
-#if USE_FAKE_INPUT
-			return Quaternion.Euler(
-				LockRotationX || LockRotationAll ? 0 : Instance._fakeRotationInput.x,
-				LockRotationY || LockRotationAll ? 0 : Instance._fakeRotationInput.y,
-				LockRotationZ || LockRotationAll ? 0 : Instance._fakeRotationInput.z);
-#else
-			return (Instance._sensor == null ?
-				Quaternion.identity :
-				Quaternion.AngleAxis(
-					(float)Instance._sensor.Rotation.Angle * Instance.RotSens * RotSensScale,
-					new Vector3(
-						LockRotationX || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.X,
-						LockRotationY || LockRotationAll ? 0 : -(float)Instance._sensor.Rotation.Y,
-						LockRotationZ || LockRotationAll ? 0 : (float)Instance._sensor.Rotation.Z)));
-#endif
-		}
+		get { return Instance.GetRotation(); }
 	}
 	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
 		return coordSys.rotation * Rotation * Quaternion.Inverse(coordSys.rotation);
@@ -50,14 +15,13 @@ public class SpaceNavigator : IDisposable {
 	public static bool LockTranslationX, LockTranslationY, LockTranslationZ, LockTranslationAll;
 	public static bool LockRotationX, LockRotationY, LockRotationZ, LockRotationAll;
 
-	// Device variables
-	private Sensor _sensor;
-	private Device _device;
-	//private Keyboard _keyboard;
+	// Abstract members
+	public abstract Vector3 GetTranslation();
+	public abstract Quaternion GetRotation();
 
 	// Sensitivity settings
 	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
-	public const float TransSensDefault = 1f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
+	public const float TransSensDefault = 10f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
 	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
 	public float TransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
 	public float RotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
@@ -70,57 +34,35 @@ public class SpaceNavigator : IDisposable {
 	private const string RotSensMinKey = "Rotation sensitivity minimum";
 	private const string RotSensMaxKey = "Rotation sensitivity maximum";
 
-#if USE_FAKE_INPUT
-	// For development without SpaceNavigator.
-	private Vector3 _fakeRotationInput;
-	private Vector3 _fakeTranslationInput;
-	private const float FakeInputThreshold = 0.1f;
-#endif
-
 	#region - Singleton -
-	/// <summary>
-	/// Private constructor, prevents a default instance of the <see cref="SpaceNavigator" /> class from being created.
-	/// </summary>
-	private SpaceNavigator() {
-		try {
-			if (_device == null) {
-				_device = new DeviceClass();
-				_sensor = _device.Sensor;
-				//_keyboard = _device.Keyboard;
-			}
-			if (!_device.IsConnected)
-				_device.Connect();
-		}
-		catch (COMException ex) {
-			Debug.LogError(ex.ToString());
-		}
-	}
-
 	public static SpaceNavigator Instance {
-		get { return _instance ?? (_instance = new SpaceNavigator()); }
+		get {
+			if (_instance == null) {
+				switch (Application.platform) {
+					case RuntimePlatform.OSXEditor:
+					case RuntimePlatform.OSXPlayer:
+						Debug.LogError("Mac version of the SpaceNavigator driver is not yet implemented, sorry");
+						_instance = SpaceNavigatorNoDevice.SubInstance;
+						break;
+					case RuntimePlatform.WindowsEditor:
+					case RuntimePlatform.WindowsPlayer:
+						_instance = SpaceNavigatorWindows.SubInstance;
+						break;
+				}
+			}
+
+			return _instance;
+		}
+		set { _instance = value; }
 	}
 	private static SpaceNavigator _instance;
-	public static bool HasInstance {
-		get { return _instance != null; }
-	}
-	#endregion - Singleton stuff -
+	#endregion - Singleton -
 
 	#region - IDisposable -
-	public void Dispose() {
-		try {
-			if (_device != null && _device.IsConnected) {
-				_device.Disconnect();
-				_instance = null;
-				GC.Collect();
-			}
-		}
-		catch (COMException ex) {
-			Debug.LogError(ex.ToString());
-		}
-	}
+	public abstract void Dispose();
 	#endregion - IDisposable -
 
-	public void OnGUI() {
+	public virtual void OnGUI() {
 		GUILayout.Space(10);
 		GUILayout.Label("Lock");
 		GUILayout.Space(4);
@@ -179,47 +121,6 @@ public class SpaceNavigator : IDisposable {
 			RotSensMax = newValue;
 		#endregion Textfield maximum
 		GUILayout.EndHorizontal();
-
-#if USE_FAKE_INPUT
-		GUILayout.Space(10);
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake rotation x {0:0.00000}", _fakeRotationInput.x));
-		_fakeRotationInput.x = GUILayout.HorizontalSlider(_fakeRotationInput.x, -1, 1);
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake rotation y {0:0.00000}", _fakeRotationInput.y));
-		_fakeRotationInput.y = GUILayout.HorizontalSlider(_fakeRotationInput.y, -1, 1);
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake rotation z {0:0.00000}", _fakeRotationInput.z));
-		_fakeRotationInput.z = GUILayout.HorizontalSlider(_fakeRotationInput.z, -1, 1);
-		GUILayout.EndHorizontal();
-
-		GUILayout.Space(5);
-
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake translation x {0:0.00000}", _fakeTranslationInput.x));
-		_fakeTranslationInput.x = GUILayout.HorizontalSlider(_fakeTranslationInput.x, -0.05f, 0.05f);
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake translation y {0:0.00000}", _fakeTranslationInput.y));
-		_fakeTranslationInput.y = GUILayout.HorizontalSlider(_fakeTranslationInput.y, -0.05f, 0.05f);
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Fake translation z {0:0.00000}", _fakeTranslationInput.z));
-		_fakeTranslationInput.z = GUILayout.HorizontalSlider(_fakeTranslationInput.z, -0.05f, 0.05f);
-		GUILayout.EndHorizontal();
-
-		if (GUILayout.Button("Stop")) {
-			_fakeRotationInput = Vector2.zero;
-			_fakeTranslationInput = Vector3.zero;
-		}
-
-		if (Mathf.Abs(_fakeRotationInput.x) < FakeInputThreshold)
-			_fakeRotationInput.x = 0;
-		if (Mathf.Abs(_fakeRotationInput.y) < FakeInputThreshold)
-			_fakeRotationInput.y = 0;
-#endif
 	}
 
 	#region - Settings -
