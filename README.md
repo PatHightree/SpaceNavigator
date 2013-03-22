@@ -20,9 +20,9 @@ I've prepared the code to make this as painless as possible.
 
 The goods
 ---------
-[SpaceNavigator.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator_2013-03-13.unitypackage)
-[SpaceNavigator+DemoScene.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator+demoscene_2013-03-13.unitypackage)
-Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
+- [SpaceNavigator.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator_2013-03-13.unitypackage)
+- [SpaceNavigator+DemoScene.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator+demoscene_2013-03-13.unitypackage)
+- Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
 
 Installation
 ------------
