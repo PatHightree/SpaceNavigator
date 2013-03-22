@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class SpaceNavigator : IDisposable {
@@ -89,37 +90,20 @@ public abstract class SpaceNavigator : IDisposable {
 		GUILayout.Label("Sensitivity");
 		GUILayout.Space(4);
 
-		string input;
-		float newValue;
-
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Translation\t {0:0.00000}", TransSens));
-		#region Textfield minimum
-		input = GUILayout.TextField(TransSensMin.ToString());
-		if (float.TryParse(input, out newValue))
-			TransSensMin = newValue;
-		#endregion Textfield minimum
+		GUILayout.Label("Translation", GUILayout.Width(75));
+		TransSens = EditorGUILayout.FloatField(TransSens, GUILayout.Width(25));
+		TransSensMin = EditorGUILayout.FloatField(TransSensMin, GUILayout.Width(25));
 		TransSens = GUILayout.HorizontalSlider(TransSens, TransSensMin, TransSensMax);
-		#region Textfield maximum
-		input = GUILayout.TextField(TransSensMax.ToString());
-		if (float.TryParse(input, out newValue))
-			TransSensMax = newValue;
-		#endregion Textfield maximum
+		TransSensMax = EditorGUILayout.FloatField(TransSensMax, GUILayout.Width(25));
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label(String.Format("Rotation\t\t {0:0.00000}", RotSens));
-		#region Textfield minimum
-		input = GUILayout.TextField(RotSensMin.ToString());
-		if (float.TryParse(input, out newValue))
-			RotSensMin = newValue;
-		#endregion Textfield minimum
-		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, 5f);
-		#region Textfield maximum
-		input = GUILayout.TextField(RotSensMax.ToString());
-		if (float.TryParse(input, out newValue))
-			RotSensMax = newValue;
-		#endregion Textfield maximum
+		GUILayout.Label("Rotation", GUILayout.Width(75));
+		RotSens = EditorGUILayout.FloatField(RotSens, GUILayout.Width(25));
+		RotSensMin = EditorGUILayout.FloatField(RotSensMin, GUILayout.Width(25));
+		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
+		RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(25));
 		GUILayout.EndHorizontal();
 	}
 
