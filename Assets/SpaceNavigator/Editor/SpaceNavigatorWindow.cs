@@ -233,8 +233,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		};
 		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 3);
 
-		// Disable the coordsys and constraint controls in Fly mode.
-		GUI.enabled = _operationMode != OperationMode.Fly;
+		// Enable the coordsys only in Telekinesis mode.
+		GUI.enabled = _operationMode == OperationMode.Telekinesis;
 		GUILayout.Label("Coordinate system");
 		string[] coordSystems = new string[] { "Camera", "World", "Parent", "Local" };
 		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, coordSystems, 4);
@@ -244,20 +244,12 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.Space(4);
 		GUILayout.BeginHorizontal();
 		_snapTranslation = GUILayout.Toggle(_snapTranslation, "Grid snap");
-		string distanceText = GUILayout.TextField(_snapDistance.ToString());
-		int newSnapDistance;
-		if (int.TryParse(distanceText, out newSnapDistance)) {
-			_snapDistance = newSnapDistance;
-		}
+		_snapDistance = EditorGUILayout.FloatField(_snapDistance);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 		_snapRotation = GUILayout.Toggle(_snapRotation, "Angle snap");
-		string angleText = GUILayout.TextField(_snapAngle.ToString());
-		int newSnapAngle;
-		if (int.TryParse(angleText, out newSnapAngle)) {
-			_snapAngle = newSnapAngle;
-		}
+		_snapAngle = EditorGUILayout.IntField(_snapAngle);
 		GUILayout.EndHorizontal();
 
 		// Re-enable gui.
