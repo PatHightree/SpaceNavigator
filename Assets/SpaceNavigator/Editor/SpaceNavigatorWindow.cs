@@ -206,17 +206,37 @@ public class SpaceNavigatorWindow : EditorWindow {
 		}
 	}
 	private void GrabMove(SceneView sceneView) {
+		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
+		if (_wasIdle)
+			StoreSelectionTransforms();
+
 		foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable)) {
-			// Rotate yaw around world Y axis.
+			if (!_unsnappedRotations.ContainsKey(transform)) continue;
+
+			// Initialize transform to unsnapped state.
+			transform.rotation = _unsnappedRotations[transform];
+			transform.position = _unsnappedTranslations[transform];
+			Vector3 oldPos = transform.position;
+
+			// Rotate with horizon lock.
 			transform.RotateAround(_camera.position, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
-			// Rotate pitch around camera right axis.
 			transform.RotateAround(_camera.position, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
-			// Translate in camera space.
+
+			// Interpret SpaceNavigator input in camera space, calculate the effect in world space.
 			Vector3 worldTranslation = sceneView.camera.transform.TransformPoint(SpaceNavigator.Translation) -
 										sceneView.camera.transform.position;
-			transform.Translate(worldTranslation, Space.World);
+			transform.position += worldTranslation;
+
+			// Store new unsnapped state.
+			_unsnappedRotations[transform] = transform.rotation;
+			_unsnappedTranslations[transform] += transform.position - oldPos;	// The rotation also added translation, so calculate the translation delta.
+
+			// Perform snapping.
+			transform.position = _snapTranslation ? SnapTranslation(_unsnappedTranslations[transform], _snapDistance) : _unsnappedTranslations[transform];
+			transform.rotation = _snapRotation ? SnapRotation(_unsnappedRotations[transform], _snapAngle) : _unsnappedRotations[transform];
 		}
 
+		// Move the scene camera.
 		Fly(sceneView);
 	}
 
@@ -239,6 +259,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		string[] coordSystems = new string[] { "Camera", "World", "Parent", "Local" };
 		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, coordSystems, 4);
 
+		// Disable the constraint controls in Fly mode.
+		GUI.enabled = _operationMode != OperationMode.Fly;
 		GUILayout.Space(10);
 		GUILayout.Label("Snapping");
 		GUILayout.Space(4);
