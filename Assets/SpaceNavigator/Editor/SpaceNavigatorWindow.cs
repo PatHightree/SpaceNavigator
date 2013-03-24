@@ -105,6 +105,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// This is called 100x per second (if the window content is visible).
 	/// </summary>
 	public void Update() {
+		// This function should only operate while editing.
+		if (Application.isPlaying) return;
+
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
 
