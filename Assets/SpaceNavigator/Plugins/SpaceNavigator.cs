@@ -1,6 +1,8 @@
 ﻿using System;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public abstract class SpaceNavigator : IDisposable {
 	// Public API
@@ -64,6 +66,7 @@ public abstract class SpaceNavigator : IDisposable {
 	#endregion - IDisposable -
 
 	public virtual void OnGUI() {
+#if UNITY_EDITOR
 		GUILayout.Space(10);
 		GUILayout.Label("Lock");
 		GUILayout.Space(4);
@@ -105,6 +108,7 @@ public abstract class SpaceNavigator : IDisposable {
 		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
 		RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(25));
 		GUILayout.EndHorizontal();
+#endif
 	}
 
 	#region - Settings -
