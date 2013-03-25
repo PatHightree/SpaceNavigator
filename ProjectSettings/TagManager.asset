@@ -4,6 +4,7 @@
 TagManager:
   tags:
   - Torus controller
+  - Torus look at target
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

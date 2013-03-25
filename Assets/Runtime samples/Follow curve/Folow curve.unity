@@ -294,7 +294,7 @@ GameObject:
   - 138: {fileID: 253356630}
   - 82: {fileID: 253356629}
   m_Layer: 0
-  m_Name: game_Controller
+  m_Name: game_controller
   m_TagString: Torus controller
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -532,6 +532,52 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 1
   m_Mesh: {fileID: 4300008, guid: f5d89f21ea7f3c94887ed48e340759ad, type: 3}
+--- !u!1 &484451068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 484451069}
+  - 132: {fileID: 484451070}
+  m_Layer: 0
+  m_Name: help_text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &484451069
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484451068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!132 &484451070
+GUIText:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 484451068}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Text: Press space to toggle between controlling the ring and orbiting the camera
+  m_Anchor: 1
+  m_Alignment: 0
+  m_PixelOffset: {x: 0, y: 16}
+  m_LineSpacing: 1
+  m_TabSize: 4
+  m_Font: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 6113a5a1cc1aa91419e9b4608167c078, type: 2}
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_PixelCorrect: 1
 --- !u!1 &629862888
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,7 +753,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f5d89f21ea7f3c94887ed48e340759ad, type: 3}
       propertyPath: m_Name
-      value: game_Curve
+      value: game_curve
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f5d89f21ea7f3c94887ed48e340759ad, type: 3}
@@ -726,9 +772,8 @@ GameObject:
   - 92: {fileID: 946653453}
   - 124: {fileID: 946653454}
   - 81: {fileID: 946653452}
-  - 114: {fileID: 946653456}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: game_camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -794,17 +839,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 946653449}
   m_Enabled: 1
---- !u!114 &946653456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 946653449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea6c95f3fcac1f942b6194e20b47c343, type: 1}
-  m_Name: 
-  Target: {fileID: 2140864779}
 --- !u!1 &989892839
 GameObject:
   m_ObjectHideFlags: 0
@@ -816,7 +850,7 @@ GameObject:
   - 111: {fileID: 989892843}
   - 64: {fileID: 989892844}
   m_Layer: 0
-  m_Name: game_Curve
+  m_Name: game_curve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -874,32 +908,6 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 0
   m_Mesh: {fileID: 0}
---- !u!1 &1108424917
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 1108424918}
-  m_Layer: 0
-  m_Name: Camera start
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1108424918
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1108424917}
-  m_LocalRotation: {x: .00784100778, y: -.94705683, z: .0231961273, w: .320131093}
-  m_LocalPosition: {x: .312553644, y: 1.5892868, z: 4.14042377}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
 --- !u!1 &1108734467
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,32 +977,52 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 1
   m_Mesh: {fileID: 4300002, guid: f5d89f21ea7f3c94887ed48e340759ad, type: 3}
---- !u!1 &1119700076
+--- !u!1 &1120107975
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 3
   m_Component:
-  - 4: {fileID: 1119700077}
+  - 4: {fileID: 1120107976}
+  - 131: {fileID: 1120107977}
   m_Layer: 0
-  m_Name: Scene camera pivot dummy
+  m_Name: help_text_background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1119700077
+--- !u!4 &1120107976
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1119700076}
+  m_GameObject: {fileID: 1120107975}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0755988e-08, y: -1.03992388e-08, z: 2.85788465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: .5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 0, z: 1}
   m_Children: []
-  m_Father: {fileID: 1738867823}
+  m_Father: {fileID: 0}
+--- !u!131 &1120107977
+GUITexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1120107975}
+  m_Enabled: 1
+  m_Texture: {fileID: 2800000, guid: 4ae8cf895dbf1364dbfb4148acb84484, type: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: .501960814}
+  m_PixelInset:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 16
+  m_LeftBorder: 0
+  m_RightBorder: 0
+  m_TopBorder: 0
+  m_BottomBorder: 0
 --- !u!1 &1181226493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1035,7 @@ GameObject:
   - 64: {fileID: 1181226497}
   - 23: {fileID: 1181226495}
   m_Layer: 0
-  m_Name: env_Plane
+  m_Name: env_plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1019,7 +1047,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1181226493}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -4.37113883e-08}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
@@ -1077,7 +1105,7 @@ GameObject:
   - 82: {fileID: 1251993243}
   - 114: {fileID: 1251993244}
   m_Layer: 0
-  m_Name: game_Torus
+  m_Name: game_torus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1252,7 +1280,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c957533afa9aa1549b576a76f3c9a6f0, type: 3}
       propertyPath: m_Name
-      value: game_Torus
+      value: game_torus
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11100000, guid: c957533afa9aa1549b576a76f3c9a6f0, type: 3}
@@ -1260,33 +1288,6 @@ Prefab:
   m_RootGameObject: {fileID: 1251993237}
   m_IsPrefabParent: 0
   m_IsExploded: 1
---- !u!1 &1738867822
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 3
-  m_Component:
-  - 4: {fileID: 1738867823}
-  m_Layer: 0
-  m_Name: Scene camera dummy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1738867823
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1738867822}
-  m_LocalRotation: {x: .0830818042, y: -.857473433, z: .146532953, w: .486173719}
-  m_LocalPosition: {x: 4.07874489, y: 2.83576894, z: 3.31414318}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1119700077}
-  m_Father: {fileID: 0}
 --- !u!1 &1827868818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1505,7 +1506,7 @@ GameObject:
   - 114: {fileID: 2140864780}
   m_Layer: 0
   m_Name: game_lookat_target
-  m_TagString: Untagged
+  m_TagString: Torus look at target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

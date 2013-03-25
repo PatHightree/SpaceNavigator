@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour {
 	private Transform _camera;
+	private Transform _LookAtTarget;
 	private bool _isControllingTorus = true;
 
 	public void Awake() {
 		_camera = Camera.mainCamera.transform;
+		_LookAtTarget = GameObject.FindGameObjectWithTag("Torus look at target").transform;
 	}
 
 	public void Update() {
@@ -19,13 +21,13 @@ public class Controller : MonoBehaviour {
 
 			// Move the camera.
 			_camera.Translate(SpaceNavigator.Translation, Space.Self);
+			_camera.LookAt(_LookAtTarget);
 		}
 		else {
-			_camera.transform.Translate(SpaceNavigator.Translation, Space.Self);
 			// Perform azimuth in world coordinates.
-			//_camera.RotateAround(transform.position, Vector3.up, SpaceNavigator.Rotation.Yaw());
+			_camera.RotateAround(transform.position, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
 			// Perform pitch in local coordinates.
-			//_camera.RotateAround(transform.position, _camera.transform.right, SpaceNavigator.Rotation.Pitch());
+			_camera.RotateAround(transform.position, _camera.transform.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
 		}
 	}
 }
