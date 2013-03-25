@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RuntimeAccess : MonoBehaviour {
+public class FlyAround : MonoBehaviour {
 	public bool HorizonLock = true;
 
 	public void Update () {

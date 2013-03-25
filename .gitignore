@@ -40,3 +40,6 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 /Assets/UnityVS
 /Assets/UnityVS.meta
+- NOT included
+
+/Assets/- NOT included.meta
