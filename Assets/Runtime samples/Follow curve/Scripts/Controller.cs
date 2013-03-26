@@ -6,6 +6,9 @@ public class Controller : MonoBehaviour {
 	private bool _isControllingTorus = true;
 
 	public void Awake() {
+		SpaceNavigator.SetTranslationSensitivity(1);
+		SpaceNavigator.SetRotationSensitivity(1);
+
 		_camera = Camera.mainCamera.transform;
 		_LookAtTarget = GameObject.FindGameObjectWithTag("Torus look at target").transform;
 	}

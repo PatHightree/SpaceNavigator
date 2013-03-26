@@ -6,19 +6,21 @@ using UnityEngine;
 class SpaceNavigatorWindows : SpaceNavigator {	
 	// Public API
 	public override Vector3 GetTranslation() {
+		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens;
 		return (SubInstance._sensor == null ?
 			Vector3.zero :
 			new Vector3(
 				LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X,
 				LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y,
 				LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z) *
-				SubInstance.TransSens * TransSensScale);
+				sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 		return (SubInstance._sensor == null ?
 			Quaternion.identity :
 			Quaternion.AngleAxis(
-				(float)SubInstance._sensor.Rotation.Angle * SubInstance.RotSens * RotSensScale,
+				(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
 				new Vector3(
 					LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
 					LockRotationY || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.Y,

@@ -5,7 +5,7 @@ using UnityEditor;
 #endif
 
 public abstract class SpaceNavigator : IDisposable {
-	// Public API
+	// Public runtime API
 	public static Vector3 Translation {
 		get { return Instance.GetTranslation(); }
 	}
@@ -14,6 +14,12 @@ public abstract class SpaceNavigator : IDisposable {
 	}
 	public static Quaternion RotationInLocalCoordSys(Transform coordSys) {
 		return coordSys.rotation * Rotation * Quaternion.Inverse(coordSys.rotation);
+	}
+	public static void SetTranslationSensitivity(float newPlayTransSens) {
+		Instance.PlayTransSens = newPlayTransSens;
+	}
+	public static void SetRotationSensitivity(float newPlayRotSens) {
+		Instance.PlayRotSens = newPlayRotSens;
 	}
 	public static bool LockTranslationX, LockTranslationY, LockTranslationZ, LockTranslationAll;
 	public static bool LockRotationX, LockRotationY, LockRotationZ, LockRotationAll;
@@ -26,8 +32,8 @@ public abstract class SpaceNavigator : IDisposable {
 	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
 	public const float TransSensDefault = 10f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
 	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
-	public float TransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
-	public float RotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
+	public float TransSens = TransSensDefault, PlayTransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
+	public float RotSens = RotSensDefault, PlayRotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
 
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";

@@ -9,16 +9,18 @@ class SpaceNavigatorNoDevice : SpaceNavigator {
 
 	// Public API
 	public override Vector3 GetTranslation() {
+		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens;
 		return new Vector3(
-			LockTranslationX || LockTranslationAll ? 0 : _fakeTranslationInput.x,
-			LockTranslationY || LockTranslationAll ? 0 : _fakeTranslationInput.y,
-			LockTranslationZ || LockTranslationAll ? 0 : _fakeTranslationInput.z);
+			LockTranslationX || LockTranslationAll ? 0 : _fakeTranslationInput.x * sensitivity,
+			LockTranslationY || LockTranslationAll ? 0 : _fakeTranslationInput.y * sensitivity,
+			LockTranslationZ || LockTranslationAll ? 0 : _fakeTranslationInput.z * sensitivity);
 	}
 	public override Quaternion GetRotation() {
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 		return Quaternion.Euler(
-			LockRotationX || LockRotationAll ? 0 : _fakeRotationInput.x,
-			LockRotationY || LockRotationAll ? 0 : _fakeRotationInput.y,
-			LockRotationZ || LockRotationAll ? 0 : _fakeRotationInput.z);
+			LockRotationX || LockRotationAll ? 0 : _fakeRotationInput.x * sensitivity,
+			LockRotationY || LockRotationAll ? 0 : _fakeRotationInput.y * sensitivity,
+			LockRotationZ || LockRotationAll ? 0 : _fakeRotationInput.z * sensitivity);
 	}
 
 	#region - Singleton -
