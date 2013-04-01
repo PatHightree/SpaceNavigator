@@ -47,6 +47,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 		StoreSelectionTransforms();
 	}
 	public void OnDisable() {
+		// This avoids unwanted disposing when playing with "Maximize on Play" enabled on the Game View.
+		if (Application.isPlaying) return;
+
 		WriteSettings();
 		DisposeCameraRig();
 		SpaceNavigator.Instance.Dispose();
