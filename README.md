@@ -1,6 +1,4 @@
-SpaceNavigator
-==============
-
+#SpaceNavigator
 SpaceNavigator driver for Unity3D
 
 This driver lets you fly around your scene and allows you to move stuff around.  
@@ -14,22 +12,33 @@ In **Telekinesis** mode, you can move the stuff you selected with the SpaceNavig
 In **GrabMove** mode the stuff will be linked to your camera so you can take it with you and position it where you want.  
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
+##Platform support
+The driver supports Unity 3 and 4, both Indie and Pro versions.  
 At the moment it is windows-only, but the code is right [here](https://github.com/PatHightree/SpaceNavigator). 
 Who knows, somebody with a mac might just step in and code the mac implementation. 
-I've prepared the code to make this as painless as possible.  
+I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
 
-The goods
----------
-- [SpaceNavigator.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator.unitypackage)
-- [SpaceNavigator+DemoScene.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator+demoscene.unitypackage)
+##The goods
+- [SpaceNavigator+DemoScenes.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator+demoscenes.unitypackage) import this package into an empty project and play around.
+  - Fly around.unity: Fly around with everybody's favorite cube while knocking over turrets.
+  - Folow curve.unity: Make your torus follow the curve, but don't touch it!
+- [SpaceNavigator.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator.unitypackage) import this package into your project and get to work.
 - Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
 
-Installation
-------------
+##Known bugs and limitations
+- No mac support
+- Grab Mode only works in the camera coordinate system (sorry, I couldn't get my head around the quaternion math of manipulating in one coordinate system while constraining in another)
+
+##Installation
 - Install [3DConnexion driver](http://www.3dconnexion.com/service/drivers.html) and make sure it is running
 - Import the unitypackage into your project
 - Open the SpaceNavigator window from the pull-down menu Window/SpaceNavigator (or hit Alt-S)
 - Fly away
+
+### Pro tip
+Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directory.  
+- SpaceNavigator is added to the packages list in the project creation in wizard.  
+- Easy to add later by right-clicking in *Project View* and choosing *Import Package*.  
 
 Credits
 -------
@@ -37,3 +46,5 @@ Credits
 http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 - Test card texture
 http://triangularpixels.net/games/development/2009/07/10/digital-test-cards-for-games/
+- Companion cube http://www.turbosquid.com/3d-models/free-aperture-companion-cube-3d-model/717149
+- Turret http://www.turbosquid.com/3d-models/free-fbx-model-portal-turret/615494
