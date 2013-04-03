@@ -108,9 +108,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// This is called 100x per second (if the window content is visible).
 	/// </summary>
 	public void Update() {
-		SpaceNavigator.IsLockingAllowed =
-			!Application.isPlaying &&				// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-			_operationMode != OperationMode.Fly;	// Fly mode should not be impaired by locked axes.
+		// Fly mode should not be impaired by locked axes.
+		SpaceNavigator.IsLockingAllowed = _operationMode != OperationMode.Fly;
 
 		// This function should only operate while editing.
 		if (Application.isPlaying) return;
