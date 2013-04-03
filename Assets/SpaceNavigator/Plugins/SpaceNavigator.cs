@@ -21,8 +21,52 @@ public abstract class SpaceNavigator : IDisposable {
 	public static void SetRotationSensitivity(float newPlayRotSens) {
 		Instance.PlayRotSens = newPlayRotSens;
 	}
-	public static bool LockTranslationX, LockTranslationY, LockTranslationZ, LockTranslationAll;
-	public static bool LockRotationX, LockRotationY, LockRotationZ, LockRotationAll;
+
+	/// <summary>
+	/// Locking can be disabled by the SpaceNavigatorWindow;
+	/// </summary>
+	public static bool IsLockingAllowed = true;
+	public static bool LockTranslationX {
+		get { return _lockTranslationX && IsLockingAllowed; }
+		set { _lockTranslationX = value; }
+	}
+	public static bool LockTranslationY {
+		get { return _lockTranslationY && IsLockingAllowed; }
+		set { _lockTranslationY = value; }
+	}
+	public static bool LockTranslationZ {
+		get { return _lockTranslationZ && IsLockingAllowed; }
+		set { _lockTranslationZ = value; }
+	}
+	public static bool LockTranslationAll {
+		get { return _lockTranslationAll && IsLockingAllowed; }
+		set { _lockTranslationAll = value; }
+	}
+	public static bool LockRotationX {
+		get { return _lockRotationX && IsLockingAllowed; }
+		set { _lockRotationX = value; }
+	}
+	public static bool LockRotationY {
+		get { return _lockRotationY && IsLockingAllowed; }
+		set { _lockRotationY = value; }
+	}
+	public static bool LockRotationZ {
+		get { return _lockRotationZ && IsLockingAllowed; }
+		set { _lockRotationZ = value; }
+	}
+	public static bool LockRotationAll {
+		get { return _lockRotationAll && IsLockingAllowed; }
+		set { _lockRotationAll = value; }
+	}
+
+	private static bool _lockTranslationX;
+	private static bool _lockTranslationY;
+	private static bool _lockTranslationZ;
+	private static bool _lockTranslationAll;
+	private static bool _lockRotationX;
+	private static bool _lockRotationY;
+	private static bool _lockRotationZ;
+	private static bool _lockRotationAll;
 
 	// Abstract members
 	public abstract Vector3 GetTranslation();
@@ -39,9 +83,18 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string TransSensKey = "Translation sensitivity";
 	private const string TransSensMinKey = "Translation sensitivity minimum";
 	private const string TransSensMaxKey = "Translation sensitivity maximum";
+	private const string LockTranslationAllKey = "Translation lock all";
+	private const string LockTranslationXKey = "Translation lock X";
+	private const string LockTranslationYKey = "Translation lock Y";
+	private const string LockTranslationZKey = "Translation lock Z";
+	
 	private const string RotSensKey = "Rotation sensitivity";
 	private const string RotSensMinKey = "Rotation sensitivity minimum";
 	private const string RotSensMaxKey = "Rotation sensitivity maximum";
+	private const string LockRotationAllKey = "Rotation lock all";
+	private const string LockRotationXKey = "Rotation lock X";
+	private const string LockRotationYKey = "Rotation lock Y";
+	private const string LockRotationZKey = "Rotation lock Z";
 
 	#region - Singleton -
 	public static SpaceNavigator Instance {
@@ -78,20 +131,20 @@ public abstract class SpaceNavigator : IDisposable {
 		GUILayout.Space(4);
 
 		GUILayout.BeginHorizontal();
-		LockTranslationAll = GUILayout.Toggle(LockTranslationAll, "Translation\t");
-		GUI.enabled = !LockTranslationAll;
-		LockTranslationX = GUILayout.Toggle(LockTranslationX, "X");
-		LockTranslationY = GUILayout.Toggle(LockTranslationY, "Y");
-		LockTranslationZ = GUILayout.Toggle(LockTranslationZ, "Z");
+		_lockTranslationAll = GUILayout.Toggle(_lockTranslationAll, "Translation\t");
+		GUI.enabled = !_lockTranslationAll;
+		_lockTranslationX = GUILayout.Toggle(_lockTranslationX, "X");
+		_lockTranslationY = GUILayout.Toggle(_lockTranslationY, "Y");
+		_lockTranslationZ = GUILayout.Toggle(_lockTranslationZ, "Z");
 		GUI.enabled = true;
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		LockRotationAll = GUILayout.Toggle(LockRotationAll, "Rotation\t\t");
-		GUI.enabled = !LockRotationAll;
-		LockRotationX = GUILayout.Toggle(LockRotationX, "X");
-		LockRotationY = GUILayout.Toggle(LockRotationY, "Y");
-		LockRotationZ = GUILayout.Toggle(LockRotationZ, "Z");
+		_lockRotationAll = GUILayout.Toggle(_lockRotationAll, "Rotation\t\t");
+		GUI.enabled = !_lockRotationAll;
+		_lockRotationX = GUILayout.Toggle(_lockRotationX, "X");
+		_lockRotationY = GUILayout.Toggle(_lockRotationY, "Y");
+		_lockRotationZ = GUILayout.Toggle(_lockRotationZ, "Z");
 		GUI.enabled = true;
 		GUILayout.EndHorizontal();
 
@@ -125,10 +178,18 @@ public abstract class SpaceNavigator : IDisposable {
 		TransSens = PlayerPrefs.GetFloat(TransSensKey, TransSensDefault);
 		TransSensMin = PlayerPrefs.GetFloat(TransSensMinKey, TransSensMinDefault);
 		TransSensMax = PlayerPrefs.GetFloat(TransSensMaxKey, TransSensMaxDefault);
+		_lockTranslationAll = PlayerPrefs.GetInt(LockTranslationAllKey, 0) == 1;
+		_lockTranslationX = PlayerPrefs.GetInt(LockTranslationXKey, 0) == 1;
+		_lockTranslationY = PlayerPrefs.GetInt(LockTranslationYKey, 0) == 1;
+		_lockTranslationZ = PlayerPrefs.GetInt(LockTranslationZKey, 0) == 1;
 
 		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
 		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
 		RotSensMax = PlayerPrefs.GetFloat(RotSensMaxKey, RotSensMaxDefault);
+		_lockRotationAll = PlayerPrefs.GetInt(LockRotationAllKey, 0) == 1;
+		_lockRotationX = PlayerPrefs.GetInt(LockRotationXKey, 0) == 1;
+		_lockRotationY = PlayerPrefs.GetInt(LockRotationYKey, 0) == 1;
+		_lockRotationZ = PlayerPrefs.GetInt(LockRotationZKey, 0) == 1;
 	}
 	/// <summary>
 	/// Writes the settings.
@@ -137,10 +198,18 @@ public abstract class SpaceNavigator : IDisposable {
 		PlayerPrefs.SetFloat(TransSensKey, TransSens);
 		PlayerPrefs.SetFloat(TransSensMinKey, TransSensMin);
 		PlayerPrefs.SetFloat(TransSensMaxKey, TransSensMax);
+		PlayerPrefs.SetInt(LockTranslationAllKey, _lockTranslationAll ? 1 : 0);
+		PlayerPrefs.SetInt(LockTranslationXKey, _lockTranslationX ? 1 : 0);
+		PlayerPrefs.SetInt(LockTranslationYKey, _lockTranslationY ? 1 : 0);
+		PlayerPrefs.SetInt(LockTranslationZKey, _lockTranslationZ ? 1 : 0);
 
 		PlayerPrefs.SetFloat(RotSensKey, RotSens);
 		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
 		PlayerPrefs.SetFloat(RotSensMaxKey, RotSensMax);
+		PlayerPrefs.SetInt(LockRotationAllKey, _lockRotationAll ? 1 : 0);
+		PlayerPrefs.SetInt(LockRotationXKey, _lockRotationX ? 1 : 0);
+		PlayerPrefs.SetInt(LockRotationYKey, _lockRotationY ? 1 : 0);
+		PlayerPrefs.SetInt(LockRotationZKey, _lockRotationZ ? 1 : 0);
 	}
 	#endregion - Settings -
 }
