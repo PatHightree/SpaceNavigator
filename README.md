@@ -42,6 +42,7 @@ Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directo
 
 Credits
 -------
+- Big thanks to Dave Buchhoffer (@vsaitoo) for testing and development feedback
 - Quaternion math by Minahito
 http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 - Test card texture
