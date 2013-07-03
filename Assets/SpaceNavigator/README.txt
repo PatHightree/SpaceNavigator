@@ -12,30 +12,30 @@ In GrabMove mode the stuff will be linked to your camera so you can take it with
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
 Platform support
+----------------
 The driver supports Unity 3 and 4, both Indie and Pro versions.  
 At the moment it is windows-only, but the code is right here https://github.com/PatHightree/SpaceNavigator. 
 Who knows, somebody with a mac might just step in and code the mac implementation. 
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
 
 The goods
+---------
 - SpaceNavigator + DemoScenes.unitypackage http://goo.gl/Qd1m3 
   Import this package into an empty project and play around.
-<<<<<<< HEAD
 	- Fly around.unity: Fly around with a sphere while knocking over some cubes.
-=======
-	- Fly around.unity: Fly around with everybody's favorite cube while knocking over turrets.
->>>>>>> bb29c4442dceb61db3539b8dd14aa8f1f0030730
 	- Folow curve.unity: Make your torus follow the curve, but don't touch it!
 - SpaceNavigator.unitypackage http://goo.gl/drz8w
   Import this package into your project and get to work.
 - Source code on Github https://github.com/PatHightree/SpaceNavigator
 
 Known bugs and limitations
+--------------------------
 - No mac support
 - Grab Mode only works in the camera coordinate system 
   (sorry, I couldn't get my head around the quaternion math of manipulating in one coordinate system while constraining in another)
 
 Installation
+------------
 - Connect the SpaceNavigator
 - Install 3DConnexion driver http://www.3dconnexion.com/service/drivers.html and make sure it is running
 - Import the unitypackage into your project
@@ -44,6 +44,7 @@ Installation
 - Fly away
 
 Pro tip
+-------
 Copy the SpaceNavigator.unitypackage to 'Unity/Editor/Standard Packages' directory.  
 - SpaceNavigator is added to the packages list in the project creation in wizard.  
 - Easy to add later by right-clicking in '*'Project View' and choosing 'Import Package'.  
