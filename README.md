@@ -20,7 +20,7 @@ I've prepared the code to make this as painless as possible, just subclass the S
 
 ##The goods
 - [SpaceNavigator + DemoScenes.unitypackage](http://goo.gl/Qd1m3) import this package into an empty project and play around.
-  - Fly around.unity: Fly around with everybody's favorite cube while knocking over turrets.
+  - Fly around.unity: Fly around with a sphere while knocking over some cubes.
   - Folow curve.unity: Make your torus follow the curve, but don't touch it!
 - [SpaceNavigator.unitypackage](http://goo.gl/drz8w) import this package into your project and get to work.
 - Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
