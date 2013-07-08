@@ -20,11 +20,11 @@ I've prepared the code to make this as painless as possible, just subclass the S
 
 The goods
 ---------
-- SpaceNavigator + DemoScenes.unitypackage http://goo.gl/Qd1m3 
+- SpaceNavigator + DemoScenes.unitypackage http://bit.ly/12hdf1F 
   Import this package into an empty project and play around.
 	- Fly around.unity: Fly around with a sphere while knocking over some cubes.
 	- Folow curve.unity: Make your torus follow the curve, but don't touch it!
-- SpaceNavigator.unitypackage http://goo.gl/drz8w
+- SpaceNavigator.unitypackage http://bit.ly/11wCvSY
   Import this package into your project and get to work.
 - Source code on Github https://github.com/PatHightree/SpaceNavigator
 
@@ -54,5 +54,3 @@ Credits
 - Big thanks to Dave Buchhoffer (@vsaitoo) for testing and development feedback
 - Quaternion math by Minahito
   http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
-- Test card texture (creative commons 2.0)
-  http://triangularpixels.net/games/development/2009/07/10/digital-test-cards-for-games/
