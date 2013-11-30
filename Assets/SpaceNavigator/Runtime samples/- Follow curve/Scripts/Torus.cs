@@ -23,6 +23,6 @@ public class Torus : MonoBehaviour {
 		Vector3 delta = _controller.transform.position - oldPos;
 
 		// Move the camera.
-		Camera.mainCamera.transform.Translate(delta, Space.World);
+		Camera.main.transform.Translate(delta, Space.World);
 	}
 }

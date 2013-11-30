@@ -9,7 +9,7 @@ public class Controller : MonoBehaviour {
 		SpaceNavigator.SetTranslationSensitivity(1);
 		SpaceNavigator.SetRotationSensitivity(1);
 
-		_camera = Camera.mainCamera.transform;
+		_camera = Camera.main.transform;
 		_LookAtTarget = GameObject.FindGameObjectWithTag("Torus look at target").transform;
 	}
 

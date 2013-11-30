@@ -162,9 +162,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// This method keeps the horizon horizontal at all times.
 		// Perform azimuth in world coordinates.
-		_camera.RotateAround(Vector3.up, SpaceNavigator.Rotation.Yaw());
+		_camera.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw());
 		// Perform pitch in local coordinates.
-		_camera.RotateAround(_camera.right, SpaceNavigator.Rotation.Pitch());
+		_camera.Rotate(_camera.right, SpaceNavigator.Rotation.Pitch());
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
