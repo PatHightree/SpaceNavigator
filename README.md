@@ -19,10 +19,10 @@ Who knows, somebody with a mac might just step in and code the mac implementatio
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
 
 ##The goods
-- [SpaceNavigator + DemoScenes.unitypackage](http://bit.ly/12hdf1F) import this package into an empty project and play around.
+- [SpaceNavigator + DemoScenes.unitypackage](http://bit.ly/1gslAEv) import this package into an empty project and play around.
   - Fly around.unity: Fly around with a sphere while knocking over some cubes.
   - Folow curve.unity: Make your torus follow the curve, but don't touch it!
-- [SpaceNavigator.unitypackage](http://bit.ly/11wCvSY) import this package into your project and get to work.
+- [SpaceNavigator.unitypackage](http://bit.ly/1cGZMCA) import this package into your project and get to work.
 - Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
 
 ##Known bugs and limitations
