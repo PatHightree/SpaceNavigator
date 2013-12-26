@@ -6,4 +6,4 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Runtime samples/Follow curve/Folow curve.unity
+    path: Assets/SpaceNavigator/Runtime samples/- Follow curve/Folow curve.unity

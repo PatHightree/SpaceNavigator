@@ -19,10 +19,10 @@ Who knows, somebody with a mac might just step in and code the mac implementatio
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
 
 ##The goods
-- [SpaceNavigator + DemoScenes.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator + demo scenes.unitypackage) import this package into an empty project and play around.
-  - Fly around.unity: Fly around with everybody's favorite cube while knocking over turrets.
+- [SpaceNavigator + DemoScenes.unitypackage](http://bit.ly/1gslAEv) import this package into an empty project and play around.
+  - Fly around.unity: Fly around with a sphere while knocking over some cubes.
   - Folow curve.unity: Make your torus follow the curve, but don't touch it!
-- [SpaceNavigator.unitypackage](http://www.xs4all.nl/~hightree/Unity/SpaceNavigator/SpaceNavigator.unitypackage) import this package into your project and get to work.
+- [SpaceNavigator.unitypackage](http://bit.ly/1cGZMCA) import this package into your project and get to work.
 - Source code on [Github](https://github.com/PatHightree/SpaceNavigator)
 
 ##Known bugs and limitations
@@ -42,9 +42,6 @@ Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directo
 
 Credits
 -------
+- Big thanks to Dave Buchhoffer (@vsaitoo) for testing and development feedback
 - Quaternion math by Minahito
-http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
-- Test card texture
-http://triangularpixels.net/games/development/2009/07/10/digital-test-cards-for-games/
-- Companion cube http://www.turbosquid.com/3d-models/free-aperture-companion-cube-3d-model/717149
-- Turret http://www.turbosquid.com/3d-models/free-fbx-model-portal-turret/615494
+  http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html

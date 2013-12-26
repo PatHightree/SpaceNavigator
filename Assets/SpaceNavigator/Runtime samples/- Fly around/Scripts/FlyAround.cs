@@ -9,9 +9,9 @@ public class FlyAround : MonoBehaviour {
 		if (HorizonLock) {
 			// This method keeps the horizon horizontal at all times.
 			// Perform azimuth in world coordinates.
-			transform.RotateAround(Vector3.up, SpaceNavigator.Rotation.Yaw());
+			transform.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg, Space.World);
 			// Perform pitch in local coordinates.
-			transform.RotateAround(transform.right, SpaceNavigator.Rotation.Pitch());
+			transform.Rotate(Vector3.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg, Space.Self);
 		}
 		else {
 			transform.Rotate(SpaceNavigator.Rotation.eulerAngles, Space.Self);

@@ -43,3 +43,8 @@ _ReSharper*/
 - NOT included
 
 /Assets/- NOT included.meta
+- Publish/
+- Packages/
+Assets/AssetStoreTools/
+Assets/AssetStoreTools.meta
+Asset sources/
