@@ -134,10 +134,6 @@ public abstract class SpaceNavigator : IDisposable {
 
 	public virtual void OnGUI() {
 #if UNITY_EDITOR
-		GUILayout.Space(10);
-		GUILayout.Label("Lock");
-		GUILayout.Space(4);
-
 		GUILayout.BeginHorizontal();
 		_lockTranslationAll = GUILayout.Toggle(_lockTranslationAll, "Translation\t");
 		GUI.enabled = !_lockTranslationAll;
