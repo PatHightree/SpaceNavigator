@@ -6,8 +6,9 @@ using UnityEditor;
 
 [Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
-	public enum OperationMode { Fly, Telekinesis, GrabMove }
+	public enum OperationMode { Fly, Orbit, Telekinesis, GrabMove }
 	private OperationMode _operationMode;
+	private bool _orbitMode;
 	public enum CoordinateSystem { Camera, World, Parent, Local }
 	private static CoordinateSystem _coordSys;
 
@@ -128,6 +129,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 			case OperationMode.Fly:
 				Fly(sceneView);
 				break;
+			case OperationMode.Orbit:
+				Orbit(sceneView);
+				break;
 			case OperationMode.Telekinesis:
 				// Manipulate the object free from the camera.
 				Telekinesis(sceneView);
@@ -171,6 +175,17 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.rotation = _pivot.rotation;
 		sceneView.Repaint();
 	}
+	private void Orbit(SceneView sceneView) {
+		SyncRigWithScene();
+
+		_camera.RotateAround(Tools.handlePosition, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
+		_camera.RotateAround(Tools.handlePosition, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
+
+		// Update sceneview pivot and repaint view.
+		sceneView.pivot = _pivot.position;
+		sceneView.rotation = _pivot.rotation;
+		sceneView.Repaint();
+	}
 	private void Telekinesis(SceneView sceneView) {
 		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 		if (_wasIdle)
@@ -200,7 +215,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 			if (reference == null) {
 				// Move the object in world coordinates.
 				_unsnappedTranslations[transform] += SpaceNavigator.Translation;
-				_unsnappedRotations[transform] = SpaceNavigator.Rotation*_unsnappedRotations[transform];
+				_unsnappedRotations[transform] = SpaceNavigator.Rotation * _unsnappedRotations[transform];
 			} else {
 				// Move the object in the reference coordinate system.
 				Vector3 worldTranslation = reference.TransformPoint(SpaceNavigator.Translation) -
@@ -257,10 +272,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.Label("Operation mode");
 		GUIContent[] modes = new GUIContent[] {
 			new GUIContent("Fly", "Where do you want to fly today?"),
+			new GUIContent("Orbit", "Round, round, round we go"),
 			new GUIContent("Telekinesis", "Watch where you're levitating that piano!"),
 			new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
 		};
-		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 3);
+		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 4);
 
 		// Enable the coordsys only in Telekinesis mode.
 		GUI.enabled = _operationMode == OperationMode.Telekinesis;
@@ -268,8 +284,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		string[] coordSystems = new string[] { "Camera", "World", "Parent", "Local" };
 		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, coordSystems, 4);
 
-		// Disable the constraint controls in Fly mode.
-		GUI.enabled = _operationMode != OperationMode.Fly;
+		// Disable the constraint controls in Fly and Orbit mode.
+		GUI.enabled = _operationMode != OperationMode.Fly && _operationMode != OperationMode.Orbit;
 		GUILayout.Space(10);
 		GUILayout.Label("Snapping");
 		GUILayout.Space(4);
