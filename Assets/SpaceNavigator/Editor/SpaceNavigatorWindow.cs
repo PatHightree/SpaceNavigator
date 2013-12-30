@@ -176,6 +176,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void Orbit(SceneView sceneView) {
+		if (Selection.gameObjects.Length == 0) return;
+
 		SyncRigWithScene();
 
 		_camera.RotateAround(Tools.handlePosition, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
