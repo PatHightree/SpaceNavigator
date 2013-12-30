@@ -6,7 +6,7 @@ using UnityEditor;
 
 [Serializable]
 public class SpaceNavigatorWindow : EditorWindow {
-	public enum OperationMode { Fly, Telekinesis, GrabMove }
+	public enum OperationMode { Fly, Orbit, Telekinesis, GrabMove }
 	private OperationMode _operationMode;
 	private bool _orbitMode;
 	public enum CoordinateSystem { Camera, World, Parent, Local }
@@ -129,6 +129,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 			case OperationMode.Fly:
 				Fly(sceneView);
 				break;
+			case OperationMode.Orbit:
+				Orbit(sceneView);
+				break;
 			case OperationMode.Telekinesis:
 				// Manipulate the object free from the camera.
 				Telekinesis(sceneView);
@@ -153,42 +156,35 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private void Fly(SceneView sceneView) {
 		SyncRigWithScene();
 
-		if (_orbitMode && IsOrbitAllowed())
-			Orbit();
-		else {
-			_camera.Translate(SpaceNavigator.Translation, Space.Self);
+		_camera.Translate(SpaceNavigator.Translation, Space.Self);
 
-			//// Default rotation method, applies the whole quaternion to the camera.
-			//Quaternion sceneCamera = sceneView.camera.transform.rotation;
-			//Quaternion inputInWorldSpace = RotationInWorldSpace;
-			//Quaternion inputInCameraSpace = sceneCamera * inputInWorldSpace * Quaternion.Inverse(sceneCamera);
-			//_camera.rotation = inputInCameraSpace * _camera.rotation;
+		//// Default rotation method, applies the whole quaternion to the camera.
+		//Quaternion sceneCamera = sceneView.camera.transform.rotation;
+		//Quaternion inputInWorldSpace = RotationInWorldSpace;
+		//Quaternion inputInCameraSpace = sceneCamera * inputInWorldSpace * Quaternion.Inverse(sceneCamera);
+		//_camera.rotation = inputInCameraSpace * _camera.rotation;
 
-			// This method keeps the horizon horizontal at all times.
-			// Perform azimuth in world coordinates.
-			_camera.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg, Space.World);
-			// Perform pitch in local coordinates.
-			_camera.Rotate(Vector3.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg, Space.Self);
-		}
+		// This method keeps the horizon horizontal at all times.
+		// Perform azimuth in world coordinates.
+		_camera.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg, Space.World);
+		// Perform pitch in local coordinates.
+		_camera.Rotate(Vector3.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg, Space.Self);
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
 		sceneView.rotation = _pivot.rotation;
 		sceneView.Repaint();
 	}
-	private void Orbit() {
+	private void Orbit(SceneView sceneView) {
+		SyncRigWithScene();
+
 		_camera.RotateAround(Tools.handlePosition, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
 		_camera.RotateAround(Tools.handlePosition, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
 
-		Vector3 oldPos = _camera.position;
-		Vector3 cameraToSelection = Vector3.Normalize(Tools.handlePosition - _camera.position);
-		_camera.Translate(SpaceNavigator.Translation.z * cameraToSelection, Space.World);
-		// Undo if we've overshot the handle position.
-		if (Vector3.Dot(_camera.forward, Tools.handlePosition - _camera.position) < 0)
-			_camera.position = oldPos;
-	}
-	private bool IsOrbitAllowed() {
-		return _operationMode == OperationMode.Fly;
+		// Update sceneview pivot and repaint view.
+		sceneView.pivot = _pivot.position;
+		sceneView.rotation = _pivot.rotation;
+		sceneView.Repaint();
 	}
 	private void Telekinesis(SceneView sceneView) {
 		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
@@ -276,10 +272,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.Label("Operation mode");
 		GUIContent[] modes = new GUIContent[] {
 			new GUIContent("Fly", "Where do you want to fly today?"),
+			new GUIContent("Orbit", "Round, round, round we go"),
 			new GUIContent("Telekinesis", "Watch where you're levitating that piano!"),
 			new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
 		};
-		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 3);
+		_operationMode = (OperationMode)GUILayout.SelectionGrid((int)_operationMode, modes, 4);
 
 		// Enable the coordsys only in Telekinesis mode.
 		GUI.enabled = _operationMode == OperationMode.Telekinesis;
@@ -287,12 +284,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 		string[] coordSystems = new string[] { "Camera", "World", "Parent", "Local" };
 		_coordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)_coordSys, coordSystems, 4);
 
-		// Enable only in Fly mode.
-		GUI.enabled = _operationMode == OperationMode.Fly;
-		_orbitMode = GUILayout.Toggle(_orbitMode, "Orbit mode");
-
-		// Disable the constraint controls in Fly mode.
-		GUI.enabled = _operationMode != OperationMode.Fly;
+		// Disable the constraint controls in Fly and Orbit mode.
+		GUI.enabled = _operationMode != OperationMode.Fly && _operationMode != OperationMode.Orbit;
 		GUILayout.Space(10);
 		GUILayout.Label("Snapping");
 		GUILayout.Space(4);
