@@ -8,7 +8,7 @@ using UnityEditor;
 public class SpaceNavigatorWindow : EditorWindow {
 	public enum OperationMode { Fly, Orbit, Telekinesis, GrabMove }
 	private OperationMode _operationMode;
-	private bool _orbitMode;
+	private bool _lockHorizon = true;
 	public enum CoordinateSystem { Camera, World, Parent, Local }
 	private static CoordinateSystem _coordSys;
 
@@ -158,17 +158,15 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		_camera.Translate(SpaceNavigator.Translation, Space.Self);
 
-		//// Default rotation method, applies the whole quaternion to the camera.
-		//Quaternion sceneCamera = sceneView.camera.transform.rotation;
-		//Quaternion inputInWorldSpace = RotationInWorldSpace;
-		//Quaternion inputInCameraSpace = sceneCamera * inputInWorldSpace * Quaternion.Inverse(sceneCamera);
-		//_camera.rotation = inputInCameraSpace * _camera.rotation;
-
-		// This method keeps the horizon horizontal at all times.
-		// Perform azimuth in world coordinates.
-		_camera.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg, Space.World);
-		// Perform pitch in local coordinates.
-		_camera.Rotate(Vector3.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg, Space.Self);
+		if (_lockHorizon) {
+			// Perform azimuth in world coordinates.
+			_camera.Rotate(Vector3.up, SpaceNavigator.Rotation.Yaw()*Mathf.Rad2Deg, Space.World);
+			// Perform pitch in local coordinates.
+			_camera.Rotate(Vector3.right, SpaceNavigator.Rotation.Pitch()*Mathf.Rad2Deg, Space.Self);
+		}
+		else
+			// Default rotation method, applies the whole quaternion to the camera.
+			_camera.rotation *= SpaceNavigator.Rotation;
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -176,10 +174,20 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void Orbit(SceneView sceneView) {
+		if (Selection.gameObjects.Length == 0) return;
+
 		SyncRigWithScene();
 
-		_camera.RotateAround(Tools.handlePosition, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
-		_camera.RotateAround(Tools.handlePosition, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
+		_camera.Translate(new Vector3(0, 0, SpaceNavigator.Translation.z), Space.Self);
+
+		if (_lockHorizon) {
+			_camera.RotateAround(Tools.handlePosition, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
+			_camera.RotateAround(Tools.handlePosition, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
+		} else {
+			_camera.RotateAround(Tools.handlePosition, _camera.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
+			_camera.RotateAround(Tools.handlePosition, _camera.right, SpaceNavigator.Rotation.Pitch() * Mathf.Rad2Deg);
+			_camera.RotateAround(Tools.handlePosition, _camera.forward, SpaceNavigator.Rotation.Roll() * Mathf.Rad2Deg);
+		}
 
 		// Update sceneview pivot and repaint view.
 		sceneView.pivot = _pivot.position;
@@ -264,6 +272,15 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Fly(sceneView);
 	}
 
+	private void StraightenHorizon() {
+		_camera.rotation = Quaternion.Euler(_camera.rotation.eulerAngles.x, _camera.rotation.eulerAngles.y, 0);
+
+		// Update sceneview pivot and repaint view.
+		SceneView.lastActiveSceneView.pivot = _pivot.position;
+		SceneView.lastActiveSceneView.rotation = _pivot.rotation;
+		SceneView.lastActiveSceneView.Repaint();
+	}
+
 	/// <summary>
 	/// Draws the EditorWindow's GUI.
 	/// </summary>
@@ -301,6 +318,15 @@ public class SpaceNavigatorWindow : EditorWindow {
 
 		// Re-enable gui.
 		GUI.enabled = true;
+
+		GUILayout.Space(10);
+		GUILayout.Label("Lock");
+		GUILayout.Space(4);
+
+		EditorGUI.BeginChangeCheck();
+		_lockHorizon = GUILayout.Toggle(_lockHorizon, "Horizon");
+		if (EditorGUI.EndChangeCheck() && _lockHorizon)
+			StraightenHorizon();
 
 		SpaceNavigator.Instance.OnGUI();
 
