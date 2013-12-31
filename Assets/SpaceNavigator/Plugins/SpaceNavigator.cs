@@ -76,6 +76,15 @@ public abstract class SpaceNavigator : IDisposable {
 	private static bool _lockRotationZ;
 	private static bool _lockRotationAll;
 
+	private static bool _invertTranslationX;
+	private static bool _invertTranslationY;
+	private static bool _invertTranslationZ;
+	protected static Vector3 InvertTranslation;
+	private static bool _invertRotationX;
+	private static bool _invertRotationY;
+	private static bool _invertRotationZ;
+	protected static Vector3 InvertRotation;
+
 	// Abstract members
 	public abstract Vector3 GetTranslation();
 	public abstract Quaternion GetRotation();
@@ -95,6 +104,9 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockTranslationXKey = "Translation lock X";
 	private const string LockTranslationYKey = "Translation lock Y";
 	private const string LockTranslationZKey = "Translation lock Z";
+	private const string InvertTranslationXKey = "Translation Invert X";
+	private const string InvertTranslationYKey = "Translation Invert Y";
+	private const string InvertTranslationZKey = "Translation Invert Z";
 	
 	private const string RotSensKey = "Rotation sensitivity";
 	private const string RotSensMinKey = "Rotation sensitivity minimum";
@@ -103,7 +115,9 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockRotationXKey = "Rotation lock X";
 	private const string LockRotationYKey = "Rotation lock Y";
 	private const string LockRotationZKey = "Rotation lock Z";
-
+	private const string InvertRotationXKey = "Rotation Invert X";
+	private const string InvertRotationYKey = "Rotation Invert Y";
+	private const string InvertRotationZKey = "Rotation Invert Z";
 	#region - Singleton -
 	public static SpaceNavigator Instance {
 		get {
@@ -153,6 +167,37 @@ public abstract class SpaceNavigator : IDisposable {
 		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
+		GUILayout.Label("Invert");
+		GUILayout.Space(4);
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Translation\t\t");
+		EditorGUI.BeginChangeCheck();
+		_invertTranslationX = GUILayout.Toggle(_invertTranslationX, "X");
+		_invertTranslationY = GUILayout.Toggle(_invertTranslationY, "Y");
+		_invertTranslationZ = GUILayout.Toggle(_invertTranslationZ, "Z");
+		if (EditorGUI.EndChangeCheck())
+			InvertTranslation = new Vector3(
+				_invertTranslationX ? -1 : 1,
+				_invertTranslationY ? -1 : 1,
+				_invertTranslationZ ? -1 : 1);
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Rotation\t\t\t");
+		EditorGUI.BeginChangeCheck();
+		_invertRotationX = GUILayout.Toggle(_invertRotationX, "X");
+		_invertRotationY = GUILayout.Toggle(_invertRotationY, "Y");
+		_invertRotationZ = GUILayout.Toggle(_invertRotationZ, "Z");
+		if (EditorGUI.EndChangeCheck())
+			InvertRotation = new Vector3(
+				_invertRotationX ? -1 : 1,
+				_invertRotationY ? -1 : 1,
+				_invertRotationZ ? -1 : 1);
+		GUILayout.EndHorizontal();
+
+
+		GUILayout.Space(10);
 		GUILayout.Label("Sensitivity");
 		GUILayout.Space(4);
 
@@ -186,6 +231,13 @@ public abstract class SpaceNavigator : IDisposable {
 		_lockTranslationX = PlayerPrefs.GetInt(LockTranslationXKey, 0) == 1;
 		_lockTranslationY = PlayerPrefs.GetInt(LockTranslationYKey, 0) == 1;
 		_lockTranslationZ = PlayerPrefs.GetInt(LockTranslationZKey, 0) == 1;
+		_invertTranslationX = PlayerPrefs.GetInt(InvertTranslationXKey, 0) == 1;
+		_invertTranslationY = PlayerPrefs.GetInt(InvertTranslationYKey, 0) == 1;
+		_invertTranslationZ = PlayerPrefs.GetInt(InvertTranslationZKey, 0) == 1;
+		InvertTranslation = new Vector3(
+			_invertTranslationX ? -1 : 1,
+			_invertTranslationY ? -1 : 1,
+			_invertTranslationZ ? -1 : 1);
 
 		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
 		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
@@ -194,6 +246,13 @@ public abstract class SpaceNavigator : IDisposable {
 		_lockRotationX = PlayerPrefs.GetInt(LockRotationXKey, 0) == 1;
 		_lockRotationY = PlayerPrefs.GetInt(LockRotationYKey, 0) == 1;
 		_lockRotationZ = PlayerPrefs.GetInt(LockRotationZKey, 0) == 1;
+		_invertRotationX = PlayerPrefs.GetInt(InvertRotationXKey, 0) == 1;
+		_invertRotationY = PlayerPrefs.GetInt(InvertRotationYKey, 0) == 1;
+		_invertRotationZ = PlayerPrefs.GetInt(InvertRotationZKey, 0) == 1;
+		InvertRotation = new Vector3(
+			_invertRotationX ? -1 : 1,
+			_invertRotationY ? -1 : 1,
+			_invertRotationZ ? -1 : 1);
 	}
 	/// <summary>
 	/// Writes the settings.
@@ -206,6 +265,9 @@ public abstract class SpaceNavigator : IDisposable {
 		PlayerPrefs.SetInt(LockTranslationXKey, _lockTranslationX ? 1 : 0);
 		PlayerPrefs.SetInt(LockTranslationYKey, _lockTranslationY ? 1 : 0);
 		PlayerPrefs.SetInt(LockTranslationZKey, _lockTranslationZ ? 1 : 0);
+		PlayerPrefs.SetInt(InvertTranslationXKey, _invertTranslationX ? 1 : 0);
+		PlayerPrefs.SetInt(InvertTranslationYKey, _invertTranslationY ? 1 : 0);
+		PlayerPrefs.SetInt(InvertTranslationZKey, _invertTranslationZ ? 1 : 0);
 
 		PlayerPrefs.SetFloat(RotSensKey, RotSens);
 		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
@@ -214,6 +276,9 @@ public abstract class SpaceNavigator : IDisposable {
 		PlayerPrefs.SetInt(LockRotationXKey, _lockRotationX ? 1 : 0);
 		PlayerPrefs.SetInt(LockRotationYKey, _lockRotationY ? 1 : 0);
 		PlayerPrefs.SetInt(LockRotationZKey, _lockRotationZ ? 1 : 0);
+		PlayerPrefs.SetInt(InvertRotationXKey, _invertRotationX ? 1 : 0);
+		PlayerPrefs.SetInt(InvertRotationYKey, _invertRotationY ? 1 : 0);
+		PlayerPrefs.SetInt(InvertRotationZKey, _invertRotationZ ? 1 : 0);
 	}
 	#endregion - Settings -
 }
