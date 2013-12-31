@@ -6,6 +6,7 @@ You can also use it at runtime via scripting.
 
 The default mode is **Fly** mode and when you're flying around, this driver always keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
+In **Orbit** mode you orbit the current selection.
 To move stuff around, you can use 2 modes: Telekinesis and GrabMove.  
 In **Telekinesis** mode, you can move the stuff you selected with the SpaceNavigator, while your camera stays put.  
 (this mode can be operated in Camera-, World-, Parent- and Local coordinates)  
@@ -13,7 +14,7 @@ In **GrabMove** mode the stuff will be linked to your camera so you can take it 
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
 ##Platform support
-The driver supports Unity 3 and 4, both Indie and Pro versions.  
+The driver supports both Unity Indie and Pro versions.  
 At the moment it is windows-only, but the code is right [here](https://github.com/PatHightree/SpaceNavigator). 
 Who knows, somebody with a mac might just step in and code the mac implementation. 
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
