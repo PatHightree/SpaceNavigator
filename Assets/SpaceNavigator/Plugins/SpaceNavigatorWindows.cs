@@ -10,9 +10,9 @@ class SpaceNavigatorWindows : SpaceNavigator {
 		return (SubInstance._sensor == null ?
 			Vector3.zero :
 			new Vector3(
-				LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X * InvertTranslation.x,
-				LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y * InvertTranslation.y,
-				LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z * InvertTranslation.z) *
+				LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X,
+				LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y,
+				LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z) *
 				sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
@@ -22,9 +22,9 @@ class SpaceNavigatorWindows : SpaceNavigator {
 			Quaternion.AngleAxis(
 				(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
 				new Vector3(
-					LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X * InvertRotation.x,
-					LockRotationY || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.Y * InvertRotation.y,
-					LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z * InvertRotation.z)));
+					LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
+					LockRotationY || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.Y,
+					LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z)));
 	}
 
 	// Device variables
