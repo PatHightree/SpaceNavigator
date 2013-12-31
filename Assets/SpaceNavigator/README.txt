@@ -43,6 +43,16 @@ Installation
   IMPORTANT The editor window has to be opened for the driver to work !
 - Fly away
 
+Upgrading
+---------
+When installing a newer version of the plugin, please follow these steps:
+- Close the SpaceNavigator editor window.
+- Delete the SpaceNavigator folder from your project.
+- Import the new package.
+- Reopen the SpaceNavigator window (Alt-S).
+If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
+When this happens, pick a layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
+
 Pro tip
 -------
 Copy the SpaceNavigator.unitypackage to 'Unity/Editor/Standard Packages' directory.  
