@@ -13,7 +13,7 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 
 Platform support
 ----------------
-The driver supports Unity 3 and 4, both Indie and Pro versions.  
+The driver supports both Unity Indie and Pro versions.  
 At the moment it is windows-only, but the code is right here https://github.com/PatHightree/SpaceNavigator. 
 Who knows, somebody with a mac might just step in and code the mac implementation. 
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
@@ -42,6 +42,16 @@ Installation
 - Open the SpaceNavigator window from the pull-down menu Window/SpaceNavigator (or hit Alt-S)
   IMPORTANT The editor window has to be opened for the driver to work !
 - Fly away
+
+Upgrading
+---------
+When installing a newer version of the plugin, please follow these steps:
+- Close the SpaceNavigator editor window.
+- Delete the SpaceNavigator folder from your project.
+- Import the new package.
+- Reopen the SpaceNavigator window (Alt-S).
+If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
+When this happens, pick a layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
 
 Pro tip
 -------
