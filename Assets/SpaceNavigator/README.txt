@@ -13,7 +13,7 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 
 Platform support
 ----------------
-The driver supports Unity 3 and 4, both Indie and Pro versions.  
+The driver supports both Unity Indie and Pro versions.  
 At the moment it is windows-only, but the code is right here https://github.com/PatHightree/SpaceNavigator. 
 Who knows, somebody with a mac might just step in and code the mac implementation. 
 I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
