@@ -95,6 +95,9 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockTranslationXKey = "Translation lock X";
 	private const string LockTranslationYKey = "Translation lock Y";
 	private const string LockTranslationZKey = "Translation lock Z";
+	private const string InvertTranslationXKey = "Translation Invert X";
+	private const string InvertTranslationYKey = "Translation Invert Y";
+	private const string InvertTranslationZKey = "Translation Invert Z";
 	
 	private const string RotSensKey = "Rotation sensitivity";
 	private const string RotSensMinKey = "Rotation sensitivity minimum";
@@ -103,7 +106,9 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockRotationXKey = "Rotation lock X";
 	private const string LockRotationYKey = "Rotation lock Y";
 	private const string LockRotationZKey = "Rotation lock Z";
-
+	private const string InvertRotationXKey = "Rotation Invert X";
+	private const string InvertRotationYKey = "Rotation Invert Y";
+	private const string InvertRotationZKey = "Rotation Invert Z";
 	#region - Singleton -
 	public static SpaceNavigator Instance {
 		get {
