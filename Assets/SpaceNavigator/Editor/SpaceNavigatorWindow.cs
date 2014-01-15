@@ -188,19 +188,21 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, rotationInversion);
 
 		_camera.Translate(translation, Space.Self);
-
-		if (_lockHorizon) {
-			// Perform azimuth in world coordinates.
-			_camera.Rotate(Vector3.up, rotation.y, Space.World);
-			// Perform pitch in local coordinates.
-			_camera.Rotate(Vector3.right, rotation.x, Space.Self);
-		}
-		else {
-			// Default rotation method, applies the whole quaternion to the camera.
-			_camera.rotation *= SpaceNavigator.Rotation;
-			_camera.Rotate(Vector3.up, rotation.y, Space.Self);
-			_camera.Rotate(Vector3.right, rotation.x, Space.Self);
-			_camera.Rotate(Vector3.forward, rotation.z, Space.Self);
+		if (sceneView.camera.isOrthoGraphic) {
+			sceneView.size += translation.z * -1.0f;
+		} else {
+			if (_lockHorizon) {
+				// Perform azimuth in world coordinates.
+				_camera.Rotate(Vector3.up, rotation.y, Space.World);
+				// Perform pitch in local coordinates.
+				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
+			} else {
+				// Default rotation method, applies the whole quaternion to the camera.
+				_camera.rotation *= SpaceNavigator.Rotation;
+				_camera.Rotate(Vector3.up, rotation.y, Space.Self);
+				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
+				_camera.Rotate(Vector3.forward, rotation.z, Space.Self);
+			}
 		}
 
 		// Update sceneview pivot and repaint view.
