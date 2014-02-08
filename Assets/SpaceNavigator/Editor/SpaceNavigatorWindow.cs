@@ -188,9 +188,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, rotationInversion);
 
 		_camera.Translate(translation, Space.Self);
-		if (sceneView.camera.isOrthoGraphic) {
-			sceneView.size += translation.z * -1.0f;
-		} else {
+		if (sceneView.orthographic)
+			sceneView.size -= translation.z;
+		else {
 			if (_lockHorizon) {
 				// Perform azimuth in world coordinates.
 				_camera.Rotate(Vector3.up, rotation.y, Space.World);
@@ -211,7 +211,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void Orbit(SceneView sceneView) {
-		if (Selection.gameObjects.Length == 0) return;
+		// If no object is selected don't orbit, fly instead.
+		if (Selection.gameObjects.Length == 0) {
+			Fly(sceneView);
+			return;
+		}
 
 		SyncRigWithScene();
 
@@ -219,7 +223,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, _orbitInvertTranslation);
 		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, _orbitInvertRotation);
 
-		_camera.Translate(new Vector3(0, 0, translation.z), Space.Self);
+		_camera.Translate(translation, Space.Self);
 
 		if (_lockHorizon) {
 			_camera.RotateAround(Tools.handlePosition, Vector3.up, rotation.y);
