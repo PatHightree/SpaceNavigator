@@ -25,45 +25,44 @@ public abstract class SpaceNavigator : IDisposable {
 	/// <summary>
 	/// Locking can be disabled by the SpaceNavigatorWindow;
 	/// </summary>
-	public static bool IsLockingAllowed = true;
 	public static bool LockTranslationX {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockTranslationX && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockTranslationX && !Application.isPlaying; }
 		set { _lockTranslationX = value; }
 	}
 	public static bool LockTranslationY {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockTranslationY && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockTranslationY && !Application.isPlaying; }
 		set { _lockTranslationY = value; }
 	}
 	public static bool LockTranslationZ {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockTranslationZ && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockTranslationZ && !Application.isPlaying; }
 		set { _lockTranslationZ = value; }
 	}
 	public static bool LockTranslationAll {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockTranslationAll && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockTranslationAll && !Application.isPlaying; }
 		set { _lockTranslationAll = value; }
 	}
 	public static bool LockRotationX {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockRotationX && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockRotationX && !Application.isPlaying; }
 		set { _lockRotationX = value; }
 	}
 	public static bool LockRotationY {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockRotationY && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockRotationY && !Application.isPlaying; }
 		set { _lockRotationY = value; }
 	}
 	public static bool LockRotationZ {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockRotationZ && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockRotationZ && !Application.isPlaying; }
 		set { _lockRotationZ = value; }
 	}
 	public static bool LockRotationAll {
 		// At runtime we don't want to limit the output of the driver, its up to the game scripts to do that.
-		get { return _lockRotationAll && IsLockingAllowed && !Application.isPlaying; }
+		get { return _lockRotationAll && !Application.isPlaying; }
 		set { _lockRotationAll = value; }
 	}
 
