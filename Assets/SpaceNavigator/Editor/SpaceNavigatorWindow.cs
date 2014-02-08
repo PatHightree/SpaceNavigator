@@ -188,19 +188,21 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, rotationInversion);
 
 		_camera.Translate(translation, Space.Self);
-
-		if (_lockHorizon) {
-			// Perform azimuth in world coordinates.
-			_camera.Rotate(Vector3.up, rotation.y, Space.World);
-			// Perform pitch in local coordinates.
-			_camera.Rotate(Vector3.right, rotation.x, Space.Self);
-		}
+		if (sceneView.orthographic)
+			sceneView.size -= translation.z;
 		else {
-			// Default rotation method, applies the whole quaternion to the camera.
-			_camera.rotation *= SpaceNavigator.Rotation;
-			_camera.Rotate(Vector3.up, rotation.y, Space.Self);
-			_camera.Rotate(Vector3.right, rotation.x, Space.Self);
-			_camera.Rotate(Vector3.forward, rotation.z, Space.Self);
+			if (_lockHorizon) {
+				// Perform azimuth in world coordinates.
+				_camera.Rotate(Vector3.up, rotation.y, Space.World);
+				// Perform pitch in local coordinates.
+				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
+			} else {
+				// Default rotation method, applies the whole quaternion to the camera.
+				_camera.rotation *= SpaceNavigator.Rotation;
+				_camera.Rotate(Vector3.up, rotation.y, Space.Self);
+				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
+				_camera.Rotate(Vector3.forward, rotation.z, Space.Self);
+			}
 		}
 
 		// Update sceneview pivot and repaint view.
@@ -209,7 +211,11 @@ public class SpaceNavigatorWindow : EditorWindow {
 		sceneView.Repaint();
 	}
 	private void Orbit(SceneView sceneView) {
-		if (Selection.gameObjects.Length == 0) return;
+		// If no object is selected don't orbit, fly instead.
+		if (Selection.gameObjects.Length == 0) {
+			Fly(sceneView);
+			return;
+		}
 
 		SyncRigWithScene();
 
@@ -217,7 +223,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, _orbitInvertTranslation);
 		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, _orbitInvertRotation);
 
-		_camera.Translate(new Vector3(0, 0, translation.z), Space.Self);
+		_camera.Translate(translation, Space.Self);
 
 		if (_lockHorizon) {
 			_camera.RotateAround(Tools.handlePosition, Vector3.up, rotation.y);
