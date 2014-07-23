@@ -81,15 +81,17 @@ public abstract class SpaceNavigator : IDisposable {
 	public abstract Quaternion GetRotation();
 
 	// Sensitivity settings
-	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
-	public const float TransSensDefault = 10f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
-	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
-	public float PlayTransSens = TransSensDefault;
-	public List<float> TransSens = new List<float> { TransSensDefault, TransSensDefault, TransSensDefault };
-	public List<float> TransSensMin = new List<float>() { TransSensMinDefault, TransSensMinDefault, TransSensMinDefault };
-	public List<float> TransSensMax = new List<float>() { TransSensMaxDefault, TransSensMaxDefault, TransSensMaxDefault };
 	private int Gears = 3;
 	public int CurrentGear = 1;
+	public const float TransSensScale = 0.001f, RotSensScale = 0.0015f;
+
+	public const float TransSensDefault = 1f, TransSensMinDefault = 0.1f, TransSensMaxDefault = 10f;
+	public float PlayTransSens = TransSensDefault;
+	public List<float> TransSens = new List<float> { 0.1f, 1, 10 };
+	public List<float> TransSensMin = new List<float>() { 0.0f, 0.1f, 1 };
+	public List<float> TransSensMax = new List<float>() { 1, 10, 100 };
+
+	public const float RotSensDefault = 1, RotSensMinDefault = 0, RotSensMaxDefault = 5f;
 	public float PlayRotSens = RotSensDefault;
 	public List<float> RotSens = new List<float> { RotSensDefault, RotSensDefault, RotSensDefault };
 	public List<float> RotSensMin = new List<float>() { RotSensMinDefault, RotSensMinDefault, RotSensMinDefault };
@@ -201,7 +203,7 @@ public abstract class SpaceNavigator : IDisposable {
 
 		GUILayout.EndVertical();
 		#endregion - Sensitivity -
-    
+
 		#region - Gearbox -
 		GUILayout.BeginVertical();
 		GUILayout.Label("Scale", GUILayout.Width(65));
@@ -216,7 +218,6 @@ public abstract class SpaceNavigator : IDisposable {
 
 		GUILayout.EndHorizontal();
 		#endregion - Sensitivity + gearbox -
-
 #endif
 	}
 
