@@ -6,7 +6,7 @@ using UnityEngine;
 class SpaceNavigatorWindows : SpaceNavigator {	
 	// Public API
 	public override Vector3 GetTranslation() {
-		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens;
+		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		return (SubInstance._sensor == null ?
 			Vector3.zero :
 			new Vector3(
@@ -16,7 +16,7 @@ class SpaceNavigatorWindows : SpaceNavigator {
 				sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
-		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens[CurrentGear];
 		return (SubInstance._sensor == null ?
 			Quaternion.identity :
 			Quaternion.AngleAxis(

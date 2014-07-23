@@ -9,14 +9,14 @@ class SpaceNavigatorNoDevice : SpaceNavigator {
 
 	// Public API
 	public override Vector3 GetTranslation() {
-		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens;
+		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		return new Vector3(
 			LockTranslationX || LockTranslationAll ? 0 : _fakeTranslationInput.x * sensitivity,
 			LockTranslationY || LockTranslationAll ? 0 : _fakeTranslationInput.y * sensitivity,
 			LockTranslationZ || LockTranslationAll ? 0 : _fakeTranslationInput.z * sensitivity);
 	}
 	public override Quaternion GetRotation() {
-		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens[CurrentGear];
 		return Quaternion.Euler(
 			LockRotationX || LockRotationAll ? 0 : _fakeRotationInput.x * sensitivity,
 			LockRotationY || LockRotationAll ? 0 : _fakeRotationInput.y * sensitivity,
