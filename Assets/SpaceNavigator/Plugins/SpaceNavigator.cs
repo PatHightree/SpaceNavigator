@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -80,11 +81,21 @@ public abstract class SpaceNavigator : IDisposable {
 	public abstract Quaternion GetRotation();
 
 	// Sensitivity settings
-	public const float TransSensScale = 0.001f, RotSensScale = 0.05f;
-	public const float TransSensDefault = 10f, TransSensMinDefault = 0.001f, TransSensMaxDefault = 50f;
-	public const float RotSensDefault = 1, RotSensMinDefault = 0.001f, RotSensMaxDefault = 5f;
-	public float TransSens = TransSensDefault, PlayTransSens = TransSensDefault, TransSensMin = TransSensMinDefault, TransSensMax = TransSensMaxDefault;
-	public float RotSens = RotSensDefault, PlayRotSens = RotSensDefault, RotSensMin = RotSensMinDefault, RotSensMax = RotSensMaxDefault;
+	private int Gears = 3;
+	public int CurrentGear = 1;
+	public const float TransSensScale = 0.001f, RotSensScale = 0.0015f;
+
+	public const float TransSensDefault = 1f, TransSensMinDefault = 0.1f, TransSensMaxDefault = 10f;
+	public float PlayTransSens = TransSensDefault;
+	public List<float> TransSens = new List<float> { 0.05f, 1, 50 };
+	public List<float> TransSensMin = new List<float>() { 0, 0, 0 };
+	public List<float> TransSensMax = new List<float>() { 1, 10, 100 };
+
+	public const float RotSensDefault = 1, RotSensMinDefault = 0, RotSensMaxDefault = 5f;
+	public float PlayRotSens = RotSensDefault;
+	public float RotSens = RotSensDefault;
+	public float RotSensMin =  RotSensMinDefault;
+	public float RotSensMax =  RotSensMaxDefault;
 
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
@@ -94,10 +105,7 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockTranslationXKey = "Translation lock X";
 	private const string LockTranslationYKey = "Translation lock Y";
 	private const string LockTranslationZKey = "Translation lock Z";
-	private const string InvertTranslationXKey = "Translation Invert X";
-	private const string InvertTranslationYKey = "Translation Invert Y";
-	private const string InvertTranslationZKey = "Translation Invert Z";
-	
+
 	private const string RotSensKey = "Rotation sensitivity";
 	private const string RotSensMinKey = "Rotation sensitivity minimum";
 	private const string RotSensMaxKey = "Rotation sensitivity maximum";
@@ -105,9 +113,6 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockRotationXKey = "Rotation lock X";
 	private const string LockRotationYKey = "Rotation lock Y";
 	private const string LockRotationZKey = "Rotation lock Z";
-	private const string InvertRotationXKey = "Rotation Invert X";
-	private const string InvertRotationYKey = "Rotation Invert Y";
-	private const string InvertRotationZKey = "Rotation Invert Z";
 	#region - Singleton -
 	public static SpaceNavigator Instance {
 		get {
@@ -138,6 +143,8 @@ public abstract class SpaceNavigator : IDisposable {
 
 	public virtual void OnGUI() {
 #if UNITY_EDITOR
+		#region - Locking -
+		#region - Translation -
 		GUILayout.BeginHorizontal();
 		_lockTranslationAll = GUILayout.Toggle(_lockTranslationAll, "Translation\t");
 		GUI.enabled = !_lockTranslationAll;
@@ -146,7 +153,9 @@ public abstract class SpaceNavigator : IDisposable {
 		_lockTranslationZ = GUILayout.Toggle(_lockTranslationZ, "Z");
 		GUI.enabled = true;
 		GUILayout.EndHorizontal();
+		#endregion - Translation -
 
+		#region - Rotation -
 		GUILayout.BeginHorizontal();
 		_lockRotationAll = GUILayout.Toggle(_lockRotationAll, "Rotation\t\t");
 		GUI.enabled = !_lockRotationAll;
@@ -155,26 +164,60 @@ public abstract class SpaceNavigator : IDisposable {
 		_lockRotationZ = GUILayout.Toggle(_lockRotationZ, "Z");
 		GUI.enabled = true;
 		GUILayout.EndHorizontal();
-
+		#endregion - Rotation -
+		#endregion - Locking -
 		GUILayout.Space(10);
+
+		#region - Sensitivity + gearbox -
+		GUILayout.BeginHorizontal();
+
+		#region - Sensitivity -
+		GUILayout.BeginVertical();
 		GUILayout.Label("Sensitivity");
 		GUILayout.Space(4);
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Translation", GUILayout.Width(75));
-		TransSens = EditorGUILayout.FloatField(TransSens, GUILayout.Width(25));
-		TransSensMin = EditorGUILayout.FloatField(TransSensMin, GUILayout.Width(25));
-		TransSens = GUILayout.HorizontalSlider(TransSens, TransSensMin, TransSensMax);
-		TransSensMax = EditorGUILayout.FloatField(TransSensMax, GUILayout.Width(25));
-		GUILayout.EndHorizontal();
 
+		#region - Translation + rotation -
+		GUILayout.BeginVertical();
+		#region - Translation -
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Rotation", GUILayout.Width(75));
-		RotSens = EditorGUILayout.FloatField(RotSens, GUILayout.Width(25));
-		RotSensMin = EditorGUILayout.FloatField(RotSensMin, GUILayout.Width(25));
-		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
-		RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(25));
+		GUILayout.Label("Translation", GUILayout.Width(67));
+		TransSens[CurrentGear] = EditorGUILayout.FloatField(TransSens[CurrentGear], GUILayout.Width(30));
+		TransSensMin[CurrentGear] = EditorGUILayout.FloatField(TransSensMin[CurrentGear], GUILayout.Width(30));
+		TransSens[CurrentGear] = GUILayout.HorizontalSlider(TransSens[CurrentGear], TransSensMin[CurrentGear], TransSensMax[CurrentGear]);
+		TransSensMax[CurrentGear] = EditorGUILayout.FloatField(TransSensMax[CurrentGear], GUILayout.Width(30));
 		GUILayout.EndHorizontal();
+		#endregion - Translation -
+
+		#region - Rotation -
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Rotation", GUILayout.Width(67));
+		RotSens = EditorGUILayout.FloatField(RotSens, GUILayout.Width(30));
+		RotSensMin = EditorGUILayout.FloatField(RotSensMin, GUILayout.Width(30));
+		RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
+		RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(30));
+		GUILayout.EndHorizontal();
+		#endregion - Rotation -
+		GUILayout.EndVertical();
+		#endregion - Translation + rotation -
+
+		GUILayout.EndVertical();
+		#endregion - Sensitivity -
+
+		#region - Gearbox -
+		GUILayout.BeginVertical();
+		GUILayout.Label("Scale", GUILayout.Width(65));
+		GUIContent[] modes = new GUIContent[] {
+			new GUIContent("Huge", "Galactic scale"),
+			new GUIContent("Human", "What people consider 'normal'"),
+			new GUIContent("Minuscule", "Itsy-bitsy-scale")
+		};
+		CurrentGear = GUILayout.SelectionGrid(CurrentGear, modes, 1, GUILayout.Width(67));
+		GUILayout.EndVertical();
+		#endregion - Gearbox -
+
+		GUILayout.EndHorizontal();
+		#endregion - Sensitivity + gearbox -
 #endif
 	}
 
@@ -183,9 +226,11 @@ public abstract class SpaceNavigator : IDisposable {
 	/// Reads the settings.
 	/// </summary>
 	public void ReadSettings() {
-		TransSens = PlayerPrefs.GetFloat(TransSensKey, TransSensDefault);
-		TransSensMin = PlayerPrefs.GetFloat(TransSensMinKey, TransSensMinDefault);
-		TransSensMax = PlayerPrefs.GetFloat(TransSensMaxKey, TransSensMaxDefault);
+		for (int gear = 0; gear < Gears; gear++) {
+			TransSens[gear] = PlayerPrefs.GetFloat(TransSensKey + gear, TransSensDefault);
+			TransSensMin[gear] = PlayerPrefs.GetFloat(TransSensMinKey + gear, TransSensMinDefault);
+			TransSensMax[gear] = PlayerPrefs.GetFloat(TransSensMaxKey + gear, TransSensMaxDefault);
+		}
 		_lockTranslationAll = PlayerPrefs.GetInt(LockTranslationAllKey, 0) == 1;
 		_lockTranslationX = PlayerPrefs.GetInt(LockTranslationXKey, 0) == 1;
 		_lockTranslationY = PlayerPrefs.GetInt(LockTranslationYKey, 0) == 1;
@@ -194,6 +239,7 @@ public abstract class SpaceNavigator : IDisposable {
 		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
 		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
 		RotSensMax = PlayerPrefs.GetFloat(RotSensMaxKey, RotSensMaxDefault);
+
 		_lockRotationAll = PlayerPrefs.GetInt(LockRotationAllKey, 0) == 1;
 		_lockRotationX = PlayerPrefs.GetInt(LockRotationXKey, 0) == 1;
 		_lockRotationY = PlayerPrefs.GetInt(LockRotationYKey, 0) == 1;
@@ -203,9 +249,11 @@ public abstract class SpaceNavigator : IDisposable {
 	/// Writes the settings.
 	/// </summary>
 	public void WriteSettings() {
-		PlayerPrefs.SetFloat(TransSensKey, TransSens);
-		PlayerPrefs.SetFloat(TransSensMinKey, TransSensMin);
-		PlayerPrefs.SetFloat(TransSensMaxKey, TransSensMax);
+		for (int gear = 0; gear < Gears; gear++) {
+			PlayerPrefs.SetFloat(TransSensKey + gear, TransSens[gear]);
+			PlayerPrefs.SetFloat(TransSensMinKey + gear, TransSensMin[gear]);
+			PlayerPrefs.SetFloat(TransSensMaxKey + gear, TransSensMax[gear]);
+		}
 		PlayerPrefs.SetInt(LockTranslationAllKey, _lockTranslationAll ? 1 : 0);
 		PlayerPrefs.SetInt(LockTranslationXKey, _lockTranslationX ? 1 : 0);
 		PlayerPrefs.SetInt(LockTranslationYKey, _lockTranslationY ? 1 : 0);
@@ -214,6 +262,7 @@ public abstract class SpaceNavigator : IDisposable {
 		PlayerPrefs.SetFloat(RotSensKey, RotSens);
 		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
 		PlayerPrefs.SetFloat(RotSensMaxKey, RotSensMax);
+
 		PlayerPrefs.SetInt(LockRotationAllKey, _lockRotationAll ? 1 : 0);
 		PlayerPrefs.SetInt(LockRotationXKey, _lockRotationX ? 1 : 0);
 		PlayerPrefs.SetInt(LockRotationYKey, _lockRotationY ? 1 : 0);

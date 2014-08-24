@@ -9,7 +9,7 @@ class SpaceNavigatorNoDevice : SpaceNavigator {
 
 	// Public API
 	public override Vector3 GetTranslation() {
-		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens;
+		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		return new Vector3(
 			LockTranslationX || LockTranslationAll ? 0 : _fakeTranslationInput.x * sensitivity,
 			LockTranslationY || LockTranslationAll ? 0 : _fakeTranslationInput.y * sensitivity,
