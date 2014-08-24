@@ -16,7 +16,7 @@ class SpaceNavigatorWindows : SpaceNavigator {
 				sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
-		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens[CurrentGear];
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 		return (SubInstance._sensor == null ?
 			Quaternion.identity :
 			Quaternion.AngleAxis(
