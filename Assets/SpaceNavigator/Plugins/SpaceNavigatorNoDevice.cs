@@ -16,7 +16,7 @@ class SpaceNavigatorNoDevice : SpaceNavigator {
 			LockTranslationZ || LockTranslationAll ? 0 : _fakeTranslationInput.z * sensitivity);
 	}
 	public override Quaternion GetRotation() {
-		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens[CurrentGear];
+		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 		return Quaternion.Euler(
 			LockRotationX || LockRotationAll ? 0 : _fakeRotationInput.x * sensitivity,
 			LockRotationY || LockRotationAll ? 0 : _fakeRotationInput.y * sensitivity,
