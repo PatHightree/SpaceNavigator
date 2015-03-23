@@ -120,8 +120,7 @@ public abstract class SpaceNavigator : IDisposable {
 				switch (Application.platform) {
 					case RuntimePlatform.OSXEditor:
 					case RuntimePlatform.OSXPlayer:
-						Debug.LogError("Mac version of the SpaceNavigator driver is not yet implemented, sorry");
-						_instance = SpaceNavigatorNoDevice.SubInstance;
+						_instance = SpaceNavigatorMac.SubInstance;
 						break;
 					case RuntimePlatform.WindowsEditor:
 					case RuntimePlatform.WindowsPlayer:
