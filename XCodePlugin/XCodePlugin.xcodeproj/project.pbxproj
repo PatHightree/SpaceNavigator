@@ -13,6 +13,7 @@
 		AE6034331AB635870097DA26 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034321AB635870097DA26 /* 3DconnexionClient.framework */; };
 		AE6034361AB64B4B0097DA26 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034351AB64B4B0097DA26 /* Cocoa.framework */; };
 		AEA2D8E01AB79C2F0090A054 /* XCodePlugin.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE60341C1AB628F90097DA26 /* XCodePlugin.bundle */; };
+		AEAB1CD81AB7A368006F9443 /* XCodePlugin.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE60341C1AB628F90097DA26 /* XCodePlugin.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,6 +24,16 @@
 			dstSubfolderSpec = 0;
 			files = (
 				AEA2D8E01AB79C2F0090A054 /* XCodePlugin.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEAB1CD71AB7A35B006F9443 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project U5/Assets/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AEAB1CD81AB7A368006F9443 /* XCodePlugin.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +124,7 @@
 				AE6034191AB628F80097DA26 /* Frameworks */,
 				AE60341A1AB628F80097DA26 /* Resources */,
 				AEA2D8DF1AB79BFE0090A054 /* CopyFiles */,
+				AEAB1CD71AB7A35B006F9443 /* CopyFiles */,
 			);
 			buildRules = (
 			);
