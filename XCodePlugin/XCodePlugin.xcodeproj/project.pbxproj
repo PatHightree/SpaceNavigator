@@ -12,7 +12,21 @@
 		AE6034311AB62FF60097DA26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034301AB62FF60097DA26 /* Foundation.framework */; };
 		AE6034331AB635870097DA26 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034321AB635870097DA26 /* 3DconnexionClient.framework */; };
 		AE6034361AB64B4B0097DA26 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034351AB64B4B0097DA26 /* Cocoa.framework */; };
+		AEA2D8E01AB79C2F0090A054 /* XCodePlugin.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE60341C1AB628F90097DA26 /* XCodePlugin.bundle */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AEA2D8DF1AB79BFE0090A054 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "/Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project/Assets/SpaceNavigator/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AEA2D8E01AB79C2F0090A054 /* XCodePlugin.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AE60341C1AB628F90097DA26 /* XCodePlugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCodePlugin.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,7 +58,6 @@
 		AE6034131AB628F80097DA26 = {
 			isa = PBXGroup;
 			children = (
-				AE60342E1AB62CFC0097DA26 /* libmono.0.dylib */,
 				AE60342B1AB62A0E0097DA26 /* Plugin.h */,
 				AE6034281AB629B90097DA26 /* Plugin.m */,
 				AE60342A1AB629F30097DA26 /* XCodePlugin_Prefix.pch */,
@@ -81,6 +94,7 @@
 		AE6034341AB640370097DA26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AE60342E1AB62CFC0097DA26 /* libmono.0.dylib */,
 				AE6034351AB64B4B0097DA26 /* Cocoa.framework */,
 				AE6034321AB635870097DA26 /* 3DconnexionClient.framework */,
 				AE6034301AB62FF60097DA26 /* Foundation.framework */,
@@ -98,6 +112,7 @@
 				AE6034181AB628F80097DA26 /* Sources */,
 				AE6034191AB628F80097DA26 /* Frameworks */,
 				AE60341A1AB628F80097DA26 /* Resources */,
+				AEA2D8DF1AB79BFE0090A054 /* CopyFiles */,
 			);
 			buildRules = (
 			);
