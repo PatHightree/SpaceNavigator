@@ -2,7 +2,7 @@
 //  Plugin.h
 //  XCodePlugin
 //
-//  Created by Ewoud Wijma on 15/03/15.
+//  Created by Patrick Hogenboom on 15/03/15.
 //  Copyright (c) 2015 Patrick Hogenboom. All rights reserved.
 //
 
@@ -19,15 +19,16 @@
     IBOutlet id		mtValueRy;
     IBOutlet id		mtValueRz;
     IBOutlet id		mtFWNotFound;
+    @public int     mDebug;
     
     UInt16			fConnexionClientID;
 }
 //==============================================================================
 
-- (void)	awakeFromNib;
-- (void)	windowWillClose:		(NSNotification*)notification;
+- (OSErr)	awakeFromNib;
+- (int)	windowWillClose;
 
-void TestMessageHandler(io_connect_t connection, natural_t messageType, void *messageArgument);
+void MessageHandler(io_connect_t connection, natural_t messageType, void *messageArgument);
 
 //==============================================================================
 @end
