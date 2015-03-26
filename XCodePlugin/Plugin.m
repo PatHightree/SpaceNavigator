@@ -12,26 +12,30 @@
 #import "XCodePlugin_Prefix.pch"
 #import <3DConnexionClient/ConnexionClientAPI.h>
 
+ConnexionListener	*gConnexionListener = 0L;
+
 //==============================================================================
-// Quick & dirty way to access our class variables from the C callback
-
-ConnexionTest	*gConnexionTest = 0L;
-
+// Public API
 
 int InitDevice()
 {
-    gConnexionTest = [[ConnexionTest alloc] init];
-    return [gConnexionTest awakeFromNib];
+    gConnexionListener = [[ConnexionListener alloc] init];
+    return [gConnexionListener initDevice];
 }
 
-int SampleDevice()
+void SampleDevice(int* x, int* y, int* z, int* rx, int* ry, int* rz)
 {
-    return gConnexionTest->mDebug;
+    *x = gConnexionListener->mtValueX;
+    *y = gConnexionListener->mtValueY;
+    *z = gConnexionListener->mtValueZ;
+    *rx = gConnexionListener->mtValueRx;
+    *ry = gConnexionListener->mtValueRy;
+    *rz = gConnexionListener->mtValueRz;
 }
 
 int DisposeDevice()
 {
-    return [gConnexionTest windowWillClose];
+    return [gConnexionListener disposeDevice];
 }
 
 
@@ -42,15 +46,12 @@ int DisposeDevice()
 extern OSErr InstallConnexionHandlers() __attribute__((weak_import));
 
 //==============================================================================
-@implementation ConnexionTest
+@implementation ConnexionListener
 //==============================================================================
 
-- (OSErr) awakeFromNib
+- (OSErr) initDevice
 {
     OSErr	error;
-    
-    // Quick hack to keep the sample as simple as possible, don't use in shipping code
-    //gConnexionTest = self;
     
     // Make sure the framework is installed
     if(InstallConnexionHandlers != NULL)
@@ -76,10 +77,8 @@ extern OSErr InstallConnexionHandlers() __attribute__((weak_import));
 
 //==============================================================================
 
-- (int) windowWillClose
+- (int) disposeDevice
 {
-    printf("3DxClientTest windowWillClose - unregistering client\n");
-    
     // Make sure the framework is installed
     if(InstallConnexionHandlers != NULL)
     {
@@ -97,43 +96,41 @@ void MessageHandler(io_connect_t connection, natural_t messageType, void *messag
     static ConnexionDeviceState	lastState;
     ConnexionDeviceState		*state;
     
-    //gConnexionTest->mDebug = gConnexionTest->mDebug + 1;
-
     switch(messageType)
     {
         case kConnexionMsgDeviceState:
 
             state = (ConnexionDeviceState*)messageArgument;
-            if(state->client == gConnexionTest->fConnexionClientID)
+            if(state->client == gConnexionListener->fConnexionClientID)
             {
                 // decipher what command/event is being reported by the driver
                 switch (state->command)
                 {
                     case kConnexionCmdHandleAxis:
-                        if(state->axis[0] != lastState.axis[0])
-                        {
-                            [gConnexionTest->mtValueX		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[0]]];
-                            gConnexionTest->mDebug = (int)state->axis[0];
-                        }
-                        if(state->axis[1] != lastState.axis[1])	[gConnexionTest->mtValueY		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[1]]];
-                        if(state->axis[2] != lastState.axis[2])	[gConnexionTest->mtValueZ		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[2]]];
-                        if(state->axis[3] != lastState.axis[3])	[gConnexionTest->mtValueRx		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[3]]];
-                        if(state->axis[4] != lastState.axis[4])	[gConnexionTest->mtValueRy		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[4]]];
-                        if(state->axis[5] != lastState.axis[5])	[gConnexionTest->mtValueRz		setStringValue:[NSString stringWithFormat:@"%d", (int)state->axis[5]]];
+                        if(state->axis[0] != lastState.axis[0]) gConnexionListener->mtValueX = (int)state->axis[0];
+                        if(state->axis[1] != lastState.axis[1])	gConnexionListener->mtValueY = (int)state->axis[1];
+                        if(state->axis[2] != lastState.axis[2])	gConnexionListener->mtValueZ = (int)state->axis[2];
+                        if(state->axis[3] != lastState.axis[3])	gConnexionListener->mtValueRx = (int)state->axis[3];
+                        if(state->axis[4] != lastState.axis[4])	gConnexionListener->mtValueRy = (int)state->axis[4];
+                        if(state->axis[5] != lastState.axis[5])	gConnexionListener->mtValueRz = (int)state->axis[5];
                         break;
                         
                     case kConnexionCmdHandleButtons:
-                        if(state->buttons != lastState.buttons)	[gConnexionTest->mtValueButtons	setStringValue:[NSString stringWithFormat:@"%d", (int)state->buttons]];
+                        if(state->buttons != lastState.buttons)	[gConnexionListener->mtValueButtons	setStringValue:[NSString stringWithFormat:@"%d", (int)state->buttons]];
                         break;
                 }
                 memmove(state, &lastState, (long)sizeof(ConnexionDeviceState));
-                //BlockMoveData(state, &lastState, (long)sizeof(ConnexionDeviceState));
             }
             break;
             
         default:
-            // other messageTypes can happen and should be ignored
-            gConnexionTest->mDebug = 0;
+            // Reset input data
+            gConnexionListener->mtValueX = 0;
+            gConnexionListener->mtValueY = 0;
+            gConnexionListener->mtValueZ = 0;
+            gConnexionListener->mtValueRx = 0;
+            gConnexionListener->mtValueRy = 0;
+            gConnexionListener->mtValueRz = 0;
             break;
     }
 }

@@ -7,17 +7,17 @@
 //
 
 //==============================================================================
-@interface ConnexionTest : NSObject
+@interface ConnexionListener : NSObject
 //==============================================================================
 {
     IBOutlet id		mtMainWindow;
     IBOutlet id		mtValueButtons;
-    IBOutlet id		mtValueX;
-    IBOutlet id		mtValueY;
-    IBOutlet id		mtValueZ;
-    IBOutlet id		mtValueRx;
-    IBOutlet id		mtValueRy;
-    IBOutlet id		mtValueRz;
+    @public int		mtValueX;
+    @public int		mtValueY;
+    @public int		mtValueZ;
+    @public int		mtValueRx;
+    @public int		mtValueRy;
+    @public int		mtValueRz;
     IBOutlet id		mtFWNotFound;
     @public int     mDebug;
     
@@ -25,8 +25,8 @@
 }
 //==============================================================================
 
-- (OSErr)	awakeFromNib;
-- (int)	windowWillClose;
+- (OSErr)	initDevice;
+- (int)     disposeDevice;
 
 void MessageHandler(io_connect_t connection, natural_t messageType, void *messageArgument);
 
