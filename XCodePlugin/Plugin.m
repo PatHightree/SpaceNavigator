@@ -23,11 +23,15 @@ int InitDevice()
     return [gConnexionListener initDevice];
 }
 
-void SampleDevice(int* x, int* y, int* z, int* rx, int* ry, int* rz)
+void SampleTranslation(int* x, int* y, int* z)
 {
     *x = gConnexionListener->mtValueX;
     *y = gConnexionListener->mtValueY;
     *z = gConnexionListener->mtValueZ;
+}
+
+void SampleRotation(int* rx, int* ry, int* rz)
+{
     *rx = gConnexionListener->mtValueRx;
     *ry = gConnexionListener->mtValueRy;
     *rz = gConnexionListener->mtValueRz;
@@ -67,11 +71,10 @@ extern OSErr InstallConnexionHandlers() __attribute__((weak_import));
         
         // Remove warning message about the framework not being available
         //[mtFWNotFound removeFromSuperview];
-        if (error >= 0)
+        if (error == 0)
             error = fConnexionClientID;
     }
-    else
-        error = -1;
+
     return error;
 }
 
