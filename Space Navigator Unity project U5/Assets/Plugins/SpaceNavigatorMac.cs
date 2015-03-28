@@ -13,6 +13,7 @@ public class SpaceNavigatorMac : SpaceNavigator
 	[DllImport ("XCodePlugin")]
 	private static extern int DisposeDevice();
 	
+	private const float TransSensScale = 0.005f, RotSensScale = 0.015f;
 	private int _clientID;
 
 	// Public API
