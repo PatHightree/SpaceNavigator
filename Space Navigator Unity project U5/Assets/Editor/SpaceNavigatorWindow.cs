@@ -32,6 +32,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 	private Vector3 _orbitInvertTranslation, _orbitInvertRotation;
 	private Vector3 _telekinesisInvertTranslation, _telekinesisInvertRotation;
 	private Vector3 _grabMoveInvertTranslation, _grabMoveInvertRotation;
+	
+	private Vector2 _scrollPos;
 
 	/// <summary>
 	/// Initializes the window.
@@ -338,6 +340,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// Draws the EditorWindow's GUI.
 	/// </summary>
 	public void OnGUI() {
+		_scrollPos = GUILayout.BeginScrollView(_scrollPos);
 		GUILayout.BeginVertical();
 
 		#region - Operation mode -
@@ -475,6 +478,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		#endregion - Axes inversion per mode -
 
 		GUILayout.EndVertical();
+		GUILayout.EndScrollView();
 	}
 
 	#region - Snapping -
