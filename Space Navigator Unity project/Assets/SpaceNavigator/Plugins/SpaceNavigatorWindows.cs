@@ -3,7 +3,9 @@ using System.Runtime.InteropServices;
 using TDx.TDxInput;
 using UnityEngine;
 
-class SpaceNavigatorWindows : SpaceNavigator {	
+class SpaceNavigatorWindows : SpaceNavigator {
+	private const float TransSensScale = 0.001f, RotSensScale = 0.0015f;
+
 	// Public API
 	public override Vector3 GetTranslation() {
 		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];

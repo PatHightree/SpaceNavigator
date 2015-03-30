@@ -83,13 +83,14 @@ public abstract class SpaceNavigator : IDisposable {
 	// Sensitivity settings
 	private int Gears = 3;
 	public int CurrentGear = 1;
-	public const float TransSensScale = 0.001f, RotSensScale = 0.0015f;
 
-	public const float TransSensDefault = 1f, TransSensMinDefault = 0.1f, TransSensMaxDefault = 10f;
-	public float PlayTransSens = TransSensDefault;
-	public List<float> TransSens = new List<float> { 0.05f, 1, 50 };
-	public List<float> TransSensMin = new List<float>() { 0, 0, 0 };
-	public List<float> TransSensMax = new List<float>() { 1, 10, 100 };
+	public static List<float> TransSensDefault = new List<float> { 0.05f, 1, 50 };
+	public static List<float> TransSensMinDefault = new List<float>() { 0.01f, 0.1f, 1 };
+	public static List<float> TransSensMaxDefault = new List<float>() { 1, 10, 100 };
+	public float PlayTransSens = TransSensDefault[1];
+	public List<float> TransSens = new List<float> (TransSensDefault);
+	public List<float> TransSensMin = new List<float>(TransSensMinDefault);
+	public List<float> TransSensMax = new List<float>(TransSensMaxDefault);
 
 	public const float RotSensDefault = 1, RotSensMinDefault = 0, RotSensMaxDefault = 5f;
 	public float PlayRotSens = RotSensDefault;
@@ -226,9 +227,9 @@ public abstract class SpaceNavigator : IDisposable {
 	/// </summary>
 	public void ReadSettings() {
 		for (int gear = 0; gear < Gears; gear++) {
-			TransSens[gear] = PlayerPrefs.GetFloat(TransSensKey + gear, TransSensDefault);
-			TransSensMin[gear] = PlayerPrefs.GetFloat(TransSensMinKey + gear, TransSensMinDefault);
-			TransSensMax[gear] = PlayerPrefs.GetFloat(TransSensMaxKey + gear, TransSensMaxDefault);
+			TransSens[gear] = PlayerPrefs.GetFloat(TransSensKey + gear, TransSensDefault[gear]);
+			TransSensMin[gear] = PlayerPrefs.GetFloat(TransSensMinKey + gear, TransSensMinDefault[gear]);
+			TransSensMax[gear] = PlayerPrefs.GetFloat(TransSensMaxKey + gear, TransSensMaxDefault[gear]);
 		}
 		_lockTranslationAll = PlayerPrefs.GetInt(LockTranslationAllKey, 0) == 1;
 		_lockTranslationX = PlayerPrefs.GetInt(LockTranslationXKey, 0) == 1;
