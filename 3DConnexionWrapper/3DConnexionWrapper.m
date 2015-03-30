@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
-#import "Plugin.h"
+#import "3DConnexionWrapper.h"
 #import <3DConnexionClient/ConnexionClientAPI.h>
 
 ConnexionListener	*gConnexionListener = 0L;
@@ -73,7 +73,7 @@ extern OSErr InstallConnexionHandlers() __attribute__((weak_import));
         if (error == 0)
             error = fConnexionClientID;
     }
-
+    
     return error;
 }
 
@@ -86,7 +86,7 @@ extern OSErr InstallConnexionHandlers() __attribute__((weak_import));
     {
         // Unregister our client and clean up all handlers
         if(fConnexionClientID) UnregisterConnexionClient(fConnexionClientID);
-            CleanupConnexionHandlers();
+        CleanupConnexionHandlers();
     }
     return fConnexionClientID;
 }
@@ -101,7 +101,7 @@ void MessageHandler(io_connect_t connection, natural_t messageType, void *messag
     switch(messageType)
     {
         case kConnexionMsgDeviceState:
-
+            
             state = (ConnexionDeviceState*)messageArgument;
             if(state->client == gConnexionListener->fConnexionClientID)
             {

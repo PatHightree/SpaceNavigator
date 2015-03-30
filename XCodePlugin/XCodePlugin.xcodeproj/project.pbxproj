@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE6034291AB629B90097DA26 /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = AE6034281AB629B90097DA26 /* Plugin.m */; };
+		AE6034291AB629B90097DA26 /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = AE6034281AB629B90097DA26 /* Plugin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AE60342F1AB62CFC0097DA26 /* libmono.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE60342E1AB62CFC0097DA26 /* libmono.0.dylib */; };
 		AE6034311AB62FF60097DA26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034301AB62FF60097DA26 /* Foundation.framework */; };
 		AE6034331AB635870097DA26 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6034321AB635870097DA26 /* 3DconnexionClient.framework */; };
@@ -43,7 +43,6 @@
 		AE60341C1AB628F90097DA26 /* XCodePlugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCodePlugin.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE6034201AB628F90097DA26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE6034281AB629B90097DA26 /* Plugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plugin.m; sourceTree = "<group>"; };
-		AE60342A1AB629F30097DA26 /* XCodePlugin_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCodePlugin_Prefix.pch; sourceTree = "<group>"; };
 		AE60342B1AB62A0E0097DA26 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
 		AE60342E1AB62CFC0097DA26 /* libmono.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libmono.0.dylib; sourceTree = "<group>"; };
 		AE6034301AB62FF60097DA26 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -71,7 +70,6 @@
 			children = (
 				AE60342B1AB62A0E0097DA26 /* Plugin.h */,
 				AE6034281AB629B90097DA26 /* Plugin.m */,
-				AE60342A1AB629F30097DA26 /* XCodePlugin_Prefix.pch */,
 				AE60341E1AB628F90097DA26 /* XCodePlugin */,
 				AE60341D1AB628F90097DA26 /* Products */,
 				AE6034341AB640370097DA26 /* Frameworks */,
