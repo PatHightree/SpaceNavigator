@@ -7,13 +7,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>3DConnexionWrapper</string>
+	<string>3DConnexionWrapperU4</string>
 	<key>CFBundleIdentifier</key>
-	<string>nl.pathightree.-DConnexionWrapper</string>
+	<string>nl.pathightree.-DConnexionWrapperU4</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>3DConnexionWrapper</string>
+	<string>3DConnexionWrapperU4</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>

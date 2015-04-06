@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 public class SpaceNavigatorMac : SpaceNavigator
 {
 #if UNITY_4_0 || UNITY_4_1 ||  UNITY_4_2 ||  UNITY_4_3 ||  UNITY_4_4 ||  UNITY_4_5 ||  UNITY_4_6
-	private const string BundleName = "3DConnexionWrapper";
+	private const string BundleName = "3DConnexionWrapperU4";
 #else
 	private const string BundleName = "3DConnexionWrapperU5";
 #endif

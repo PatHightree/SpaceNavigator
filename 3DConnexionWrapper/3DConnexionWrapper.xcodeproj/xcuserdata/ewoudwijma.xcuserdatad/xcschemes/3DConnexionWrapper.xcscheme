@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE762A9B1AC9F8C30011CD23"
-               BuildableName = "3DConnexionWrapper.bundle"
-               BlueprintName = "3DConnexionWrapper"
+               BuildableName = "3DConnexionWrapperU4.bundle"
+               BlueprintName = "3DConnexionWrapperU4"
                ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE762A9B1AC9F8C30011CD23"
-            BuildableName = "3DConnexionWrapper.bundle"
-            BlueprintName = "3DConnexionWrapper"
+            BuildableName = "3DConnexionWrapperU4.bundle"
+            BlueprintName = "3DConnexionWrapperU4"
             ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -66,8 +66,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE762A9B1AC9F8C30011CD23"
-            BuildableName = "3DConnexionWrapper.bundle"
-            BlueprintName = "3DConnexionWrapper"
+            BuildableName = "3DConnexionWrapperU4.bundle"
+            BlueprintName = "3DConnexionWrapperU4"
             ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -84,8 +84,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE762A9B1AC9F8C30011CD23"
-            BuildableName = "3DConnexionWrapper.bundle"
-            BlueprintName = "3DConnexionWrapper"
+            BuildableName = "3DConnexionWrapperU4.bundle"
+            BlueprintName = "3DConnexionWrapperU4"
             ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

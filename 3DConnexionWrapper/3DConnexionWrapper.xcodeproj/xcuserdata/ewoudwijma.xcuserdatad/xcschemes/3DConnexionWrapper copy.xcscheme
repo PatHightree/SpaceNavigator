@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEBCDF7E1AD28DD70037C067"
-               BuildableName = "3DConnexionWrapper copy.bundle"
+               BuildableName = "3DConnexionWrapperU5.bundle"
                BlueprintName = "3DConnexionWrapperU5"
                ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEBCDF7E1AD28DD70037C067"
-            BuildableName = "3DConnexionWrapper copy.bundle"
+            BuildableName = "3DConnexionWrapperU5.bundle"
             BlueprintName = "3DConnexionWrapperU5"
             ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AEBCDF7E1AD28DD70037C067"
-            BuildableName = "3DConnexionWrapper copy.bundle"
+            BuildableName = "3DConnexionWrapperU5.bundle"
             BlueprintName = "3DConnexionWrapperU5"
             ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
          </BuildableReference>

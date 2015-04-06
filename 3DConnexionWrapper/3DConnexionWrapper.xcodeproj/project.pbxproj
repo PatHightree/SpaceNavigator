@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapper.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapper.bundle */; };
+		AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapperU4.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */; };
 		AE762AAD1AC9FB470011CD23 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAC1AC9FB470011CD23 /* Cocoa.framework */; };
 		AE762AAF1AC9FB4F0011CD23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */; };
 		AE762AB11AC9FB560011CD23 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AB01AC9FB560011CD23 /* 3DconnexionClient.framework */; };
@@ -18,7 +18,7 @@
 		AEBCDF841AD28DD70037C067 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */; };
 		AEBCDF901AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEBCDF8F1AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist */; };
 		AEBCDF911AD2983C0037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */; };
-		AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapper.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapper.bundle */; };
+		AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapperU4.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */; };
 		AEBCDF961AD2A5E60037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */; };
 /* End PBXBuildFile section */
 
@@ -29,7 +29,7 @@
 			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project/Assets/Plugins";
 			dstSubfolderSpec = 0;
 			files = (
-				AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapper.bundle in CopyFiles */,
+				AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapperU4.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,7 +49,7 @@
 			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project U5/Assets/Plugins";
 			dstSubfolderSpec = 0;
 			files = (
-				AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapper.bundle in CopyFiles */,
+				AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapperU4.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 3DConnexionWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 3DConnexionWrapperU4.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE762AA01AC9F8C30011CD23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE762AAC1AC9FB470011CD23 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cocoa.framework; sourceTree = "<group>"; };
 		AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Foundation.framework; sourceTree = "<group>"; };
@@ -116,7 +116,7 @@
 		AE762A9D1AC9F8C30011CD23 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapper.bundle */,
+				AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */,
 				AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */,
 			);
 			name = Products;
@@ -151,9 +151,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapper */ = {
+		AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapperU4 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapper" */;
+			buildConfigurationList = AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU4" */;
 			buildPhases = (
 				AE762A981AC9F8C30011CD23 /* Sources */,
 				AE762A991AC9F8C30011CD23 /* Frameworks */,
@@ -165,9 +165,9 @@
 			);
 			dependencies = (
 			);
-			name = 3DConnexionWrapper;
+			name = 3DConnexionWrapperU4;
 			productName = 3DConnexionWrapper;
-			productReference = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapper.bundle */;
+			productReference = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		AEBCDF7E1AD28DD70037C067 /* 3DConnexionWrapperU5 */ = {
@@ -215,7 +215,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapper */,
+				AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapperU4 */,
 				AEBCDF7E1AD28DD70037C067 /* 3DConnexionWrapperU5 */,
 			);
 		};
@@ -417,7 +417,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapper" */ = {
+		AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU4" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AE762AA41AC9F8C30011CD23 /* Debug */,
