@@ -20,6 +20,20 @@
                ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AEBCDF7E1AD28DD70037C067"
+               BuildableName = "3DConnexionWrapperU5.bundle"
+               BlueprintName = "3DConnexionWrapperU5"
+               ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -29,6 +43,15 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "AE762A9B1AC9F8C30011CD23"
+            BuildableName = "3DConnexionWrapper.bundle"
+            BlueprintName = "3DConnexionWrapper"
+            ReferencedContainer = "container:3DConnexionWrapper.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"

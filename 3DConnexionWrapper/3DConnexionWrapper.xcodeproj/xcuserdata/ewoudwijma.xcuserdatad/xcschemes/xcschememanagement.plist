@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>3DConnexionWrapper copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>3DConnexionWrapper.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +18,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>AE762A9B1AC9F8C30011CD23</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AEBCDF7E1AD28DD70037C067</key>
 		<dict>
 			<key>primary</key>
 			<true/>
