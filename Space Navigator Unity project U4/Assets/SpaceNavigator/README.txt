@@ -3,7 +3,7 @@ SpaceNavigator driver for Unity3D
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
 
-The default mode is Fly mode and when you're flying around, this driver always keeps your horizon horizontal.  
+The default mode is Fly mode and when you're flying around, this driver (optionally) always keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
 To move stuff around, you can use 2 modes: Telekinesis and GrabMove.  
 In Telekinesis mode, you can move the stuff you selected with the SpaceNavigator, while your camera stays put.  
@@ -13,24 +13,20 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 
 Platform support
 ----------------
-The driver supports both Unity Indie and Pro versions.  
-At the moment it is windows-only, but the code is right here https://github.com/PatHightree/SpaceNavigator. 
-Who knows, somebody with a mac might just step in and code the mac implementation. 
-I've prepared the code to make this as painless as possible, just subclass the SpaceNavigator class.  
+The driver supports both Unity Personal and Pro versions.  
+As of version 1.3, this driver supports both PC and Mac.
 
 The goods
 ---------
-- SpaceNavigator + DemoScenes.unitypackage http://bit.ly/12hdf1F 
+- SpaceNavigator + DemoScenes unitypackage
   Import this package into an empty project and play around.
 	- Fly around.unity: Fly around with a sphere while knocking over some cubes.
 	- Folow curve.unity: Make your torus follow the curve, but don't touch it!
-- SpaceNavigator.unitypackage http://bit.ly/11wCvSY
-  Import this package into your project and get to work.
 - Source code on Github https://github.com/PatHightree/SpaceNavigator
 
 Known bugs and limitations
 --------------------------
-- No mac support
+- The editor window has to be opened for the driver to work.
 - Grab Mode only works in the camera coordinate system 
   (sorry, I couldn't get my head around the quaternion math of manipulating in one coordinate system while constraining in another)
 
@@ -61,6 +57,6 @@ Copy the SpaceNavigator.unitypackage to 'Unity/Editor/Standard Packages' directo
 
 Credits
 -------
-- Big thanks to Dave Buchhoffer (@vsaitoo) for testing and development feedback
-- Quaternion math by Minahito
-  http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
+- Big thanks to Dave Buchhoffer (@vsaitoo) for testing and development feedback  
+- Quaternion math by Minahito  
+  http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html  
