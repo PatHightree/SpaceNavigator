@@ -146,7 +146,7 @@ public abstract class SpaceNavigator : IDisposable {
 		#region - Locking -
 		#region - Translation -
 		GUILayout.BeginHorizontal();
-		_lockTranslationAll = GUILayout.Toggle(_lockTranslationAll, "Translation\t");
+		_lockTranslationAll = GUILayout.Toggle(_lockTranslationAll, "Translation", GUILayout.Width(100));
 		GUI.enabled = !_lockTranslationAll;
 		_lockTranslationX = GUILayout.Toggle(_lockTranslationX, "X");
 		_lockTranslationY = GUILayout.Toggle(_lockTranslationY, "Y");
@@ -157,7 +157,7 @@ public abstract class SpaceNavigator : IDisposable {
 
 		#region - Rotation -
 		GUILayout.BeginHorizontal();
-		_lockRotationAll = GUILayout.Toggle(_lockRotationAll, "Rotation\t\t");
+		_lockRotationAll = GUILayout.Toggle(_lockRotationAll, "Rotation", GUILayout.Width(100));
 		GUI.enabled = !_lockRotationAll;
 		_lockRotationX = GUILayout.Toggle(_lockRotationX, "X");
 		_lockRotationY = GUILayout.Toggle(_lockRotationY, "Y");

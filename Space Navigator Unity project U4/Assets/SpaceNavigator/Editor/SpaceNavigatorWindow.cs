@@ -424,7 +424,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		}
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Translation\t\t");
+		GUILayout.Label("Translation", GUILayout.Width(100));
 		EditorGUI.BeginChangeCheck();
 		tx = GUILayout.Toggle(tx, "X");
 		ty = GUILayout.Toggle(ty, "Y");
@@ -450,7 +450,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Rotation\t\t\t");
+		GUILayout.Label("Rotation", GUILayout.Width(100));
 		EditorGUI.BeginChangeCheck();
 
 		rx = GUILayout.Toggle(rx, "X");
