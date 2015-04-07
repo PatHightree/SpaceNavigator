@@ -84,9 +84,9 @@ public abstract class SpaceNavigator : IDisposable {
 	private int Gears = 3;
 	public int CurrentGear = 1;
 
-	public static List<float> TransSensDefault = new List<float> { 0.05f, 1, 50 };
-	public static List<float> TransSensMinDefault = new List<float>() { 0.01f, 0.1f, 1 };
-	public static List<float> TransSensMaxDefault = new List<float>() { 1, 10, 100 };
+	public static List<float> TransSensDefault = new List<float> { 50, 1, 0.05f };
+	public static List<float> TransSensMinDefault = new List<float>() { 1, 0.1f, 0.01f };
+	public static List<float> TransSensMaxDefault = new List<float>() { 100, 10, 1 };
 	public float PlayTransSens = TransSensDefault[1];
 	public List<float> TransSens = new List<float> (TransSensDefault);
 	public List<float> TransSensMin = new List<float>(TransSensMinDefault);
