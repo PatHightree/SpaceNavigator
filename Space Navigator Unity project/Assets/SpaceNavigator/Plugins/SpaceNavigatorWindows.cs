@@ -4,7 +4,7 @@ using TDx.TDxInput;
 using UnityEngine;
 
 class SpaceNavigatorWindows : SpaceNavigator {
-	private const float TransSensScale = 0.001f, RotSensScale = 0.0015f;
+	private const float TransSensScale = 0.0001f, RotSensScale = 0.0008f;
 
 	// Public API
 	public override Vector3 GetTranslation() {

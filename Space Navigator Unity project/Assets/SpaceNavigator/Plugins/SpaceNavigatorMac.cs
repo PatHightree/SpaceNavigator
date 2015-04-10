@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 
 public class SpaceNavigatorMac : SpaceNavigator {
+	private const float TransSensScale = 0.007f, RotSensScale = 0.025f;
+
 #if UNITY_4_0 || UNITY_4_1 ||  UNITY_4_2 ||  UNITY_4_3 ||  UNITY_4_4 ||  UNITY_4_5 ||  UNITY_4_6
 	private const string BundleName = "3DConnexionWrapperU4";
 #else
@@ -17,7 +19,6 @@ public class SpaceNavigatorMac : SpaceNavigator {
 	[DllImport(BundleName)]
 	private static extern int DisposeDevice();
 
-	private const float TransSensScale = 0.005f, RotSensScale = 0.015f;
 	private int _clientID;
 
 	// Public API
