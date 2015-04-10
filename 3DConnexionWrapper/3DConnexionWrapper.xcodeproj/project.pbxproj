@@ -1,0 +1,441 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapperU4.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */; };
+		AE762AAD1AC9FB470011CD23 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAC1AC9FB470011CD23 /* Cocoa.framework */; };
+		AE762AAF1AC9FB4F0011CD23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */; };
+		AE762AB11AC9FB560011CD23 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AB01AC9FB560011CD23 /* 3DconnexionClient.framework */; };
+		AE762AB41ACA05E00011CD23 /* 3DConnexionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = AE762AB31ACA05E00011CD23 /* 3DConnexionWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		AEBCDF801AD28DD70037C067 /* 3DConnexionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = AE762AB31ACA05E00011CD23 /* 3DConnexionWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		AEBCDF821AD28DD70037C067 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AB01AC9FB560011CD23 /* 3DconnexionClient.framework */; };
+		AEBCDF831AD28DD70037C067 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAC1AC9FB470011CD23 /* Cocoa.framework */; };
+		AEBCDF841AD28DD70037C067 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */; };
+		AEBCDF901AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AEBCDF8F1AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist */; };
+		AEBCDF911AD2983C0037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */; };
+		AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapperU4.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */; };
+		AEBCDF961AD2A5E60037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AE762AA81AC9F96A0011CD23 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project/Assets/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AE762AA91AC9F97F0011CD23 /* 3DConnexionWrapperU4.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF861AD28DD70037C067 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project/Assets/SpaceNavigator/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AEBCDF911AD2983C0037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF921AD2A5820037C067 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project U5/Assets/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AEBCDF941AD2A5D10037C067 /* 3DConnexionWrapperU4.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF951AD2A5DC0037C067 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Users/ewoudwijma/Developer/Space Navigator driver/Space Navigator driver/Space Navigator Unity project U5/Assets/SpaceNavigator/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				AEBCDF961AD2A5E60037C067 /* 3DConnexionWrapperU5.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 3DConnexionWrapperU4.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE762AA01AC9F8C30011CD23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AE762AAC1AC9FB470011CD23 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cocoa.framework; sourceTree = "<group>"; };
+		AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Foundation.framework; sourceTree = "<group>"; };
+		AE762AB01AC9FB560011CD23 /* 3DconnexionClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = 3DconnexionClient.framework; sourceTree = "<group>"; };
+		AE762AB21ACA05E00011CD23 /* 3DConnexionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3DConnexionWrapper.h; sourceTree = "<group>"; };
+		AE762AB31ACA05E00011CD23 /* 3DConnexionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = 3DConnexionWrapper.m; sourceTree = "<group>"; };
+		AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 3DConnexionWrapperU5.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEBCDF8F1AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "3DConnexionWrapperU5-Info.plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AE762A991AC9F8C30011CD23 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE762AB11AC9FB560011CD23 /* 3DconnexionClient.framework in Frameworks */,
+				AE762AAD1AC9FB470011CD23 /* Cocoa.framework in Frameworks */,
+				AE762AAF1AC9FB4F0011CD23 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF811AD28DD70037C067 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEBCDF821AD28DD70037C067 /* 3DconnexionClient.framework in Frameworks */,
+				AEBCDF831AD28DD70037C067 /* Cocoa.framework in Frameworks */,
+				AEBCDF841AD28DD70037C067 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AE762A931AC9F8C30011CD23 = {
+			isa = PBXGroup;
+			children = (
+				AEBCDF8F1AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist */,
+				AE762AB21ACA05E00011CD23 /* 3DConnexionWrapper.h */,
+				AE762AB31ACA05E00011CD23 /* 3DConnexionWrapper.m */,
+				AE762A9E1AC9F8C30011CD23 /* 3DConnexionWrapper */,
+				AE762A9D1AC9F8C30011CD23 /* Products */,
+				AE762AAB1AC9FB290011CD23 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AE762A9D1AC9F8C30011CD23 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */,
+				AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AE762A9E1AC9F8C30011CD23 /* 3DConnexionWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				AE762A9F1AC9F8C30011CD23 /* Supporting Files */,
+			);
+			path = 3DConnexionWrapper;
+			sourceTree = "<group>";
+		};
+		AE762A9F1AC9F8C30011CD23 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AE762AA01AC9F8C30011CD23 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AE762AAB1AC9FB290011CD23 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AE762AAC1AC9FB470011CD23 /* Cocoa.framework */,
+				AE762AAE1AC9FB4F0011CD23 /* Foundation.framework */,
+				AE762AB01AC9FB560011CD23 /* 3DconnexionClient.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapperU4 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU4" */;
+			buildPhases = (
+				AE762A981AC9F8C30011CD23 /* Sources */,
+				AE762A991AC9F8C30011CD23 /* Frameworks */,
+				AE762A9A1AC9F8C30011CD23 /* Resources */,
+				AE762AA81AC9F96A0011CD23 /* CopyFiles */,
+				AEBCDF921AD2A5820037C067 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 3DConnexionWrapperU4;
+			productName = 3DConnexionWrapper;
+			productReference = AE762A9C1AC9F8C30011CD23 /* 3DConnexionWrapperU4.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		AEBCDF7E1AD28DD70037C067 /* 3DConnexionWrapperU5 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEBCDF881AD28DD70037C067 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU5" */;
+			buildPhases = (
+				AEBCDF7F1AD28DD70037C067 /* Sources */,
+				AEBCDF811AD28DD70037C067 /* Frameworks */,
+				AEBCDF851AD28DD70037C067 /* Resources */,
+				AEBCDF861AD28DD70037C067 /* CopyFiles */,
+				AEBCDF951AD2A5DC0037C067 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 3DConnexionWrapperU5;
+			productName = 3DConnexionWrapper;
+			productReference = AEBCDF8B1AD28DD70037C067 /* 3DConnexionWrapperU5.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AE762A941AC9F8C30011CD23 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Patrick Hogenboom";
+				TargetAttributes = {
+					AE762A9B1AC9F8C30011CD23 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = AE762A971AC9F8C30011CD23 /* Build configuration list for PBXProject "3DConnexionWrapper" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AE762A931AC9F8C30011CD23;
+			productRefGroup = AE762A9D1AC9F8C30011CD23 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AE762A9B1AC9F8C30011CD23 /* 3DConnexionWrapperU4 */,
+				AEBCDF7E1AD28DD70037C067 /* 3DConnexionWrapperU5 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AE762A9A1AC9F8C30011CD23 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF851AD28DD70037C067 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEBCDF901AD290E40037C067 /* 3DConnexionWrapperU5-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AE762A981AC9F8C30011CD23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE762AB41ACA05E00011CD23 /* 3DConnexionWrapper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEBCDF7F1AD28DD70037C067 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEBCDF801AD28DD70037C067 /* 3DConnexionWrapper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AE762AA11AC9F8C30011CD23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		AE762AA21AC9F8C30011CD23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AE762AA41AC9F8C30011CD23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = 3DConnexionWrapper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = i386;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		AE762AA51AC9F8C30011CD23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = 3DConnexionWrapper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = i386;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		AEBCDF891AD28DD70037C067 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = "3DConnexionWrapperU5-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = 3DConnexionWrapperU5;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		AEBCDF8A1AD28DD70037C067 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = "3DConnexionWrapperU5-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				PRODUCT_NAME = 3DConnexionWrapperU5;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "i386 x86_64";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AE762A971AC9F8C30011CD23 /* Build configuration list for PBXProject "3DConnexionWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE762AA11AC9F8C30011CD23 /* Debug */,
+				AE762AA21AC9F8C30011CD23 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AE762AA31AC9F8C30011CD23 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE762AA41AC9F8C30011CD23 /* Debug */,
+				AE762AA51AC9F8C30011CD23 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AEBCDF881AD28DD70037C067 /* Build configuration list for PBXNativeTarget "3DConnexionWrapperU5" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEBCDF891AD28DD70037C067 /* Debug */,
+				AEBCDF8A1AD28DD70037C067 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AE762A941AC9F8C30011CD23 /* Project object */;
+}
