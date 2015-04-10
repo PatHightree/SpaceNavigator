@@ -25,8 +25,7 @@ public class Controller : MonoBehaviour {
 			// Move the camera.
 			_camera.Translate(SpaceNavigator.Translation, Space.Self);
 			_camera.LookAt(_LookAtTarget);
-		}
-		else {
+		} else {
 			// Perform azimuth in world coordinates.
 			_camera.RotateAround(transform.position, Vector3.up, SpaceNavigator.Rotation.Yaw() * Mathf.Rad2Deg);
 			// Perform pitch in local coordinates.

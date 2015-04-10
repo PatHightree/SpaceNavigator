@@ -10,23 +10,23 @@ class SpaceNavigatorWindows : SpaceNavigator {
 	public override Vector3 GetTranslation() {
 		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		return (SubInstance._sensor == null ?
-			Vector3.zero :
-			new Vector3(
-				LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X,
-				LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y,
-				LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z) *
-				sensitivity * TransSensScale);
+					Vector3.zero :
+					new Vector3(
+						LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X,
+						LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y,
+						LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z) *
+					sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
 		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 		return (SubInstance._sensor == null ?
-			Quaternion.identity :
-			Quaternion.AngleAxis(
-				(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
-				new Vector3(
-					LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
-					LockRotationY || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Y,
-					LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z)));
+					Quaternion.identity :
+					Quaternion.AngleAxis(
+						(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
+						new Vector3(
+							LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
+							LockRotationY || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Y,
+							LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z)));
 	}
 
 	// Device variables

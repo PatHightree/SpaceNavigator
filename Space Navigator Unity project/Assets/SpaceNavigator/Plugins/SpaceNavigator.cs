@@ -88,15 +88,15 @@ public abstract class SpaceNavigator : IDisposable {
 	public static List<float> TransSensMinDefault = new List<float>() { 1, 0.1f, 0.01f };
 	public static List<float> TransSensMaxDefault = new List<float>() { 100, 10, 1 };
 	public float PlayTransSens = TransSensDefault[1];
-	public List<float> TransSens = new List<float> (TransSensDefault);
+	public List<float> TransSens = new List<float>(TransSensDefault);
 	public List<float> TransSensMin = new List<float>(TransSensMinDefault);
 	public List<float> TransSensMax = new List<float>(TransSensMaxDefault);
 
 	public const float RotSensDefault = 1, RotSensMinDefault = 0, RotSensMaxDefault = 5f;
 	public float PlayRotSens = RotSensDefault;
 	public float RotSens = RotSensDefault;
-	public float RotSensMin =  RotSensMinDefault;
-	public float RotSensMax =  RotSensMaxDefault;
+	public float RotSensMin = RotSensMinDefault;
+	public float RotSensMax = RotSensMaxDefault;
 
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
@@ -208,10 +208,10 @@ public abstract class SpaceNavigator : IDisposable {
 		GUILayout.BeginVertical();
 		GUILayout.Label("Scale", GUILayout.Width(65));
 		GUIContent[] modes = new GUIContent[] {
-			new GUIContent("Huge", "Galactic scale"),
-			new GUIContent("Human", "What people consider 'normal'"),
-			new GUIContent("Minuscule", "Itsy-bitsy-scale")
-		};
+				new GUIContent("Huge", "Galactic scale"),
+				new GUIContent("Human", "What people consider 'normal'"),
+				new GUIContent("Minuscule", "Itsy-bitsy-scale")
+			};
 		CurrentGear = GUILayout.SelectionGrid(CurrentGear, modes, 1, GUILayout.Width(67));
 		GUILayout.EndVertical();
 		#endregion - Gearbox -
