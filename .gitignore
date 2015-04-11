@@ -38,22 +38,11 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
-/Assets/UnityVS
-/Assets/UnityVS.meta
-- NOT included
 
-/Assets/- NOT included.meta
 - Publish/
 - Packages/
-Assets/AssetStoreTools/
-Assets/AssetStoreTools.meta
 Asset sources/
-Space Navigator Unity project U4/Assets/AssetStoreTools/
-Space Navigator Unity project U4/Assets/AssetStoreTools.meta
-Space Navigator Unity project/Assets/AssetStoreTools/Editor/AssetStoreTools.dll
-Space Navigator Unity project/Assets/AssetStoreTools/Editor/AssetStoreToolsExtra.dll
-/Space Navigator Unity project/Assets/AssetStoreTools.meta
-Space Navigator Unity project/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll
-Space Navigator Unity project/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll
-Space Navigator Unity project/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll
-/Space Navigator Unity project/Assets/UnityVS.meta
+Space Navigator Unity project/Assets/AssetStoreTools/
+Space Navigator Unity project/Assets/AssetStoreTools.meta
+Space Navigator Unity project/Assets/UnityVS/
+Space Navigator Unity project/Assets/UnityVS.meta
