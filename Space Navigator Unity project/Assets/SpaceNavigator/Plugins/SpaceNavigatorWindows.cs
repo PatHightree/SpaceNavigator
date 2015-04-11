@@ -25,7 +25,7 @@ class SpaceNavigatorWindows : SpaceNavigator {
 						(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
 						new Vector3(
 							LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
-							LockRotationY || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Y,
+							LockRotationY || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.Y,
 							LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z)));
 	}
 
