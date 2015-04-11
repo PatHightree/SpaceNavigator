@@ -3,6 +3,10 @@ SpaceNavigator driver for Unity3D
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
 
+New:
+- Mac support.
+- The driver works with the SpaceNavigator window closed.
+
 The default mode is Fly mode and when you're flying around, this driver keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
 To comfortably navigate large areas and minute details, you can easilly switch between 3 customizable sensitivity presets.  
@@ -22,7 +26,6 @@ Caveat: when running Unity 4 and lower on Mac you need the Pro version because F
 
 Known bugs and limitations
 ---------
-- The editor window has to stay open for the driver to work.
 - Grab Mode only works in the camera coordinate system (sorry, I couldn't get my head around the quaternion math of manipulating in one coordinate system while constraining in another)
 
 The goods
@@ -38,7 +41,6 @@ Installation
 - Install 3DConnexion driver and make sure it is running http://www.3dconnexion.com/service/drivers.html
 - Import the unitypackage into your project
 - Open the SpaceNavigator window from the pull-down menu Window/SpaceNavigator (or hit Alt-S)
-- IMPORTANT The editor window has to stay open for the driver to work !
 - Fly away
 
 Upgrading
@@ -63,6 +65,7 @@ Credits
 -------
 - Big thanks to Chase Cobb for motivating me to implement the mac version.
 - Thanks to Manuela Maier and Dave Buchhoffer (@vsaitoo) for testing and development feedback.
+- Thanks to Ewoud Wijma for loaning me the Hackingtosh for building the Mac port.
 - Quaternion math by Minahito
   http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 
