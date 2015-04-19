@@ -4,6 +4,7 @@ Changelog
 - Driver works without having the editor window open.
 - Fixed inverted yaw axis on PC.
 - Tweaked sensitivity scale of PC and Mac implementations.
+- Fixed errors in Follow Curve sample in Unity 5.
 
 1.3.3
 - Mac support.
