@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 public class SpaceNavigatorMac : SpaceNavigator {
 	private const float TransSensScale = 0.007f, RotSensScale = 0.025f;
 
@@ -81,4 +82,4 @@ public class SpaceNavigatorMac : SpaceNavigator {
 	#endregion - IDisposable -
 }
 
-
+#endif // UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
