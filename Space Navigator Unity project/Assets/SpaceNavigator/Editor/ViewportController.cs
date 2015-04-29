@@ -109,10 +109,7 @@ class ViewportController {
 				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
 			} else {
 				// Default rotation method, applies the whole quaternion to the camera.
-				_camera.rotation *= SpaceNavigator.Rotation;
-				_camera.Rotate(Vector3.up, rotation.y, Space.Self);
-				_camera.Rotate(Vector3.right, rotation.x, Space.Self);
-				_camera.Rotate(Vector3.forward, rotation.z, Space.Self);
+				_camera.Rotate(rotation);
 			}
 		}
 
