@@ -1,7 +1,7 @@
 #SpaceNavigator
 SpaceNavigator driver for Unity3D
 
-New:
+New:  
 **Mac support**  
 **The driver works with the SpaceNavigator window closed**
 
