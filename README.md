@@ -3,13 +3,10 @@ SpaceNavigator driver for Unity3D
 
 New:
 **Mac support**
+**The driver works with the SpaceNavigator window closed**
 
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
-
-New:
-- Mac support.
-- The driver works with the SpaceNavigator window closed.
 
 The default mode is **Fly** mode and when you're flying around, this driver keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
