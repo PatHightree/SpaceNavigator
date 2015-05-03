@@ -1,25 +1,34 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Torus : MonoBehaviour {
 	private Rigidbody _controller;
+	private List<Collider> _colliders;
+	private Vector3 _startPos;
 	
 	public void Awake() {
 		_controller = GameObject.FindGameObjectWithTag("Torus controller").rigidbody;
+		_colliders = GetComponentsInChildren<Collider>().ToList();
+		_startPos = transform.position;
 	}
 
 	public void OnCollisionEnter(Collision collision) {
 		audio.Play();
 
+		Vector3 resetPos = collision.collider.tag == "Floor" ? _startPos : collision.collider.transform.position;
+
+
 		// Move the torus.
 		rigidbody.isKinematic = true;
-		collider.isTrigger = true;
-		transform.position = collision.collider.transform.position;
+		_colliders.ForEach(c => c.isTrigger = true);
+		transform.position = resetPos;
 		rigidbody.isKinematic = false;
-		collider.isTrigger = false;
+		_colliders.ForEach(c => c.isTrigger = false);
 
 		// Move the controller.
 		Vector3 oldPos = _controller.transform.position;
-		_controller.transform.position = collision.collider.transform.position;
+		_controller.transform.position = resetPos;
 		Vector3 delta = _controller.transform.position - oldPos;
 
 		// Move the camera.

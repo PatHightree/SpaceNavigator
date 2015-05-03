@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using TDx.TDxInput;
 using UnityEngine;
+
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+using TDx.TDxInput;
 
 class SpaceNavigatorWindows : SpaceNavigator {
 	private const float TransSensScale = 0.0001f, RotSensScale = 0.0008f;
@@ -74,3 +76,4 @@ class SpaceNavigatorWindows : SpaceNavigator {
 	}
 	#endregion - IDisposable -
 }
+#endif	// UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN

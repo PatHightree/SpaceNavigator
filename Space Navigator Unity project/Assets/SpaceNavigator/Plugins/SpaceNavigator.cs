@@ -118,18 +118,13 @@ public abstract class SpaceNavigator : IDisposable {
 	public static SpaceNavigator Instance {
 		get {
 			if (_instance == null) {
-				switch (Application.platform) {
-					case RuntimePlatform.OSXEditor:
-					case RuntimePlatform.OSXPlayer:
-						_instance = SpaceNavigatorMac.SubInstance;
-						break;
-					case RuntimePlatform.WindowsEditor:
-					case RuntimePlatform.WindowsPlayer:
-						_instance = SpaceNavigatorWindows.SubInstance;
-						break;
-				}
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+				_instance = SpaceNavigatorWindows.SubInstance;
+#endif
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+				_instance = SpaceNavigatorMac.SubInstance;
+#endif
 			}
-
 			return _instance;
 		}
 		set { _instance = value; }
