@@ -1,0 +1,14 @@
+Changelog
+
+1.4
+- Driver works without having the editor window open.
+- Fixed inverted yaw axis on PC.
+- Tweaked sensitivity scale of PC and Mac implementations.
+- Fixed errors in Follow Curve sample in Unity 5.
+
+1.3.3
+- Mac support.
+- Added XCode project for Mac 3DConnexionWrapper (see github).
+- Fixed incorrect default sensitivity presets.
+- Added scroll bars to editor window.
+- Lined up checkboxes in editor window.

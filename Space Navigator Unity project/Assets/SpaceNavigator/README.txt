@@ -1,23 +1,22 @@
-#SpaceNavigator
 SpaceNavigator driver for Unity3D
-
-New:
-**Mac support**
-**The driver works with the SpaceNavigator window closed**
 
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
 
-The default mode is **Fly** mode and when you're flying around, this driver keeps your horizon horizontal.  
+New:
+- Mac support.
+- The driver works with the SpaceNavigator window closed.
+
+The default mode is Fly mode and when you're flying around, this driver keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
 To comfortably navigate large areas and minute details, you can easilly switch between 3 customizable sensitivity presets.  
 To move stuff around, you can use 2 modes: Telekinesis and GrabMove.  
-In **Telekinesis** mode, you can move the stuff you selected with the SpaceNavigator, while your camera stays put.  
+In Telekinesis mode, you can move the stuff you selected with the SpaceNavigator, while your camera stays put.  
 (this mode can be operated in Camera-, World-, Parent- and Local coordinates)  
-In **GrabMove** mode the stuff will be linked to your camera so you can take it with you and position it where you want.  
+In GrabMove mode the stuff will be linked to your camera so you can take it with you and position it where you want.  
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
-If you have feedback, please use this [thread](http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource) on the Unity forums.
+If you have feedback, please use this thread on the Unity forums http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource
 
 Platform support
 ---------
@@ -31,15 +30,15 @@ Known bugs and limitations
 
 The goods
 ---------
-- The full [package](http://u3d.as/51X) is available on the Unity asset store.
+- The full package is available on the Unity asset store http://u3d.as/51X
 - The package also contains a couple of runtime samples:
   - Fly around.unity: Fly around with a sphere while knocking over some cubes.
   - Folow curve.unity: Make your torus follow the curve, but don't touch it!
-- The source code is available on [Github](https://github.com/PatHightree/SpaceNavigator)
+- The source code is available on Github https://github.com/PatHightree/SpaceNavigator
 
 Installation
 ---------
-- Install [3DConnexion driver](http://www.3dconnexion.com/service/drivers.html) and make sure it is running
+- Install 3DConnexion driver and make sure it is running http://www.3dconnexion.com/service/drivers.html
 - Import the unitypackage into your project
 - Open the SpaceNavigator window from the pull-down menu Window/SpaceNavigator (or hit Alt-S)
 - Fly away
@@ -56,10 +55,11 @@ When installing a newer version of the plugin, please follow these steps:
 If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
 When this happens, choose the default layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
 
-### Pro tip
-Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directory.  
+Pro tip
+-------
+Copy the SpaceNavigator.unitypackage to Unity/Editor/Standard Packages directory.  
 - SpaceNavigator is added to the packages list in the project creation in wizard.  
-- Easy to add later by right-clicking in *Project View* and choosing *Import Package*.  
+- Easy to add later by right-clicking in Project View and choosing Import Package.  
 
 Credits
 -------
