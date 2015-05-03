@@ -2,7 +2,7 @@
 SpaceNavigator driver for Unity3D
 
 New:
-**Mac support**
+**Mac support**  
 **The driver works with the SpaceNavigator window closed**
 
 This driver lets you fly around your scene and allows you to move stuff around.  
