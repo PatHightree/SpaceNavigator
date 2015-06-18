@@ -14,8 +14,6 @@ public class SpaceNavigatorWindow : EditorWindow {
 	[MenuItem("Window/SpaceNavigator &s")]
 	public static void Init()
 	{
-	    PlayerPrefs.DeleteAll();
-
         SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 
 		if (window) {
