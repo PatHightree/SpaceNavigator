@@ -47,9 +47,7 @@ class ViewportController {
 		SpaceNavigator.Instance.Dispose();
 	}
 	static void Update() {
-        Debug.Log("EnableWhilePlaying: " + EnableWhilePlaying);
-
-		if (!EnableWhilePlaying && Application.isPlaying) return;
+        if (!EnableWhilePlaying && Application.isPlaying) return;
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
