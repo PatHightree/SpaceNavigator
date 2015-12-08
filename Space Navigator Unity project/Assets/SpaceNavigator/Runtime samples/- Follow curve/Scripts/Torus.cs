@@ -8,22 +8,22 @@ public class Torus : MonoBehaviour {
 	private Vector3 _startPos;
 	
 	public void Awake() {
-		_controller = GameObject.FindGameObjectWithTag("Torus controller").rigidbody;
+		_controller = GameObject.FindGameObjectWithTag("Torus controller").GetComponent<Rigidbody>();
 		_colliders = GetComponentsInChildren<Collider>().ToList();
 		_startPos = transform.position;
 	}
 
 	public void OnCollisionEnter(Collision collision) {
-		audio.Play();
+		GetComponent<AudioSource>().Play();
 
 		Vector3 resetPos = collision.collider.tag == "Floor" ? _startPos : collision.collider.transform.position;
 
 
 		// Move the torus.
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 		_colliders.ForEach(c => c.isTrigger = true);
 		transform.position = resetPos;
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 		_colliders.ForEach(c => c.isTrigger = false);
 
 		// Move the controller.

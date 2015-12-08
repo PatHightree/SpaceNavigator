@@ -1,12 +1,8 @@
-using System;
-using UnityEngine;
-using System.Runtime.InteropServices;
-
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 public class SpaceNavigatorMac : SpaceNavigator {
 	private const float TransSensScale = 0.007f, RotSensScale = 0.025f;
 
-#if UNITY_4_0 || UNITY_4_1 ||  UNITY_4_2 ||  UNITY_4_3 ||  UNITY_4_4 ||  UNITY_4_5 ||  UNITY_4_6
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6
 	private const string BundleName = "3DConnexionWrapperU4";
 #else
 	private const string BundleName = "3DConnexionWrapperU5";
