@@ -27,6 +27,12 @@ public class SpaceNavigatorMac : SpaceNavigator {
 		int x = 0, y = 0, z = 0;
 		SampleTranslation(ref x, ref y, ref z);
 		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
+		
+		// Workaround for drift on mac by Enrico Tuttobene.
+		if (Mathf.Abs(x) == 1) x = 0;
+		if (Mathf.Abs(y) == 1) y = 0;
+		if (Mathf.Abs(z) == 1) z = 0;
+
 		return (
 				   _clientID == 0 ?
 					   Vector3.zero :
@@ -39,6 +45,12 @@ public class SpaceNavigatorMac : SpaceNavigator {
 		int rx = 0, ry = 0, rz = 0;
 		SampleRotation(ref rx, ref ry, ref rz);
 		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
+
+		// Workaround for drift on mac by Enrico Tuttobene.
+		if (Mathf.Abs(rx) == 1) rx = 0;
+		if (Mathf.Abs(ry) == 1) ry = 0;
+		if (Mathf.Abs(rz) == 1) rz = 0;
+
 		return (
 				   _clientID == 0 ?
 					   Quaternion.identity :
