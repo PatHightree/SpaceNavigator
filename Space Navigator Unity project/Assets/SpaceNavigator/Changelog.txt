@@ -1,5 +1,8 @@
 Changelog
 
+1.4.1
+- Fixed drift on Mac (contributed by Enrico Tuttobene)
+
 1.4
 - Driver works without having the editor window open.
 - Fixed inverted yaw axis on PC.
