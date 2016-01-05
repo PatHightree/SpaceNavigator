@@ -4,6 +4,7 @@ SpaceNavigator driver for Unity3D
 New:  
 **Mac support**  
 **The driver works with the SpaceNavigator window closed**
+**Fixed drift on Mac**
 
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
@@ -63,6 +64,7 @@ Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directo
 
 Credits
 -------
+- Thanks to Enrico Tuttobene for contributing the mac drift fix.
 - Big thanks to Chase Cobb for motivating me to implement the mac version.
 - Thanks to Manuela Maier and Dave Buchhoffer (@vsaitoo) for testing and development feedback.
 - Thanks to Ewoud Wijma for loaning me the Hackingtosh for building the Mac port.
