@@ -307,6 +307,7 @@ class ViewportController {
 	#region - Settings -
 	private static void ReadSettings() {
 		Mode = (OperationMode)PlayerPrefs.GetInt("Navigation mode", (int)OperationMode.Fly);
+		LockHorizon = PlayerPrefs.GetInt("LockHorizon", 1) == 1;
 		RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 		ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 		ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
@@ -325,6 +326,7 @@ class ViewportController {
 	}
 	public static void WriteSettings() {
 		PlayerPrefs.SetInt("Navigation mode", (int)Mode);
+		PlayerPrefs.SetInt("LockHorizon", LockHorizon ? 1 : 0);
 		PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 		WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 		WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");

@@ -2,6 +2,7 @@ Changelog
 
 1.5
 - Added option to navigate in the editor at runtime.
+- Fixed horizon lock setting not being saved.
 
 1.4.1
 - Fixed drift on Mac (contributed by Enrico Tuttobene)
