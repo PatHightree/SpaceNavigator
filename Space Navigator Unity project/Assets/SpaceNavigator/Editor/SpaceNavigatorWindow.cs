@@ -89,6 +89,8 @@ public class SpaceNavigatorWindow : EditorWindow {
 			ViewportController.StraightenHorizon();
 
 		SpaceNavigator.Instance.OnGUI();
+
+		ViewportController.RuntimeEditorNav = GUILayout.Toggle(ViewportController.RuntimeEditorNav, "Runtime Editor Navigation");
 		#endregion - Locking and sensitivity -
 
 		#region - Axes inversion per mode -

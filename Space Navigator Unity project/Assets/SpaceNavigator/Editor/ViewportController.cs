@@ -11,6 +11,7 @@ public enum CoordinateSystem { Camera, World, Parent, Local }
 class ViewportController {
 	public static OperationMode Mode;
 	public static bool LockHorizon = true;
+	public static bool RuntimeEditorNav = true;
 	public static CoordinateSystem CoordSys;
 
 	// Snapping
@@ -47,7 +48,7 @@ class ViewportController {
 	}
 	static void Update() {
 		// This function should only operate while editing.
-		if (Application.isPlaying) return;
+		if (Application.isPlaying && !RuntimeEditorNav) return;
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
@@ -306,6 +307,7 @@ class ViewportController {
 	#region - Settings -
 	private static void ReadSettings() {
 		Mode = (OperationMode)PlayerPrefs.GetInt("Navigation mode", (int)OperationMode.Fly);
+		RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 		ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 		ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
 		ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
@@ -323,6 +325,7 @@ class ViewportController {
 	}
 	public static void WriteSettings() {
 		PlayerPrefs.SetInt("Navigation mode", (int)Mode);
+		PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 		WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 		WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
 		WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
