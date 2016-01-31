@@ -33,9 +33,9 @@ public class SpaceNavigatorMac : SpaceNavigator {
 				   _clientID == 0 ?
 					   Vector3.zero :
 					   new Vector3(
-						   LockTranslationX || LockTranslationAll ? 0 : (float)x,
-						   LockTranslationY || LockTranslationAll ? 0 : -(float)z,
-						   LockTranslationZ || LockTranslationAll ? 0 : -(float)y) * sensitivity * TransSensScale);
+						   (Settings.LockTranslation.X || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : (float)x,
+						   (Settings.LockTranslation.Y || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : -(float)z,
+						   (Settings.LockTranslation.Z || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : -(float)y) * sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
 		int rx = 0, ry = 0, rz = 0;
@@ -52,12 +52,12 @@ public class SpaceNavigatorMac : SpaceNavigator {
 					   Quaternion.identity :
 					   Quaternion.Euler(
 						   new Vector3(
-							   LockRotationX || LockRotationAll ? 0 : -(float)rx,
-							   LockRotationY || LockRotationAll ? 0 : (float)rz,
-							   LockRotationZ || LockRotationAll ? 0 : (float)ry) * sensitivity * RotSensScale));
+							   (Settings.LockRotation.X || Settings.LockRotation.All) && !Application.isPlaying ? 0 : -(float)rx,
+							   (Settings.LockRotation.Y || Settings.LockRotation.All) && !Application.isPlaying ? 0 : (float)rz,
+							   (Settings.LockRotation.Z || Settings.LockRotation.All) && !Application.isPlaying ? 0 : (float)ry) * sensitivity * RotSensScale));
 	}
 
-	#region - Singleton -
+#region - Singleton -
 	/// <summary>
 	/// Private constructor, prevents a default instance of the <see cref="SpaceNavigatorMac" /> class from being created.
 	/// </summary>
@@ -75,9 +75,9 @@ public class SpaceNavigatorMac : SpaceNavigator {
 		get { return _subInstance ?? (_subInstance = new SpaceNavigatorMac()); }
 	}
 	private static SpaceNavigatorMac _subInstance;
-	#endregion - Singleton -
+#endregion - Singleton -
 
-	#region - IDisposable -
+#region - IDisposable -
 	public override void Dispose() {
 		try {
 			DisposeDevice();
@@ -87,7 +87,7 @@ public class SpaceNavigatorMac : SpaceNavigator {
 			Debug.LogError(ex.ToString());
 		}
 	}
-	#endregion - IDisposable -
+#endregion - IDisposable -
 }
 
 #endif // UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

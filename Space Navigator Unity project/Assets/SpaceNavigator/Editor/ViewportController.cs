@@ -4,23 +4,13 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public enum OperationMode { Fly, Orbit, Telekinesis, GrabMove }
-public enum CoordinateSystem { Camera, World, Parent, Local }
-
 [InitializeOnLoad]
+[Serializable]
 class ViewportController {
-	public static OperationMode Mode;
-	public static bool LockHorizon = true;
-	public static bool RuntimeEditorNav = true;
-	public static CoordinateSystem CoordSys;
 
 	// Snapping
 	private static Dictionary<Transform, Quaternion> _unsnappedRotations = new Dictionary<Transform, Quaternion>();
 	private static Dictionary<Transform, Vector3> _unsnappedTranslations = new Dictionary<Transform, Vector3>();
-	public static bool SnapRotation;
-	public static int SnapAngle = 45;
-	public static bool SnapTranslation;
-	public static float SnapDistance = 0.1f;
 	private static bool _wasIdle;
 
 	// Rig components
@@ -29,26 +19,35 @@ class ViewportController {
 	[SerializeField]
 	private static Transform _pivot, _camera;
 
-	// Inversion
-	public static Vector3 FlyInvertTranslation, FlyInvertRotation;
-	public static Vector3 OrbitInvertTranslation, OrbitInvertRotation;
-	public static Vector3 TelekinesisInvertTranslation, TelekinesisInvertRotation;
-	public static Vector3 GrabMoveInvertTranslation, GrabMoveInvertRotation;
+	private static bool _wasHorizonLocked;
 
 	static ViewportController() {
+		// Set up callbacks.
 		EditorApplication.update += Update;
-		ReadSettings();
+		EditorApplication.playmodeStateChanged += PlaymodeStateChanged;
+
+		// Initialize.
+		Settings.Read();
 		InitCameraRig();
 		StoreSelectionTransforms();
 	}
+
+	#region - Callbacks -
+	private static void PlaymodeStateChanged() {
+		if (EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
+			Settings.Write();
+	}
+
 	public static void OnApplicationQuit() {
-		WriteSettings();
+		Settings.Write();
 		DisposeCameraRig();
 		SpaceNavigator.Instance.Dispose();
 	}
+	#endregion - Callbacks -
+    
 	static void Update() {
-		// This function should only operate while editing.
-		if (Application.isPlaying && !RuntimeEditorNav) return;
+		// If we don't want the driver to navigate the editor at runtime, exit now.
+		if (Application.isPlaying && !Settings.RuntimeEditorNav) return;
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
@@ -60,7 +59,11 @@ class ViewportController {
 			return;
 		}
 
-		switch (Mode) {
+		if (Settings.LockHorizon && !_wasHorizonLocked)
+			StraightenHorizon();
+		_wasHorizonLocked = Settings.LockHorizon;
+
+		switch (Settings.Mode) {
 			case OperationMode.Fly:
 				Fly(sceneView);
 				break;
@@ -90,7 +93,7 @@ class ViewportController {
 
 	#region - Navigation -
 	static void Fly(SceneView sceneView) {
-		Fly(sceneView, FlyInvertTranslation, FlyInvertRotation);
+		Fly(sceneView, Settings.FlyInvertTranslation, Settings.FlyInvertRotation);
 	}
 	static void Fly(SceneView sceneView, Vector3 translationInversion, Vector3 rotationInversion) {
 		SyncRigWithScene();
@@ -103,7 +106,7 @@ class ViewportController {
 		if (sceneView.orthographic)
 			sceneView.size -= translation.z;
 		else {
-			if (LockHorizon) {
+			if (Settings.LockHorizon) {
 				// Perform azimuth in world coordinates.
 				_camera.Rotate(Vector3.up, rotation.y, Space.World);
 				// Perform pitch in local coordinates.
@@ -129,12 +132,12 @@ class ViewportController {
 		SyncRigWithScene();
 
 		// Apply inversion of axes for orbit mode.
-		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, OrbitInvertTranslation);
-		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, OrbitInvertRotation);
+		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.OrbitInvertTranslation);
+		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.OrbitInvertRotation);
 
 		_camera.Translate(translation, Space.Self);
 
-		if (LockHorizon) {
+		if (Settings.LockHorizon) {
 			_camera.RotateAround(Tools.handlePosition, Vector3.up, rotation.y);
 			_camera.RotateAround(Tools.handlePosition, _camera.right, rotation.x);
 		} else {
@@ -150,8 +153,8 @@ class ViewportController {
 	}
 	static void Telekinesis(SceneView sceneView) {
 		// Apply inversion of axes for telekinesis mode.
-		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, TelekinesisInvertTranslation);
-		Quaternion rotation = Quaternion.Euler(Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, TelekinesisInvertRotation));
+		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.TelekinesisInvertTranslation);
+		Quaternion rotation = Quaternion.Euler(Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.TelekinesisInvertRotation));
 
 		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 		if (_wasIdle)
@@ -161,7 +164,7 @@ class ViewportController {
 			if (!_unsnappedRotations.ContainsKey(transform)) continue;
 
 			Transform reference;
-			switch (CoordSys) {
+			switch (Settings.CoordSys) {
 				case CoordinateSystem.Camera:
 					reference = sceneView.camera.transform;
 					break;
@@ -191,14 +194,14 @@ class ViewportController {
 			}
 
 			// Perform rotation with or without snapping.
-			transform.rotation = SnapRotation ? SnapOnRotation(_unsnappedRotations[transform], SnapAngle) : _unsnappedRotations[transform];
-			transform.position = SnapTranslation ? SnapOnTranslation(_unsnappedTranslations[transform], SnapDistance) : _unsnappedTranslations[transform];
+			transform.rotation = Settings.SnapRotation ? SnapOnRotation(_unsnappedRotations[transform], Settings.SnapAngle) : _unsnappedRotations[transform];
+			transform.position = Settings.SnapTranslation ? SnapOnTranslation(_unsnappedTranslations[transform], Settings.SnapDistance) : _unsnappedTranslations[transform];
 		}
 	}
 	static void GrabMove(SceneView sceneView) {
 		// Apply inversion of axes for grab move mode.
-		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, GrabMoveInvertTranslation);
-		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, GrabMoveInvertRotation);
+		Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.GrabMoveInvertTranslation);
+		Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.GrabMoveInvertRotation);
 
 		// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 		if (_wasIdle)
@@ -226,12 +229,12 @@ class ViewportController {
 			_unsnappedTranslations[transform] += transform.position - oldPos;	// The rotation also added translation, so calculate the translation delta.
 
 			// Perform snapping.
-			transform.position = SnapTranslation ? SnapOnTranslation(_unsnappedTranslations[transform], SnapDistance) : _unsnappedTranslations[transform];
-			transform.rotation = SnapRotation ? SnapOnRotation(_unsnappedRotations[transform], SnapAngle) : _unsnappedRotations[transform];
+			transform.position = Settings.SnapTranslation ? SnapOnTranslation(_unsnappedTranslations[transform], Settings.SnapDistance) : _unsnappedTranslations[transform];
+			transform.rotation = Settings.SnapRotation ? SnapOnRotation(_unsnappedRotations[transform], Settings.SnapAngle) : _unsnappedRotations[transform];
 		}
 
 		// Move the scene camera.
-		Fly(sceneView, GrabMoveInvertTranslation, GrabMoveInvertRotation);
+		Fly(sceneView, Settings.GrabMoveInvertTranslation, Settings.GrabMoveInvertRotation);
 	}
 	public static void StraightenHorizon() {
 		_camera.rotation = Quaternion.Euler(_camera.rotation.eulerAngles.x, _camera.rotation.eulerAngles.y, 0);
@@ -303,45 +306,4 @@ class ViewportController {
 			Mathf.RoundToInt(v.z / snap) * snap);
 	}
 	#endregion - Snapping -
-
-	#region - Settings -
-	private static void ReadSettings() {
-		Mode = (OperationMode)PlayerPrefs.GetInt("Navigation mode", (int)OperationMode.Fly);
-		LockHorizon = PlayerPrefs.GetInt("LockHorizon", 1) == 1;
-		RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
-		ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
-		ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
-		ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
-		ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
-
-		SpaceNavigator.Instance.ReadSettings();
-	}
-	private static void ReadAxisInversions(ref Vector3 translation, ref Vector3 rotation, string baseName) {
-		translation.x = PlayerPrefs.GetInt(baseName + " invert translation x", 1);
-		translation.y = PlayerPrefs.GetInt(baseName + " invert translation y", 1);
-		translation.z = PlayerPrefs.GetInt(baseName + " invert translation z", 1);
-		rotation.x = PlayerPrefs.GetInt(baseName + " invert rotation x", 1);
-		rotation.y = PlayerPrefs.GetInt(baseName + " invert rotation y", 1);
-		rotation.z = PlayerPrefs.GetInt(baseName + " invert rotation z", 1);
-	}
-	public static void WriteSettings() {
-		PlayerPrefs.SetInt("Navigation mode", (int)Mode);
-		PlayerPrefs.SetInt("LockHorizon", LockHorizon ? 1 : 0);
-		PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
-		WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
-		WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
-		WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
-		WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
-
-		SpaceNavigator.Instance.WriteSettings();
-	}
-	private static void WriteAxisInversions(Vector3 translation, Vector3 rotation, string baseName) {
-		PlayerPrefs.SetInt(baseName + " invert translation x", translation.x < 0 ? -1 : 1);
-		PlayerPrefs.SetInt(baseName + " invert translation y", translation.y < 0 ? -1 : 1);
-		PlayerPrefs.SetInt(baseName + " invert translation z", translation.z < 0 ? -1 : 1);
-		PlayerPrefs.SetInt(baseName + " invert rotation x", rotation.x < 0 ? -1 : 1);
-		PlayerPrefs.SetInt(baseName + " invert rotation y", rotation.y < 0 ? -1 : 1);
-		PlayerPrefs.SetInt(baseName + " invert rotation z", rotation.z < 0 ? -1 : 1);
-	}
-	#endregion - Settings -
 }

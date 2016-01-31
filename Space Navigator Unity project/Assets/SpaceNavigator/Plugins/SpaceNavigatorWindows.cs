@@ -10,31 +10,31 @@ class SpaceNavigatorWindows : SpaceNavigator {
 
 	// Public API
 	public override Vector3 GetTranslation() {
-		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
+		float sensitivity = Application.isPlaying ? Settings.PlayTransSens : Settings.TransSens[Settings.CurrentGear];
 		return (SubInstance._sensor == null ?
 					Vector3.zero :
 					new Vector3(
-						LockTranslationX || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.X,
-						LockTranslationY || LockTranslationAll ? 0 : (float)SubInstance._sensor.Translation.Y,
-						LockTranslationZ || LockTranslationAll ? 0 : -(float)SubInstance._sensor.Translation.Z) *
+						(Settings.LockTranslation.X || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Translation.X,
+						(Settings.LockTranslation.Y || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Translation.Y,
+						(Settings.LockTranslation.Z || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Translation.Z) *
 					sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
-		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
+		float sensitivity = Application.isPlaying ? Settings.PlayRotSens : Settings.RotSens;
 		return (SubInstance._sensor == null ?
 					Quaternion.identity :
 					Quaternion.AngleAxis(
 						(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
 						new Vector3(
-							LockRotationX || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.X,
-							LockRotationY || LockRotationAll ? 0 : -(float)SubInstance._sensor.Rotation.Y,
-							LockRotationZ || LockRotationAll ? 0 : (float)SubInstance._sensor.Rotation.Z)));
+							(Settings.LockRotation.X || Settings.LockRotation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Rotation.X,
+							(Settings.LockRotation.Y || Settings.LockRotation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Rotation.Y,
+							(Settings.LockRotation.Z || Settings.LockRotation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Rotation.Z)));
 	}
 
 	// Device variables
-	private readonly Sensor _sensor;
-	private readonly Device _device;
-	//private readonly Keyboard _keyboard;
+	private Sensor _sensor;
+	private Device _device;
+	//private Keyboard _keyboard;
 
 	#region - Singleton -
 	/// <summary>
