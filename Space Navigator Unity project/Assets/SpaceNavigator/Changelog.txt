@@ -1,7 +1,10 @@
 Changelog
 
 1.5
+Features
 - Added option to navigate in the editor at runtime.
+- Separate axis lock settings for navigation and manipulation modes.
+Fixes
 - Fixed horizon lock, coord sys and snap setting not being saved.
 - Refactored driver settings.
 

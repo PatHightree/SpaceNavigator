@@ -14,9 +14,9 @@ class SpaceNavigatorWindows : SpaceNavigator {
 		return (SubInstance._sensor == null ?
 					Vector3.zero :
 					new Vector3(
-						(Settings.LockTranslation.X || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Translation.X,
-						(Settings.LockTranslation.Y || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Translation.Y,
-						(Settings.LockTranslation.Z || Settings.LockTranslation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Translation.Z) *
+						Settings.GetLock(DoF.Translation, Axis.X) ? 0 : (float)SubInstance._sensor.Translation.X,
+						Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : (float)SubInstance._sensor.Translation.Y,
+						Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : -(float)SubInstance._sensor.Translation.Z) *
 					sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
@@ -26,9 +26,9 @@ class SpaceNavigatorWindows : SpaceNavigator {
 					Quaternion.AngleAxis(
 						(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
 						new Vector3(
-							(Settings.LockRotation.X || Settings.LockRotation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Rotation.X,
-							(Settings.LockRotation.Y || Settings.LockRotation.All) && !Application.isPlaying ? 0 : -(float)SubInstance._sensor.Rotation.Y,
-							(Settings.LockRotation.Z || Settings.LockRotation.All) && !Application.isPlaying ? 0 : (float)SubInstance._sensor.Rotation.Z)));
+							Settings.GetLock(DoF.Rotation, Axis.X) ? 0 : -(float)SubInstance._sensor.Rotation.X,
+							Settings.GetLock(DoF.Rotation, Axis.Y) ? 0 : -(float)SubInstance._sensor.Rotation.Y,
+							Settings.GetLock(DoF.Rotation, Axis.Z) ? 0 : (float)SubInstance._sensor.Rotation.Z)));
 	}
 
 	// Device variables

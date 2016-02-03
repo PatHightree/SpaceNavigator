@@ -7,6 +7,8 @@ using UnityEditor;
 
 public enum OperationMode { Fly, Orbit, Telekinesis, GrabMove }
 public enum CoordinateSystem { Camera, World, Parent, Local }
+public enum Axis { X, Y, Z }
+public enum DoF { Translation, Rotation }
 
 [Serializable]
 public static class Settings {
@@ -24,9 +26,13 @@ public static class Settings {
 	// Locking
 	public static bool LockHorizon = true;
 	[SerializeField]
-	public static Locks LockTranslation;
+	public static Locks NavTranslationLock;
 	[SerializeField]
-	public static Locks LockRotation;
+	public static Locks NavRotationLock;
+	[SerializeField]
+	public static Locks ManipulateTranslationLock;
+	[SerializeField]
+	public static Locks ManipulateRotationLock;
 
 	// Sensitivity
 	private static int Gears = 3;
@@ -46,14 +52,7 @@ public static class Settings {
 	public static float RotSensMin = RotSensMinDefault;
 	public static float RotSensMax = RotSensMaxDefault;
 
-	// Setting storage keys
-	private const string TransSensKey = "Translation sensitivity";
-	private const string TransSensMinKey = "Translation sensitivity minimum";
-	private const string TransSensMaxKey = "Translation sensitivity maximum";
-	private const string RotSensKey = "Rotation sensitivity";
-	private const string RotSensMinKey = "Rotation sensitivity minimum";
-	private const string RotSensMaxKey = "Rotation sensitivity maximum";
-
+	// Runtime editor navigation
 	public static bool RuntimeEditorNav = true;
 
 	// Inversion
@@ -66,8 +65,10 @@ public static class Settings {
 
 	static Settings() {
 		//Debug.Log("New Settings()");
-		LockTranslation = new Locks("Translation");
-		LockRotation = new Locks("Rotation");
+		NavTranslationLock = new Locks("Navigation Translation");
+		NavRotationLock = new Locks("Navigation Rotation");
+		ManipulateTranslationLock = new Locks("Manipulation Translation");
+		ManipulateRotationLock = new Locks("Manipulation Rotation");
 	}
 
 	public static void OnGUI() {
@@ -124,23 +125,43 @@ public static class Settings {
 
 		#region - Translation -
 		GUILayout.BeginHorizontal();
-		LockTranslation.All = GUILayout.Toggle(LockTranslation.All, "Translation", GUILayout.Width(100));
-		GUI.enabled = !LockTranslation.All;
-		LockTranslation.X = GUILayout.Toggle(LockTranslation.X, "X");
-		LockTranslation.Y = GUILayout.Toggle(LockTranslation.Y, "Y");
-		LockTranslation.Z = GUILayout.Toggle(LockTranslation.Z, "Z");
-		GUI.enabled = true;
+		if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
+			NavTranslationLock.All = GUILayout.Toggle(NavTranslationLock.All, "Translation", GUILayout.Width(100));
+			GUI.enabled = !NavTranslationLock.All;
+			NavTranslationLock.X = GUILayout.Toggle(NavTranslationLock.X, "X");
+			NavTranslationLock.Y = GUILayout.Toggle(NavTranslationLock.Y, "Y");
+			NavTranslationLock.Z = GUILayout.Toggle(NavTranslationLock.Z, "Z");
+			GUI.enabled = true;
+		}
+		else {
+			ManipulateTranslationLock.All = GUILayout.Toggle(ManipulateTranslationLock.All, "Translation", GUILayout.Width(100));
+			GUI.enabled = !ManipulateTranslationLock.All;
+			ManipulateTranslationLock.X = GUILayout.Toggle(ManipulateTranslationLock.X, "X");
+			ManipulateTranslationLock.Y = GUILayout.Toggle(ManipulateTranslationLock.Y, "Y");
+			ManipulateTranslationLock.Z = GUILayout.Toggle(ManipulateTranslationLock.Z, "Z");
+			GUI.enabled = true;
+		}
 		GUILayout.EndHorizontal();
 		#endregion - Translation -
 
 		#region - Rotation -
 		GUILayout.BeginHorizontal();
-		LockRotation.All = GUILayout.Toggle(LockRotation.All, "Rotation", GUILayout.Width(100));
-		GUI.enabled = !LockRotation.All;
-		LockRotation.X = GUILayout.Toggle(LockRotation.X, "X");
-		LockRotation.Y = GUILayout.Toggle(LockRotation.Y, "Y");
-		LockRotation.Z = GUILayout.Toggle(LockRotation.Z, "Z");
-		GUI.enabled = true;
+		if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
+			NavRotationLock.All = GUILayout.Toggle(NavRotationLock.All, "Rotation", GUILayout.Width(100));
+			GUI.enabled = !NavRotationLock.All;
+			NavRotationLock.X = GUILayout.Toggle(NavRotationLock.X, "X");
+			NavRotationLock.Y = GUILayout.Toggle(NavRotationLock.Y, "Y");
+			NavRotationLock.Z = GUILayout.Toggle(NavRotationLock.Z, "Z");
+			GUI.enabled = true;
+		}
+		else {
+			ManipulateRotationLock.All = GUILayout.Toggle(ManipulateRotationLock.All, "Rotation", GUILayout.Width(100));
+			GUI.enabled = !ManipulateRotationLock.All;
+			ManipulateRotationLock.X = GUILayout.Toggle(ManipulateRotationLock.X, "X");
+			ManipulateRotationLock.Y = GUILayout.Toggle(ManipulateRotationLock.Y, "Y");
+			ManipulateRotationLock.Z = GUILayout.Toggle(ManipulateRotationLock.Z, "Z");
+			GUI.enabled = true;
+		}
 		GUILayout.EndHorizontal();
 		#endregion - Rotation -
 
@@ -286,6 +307,9 @@ public static class Settings {
 #endif
 	}
 
+	/// <summary>
+	/// Write settings to PlayerPrefs.
+	/// </summary>
 	public static void Write() {
 		//Debug.Log("Write settings");
 
@@ -301,17 +325,19 @@ public static class Settings {
 		// Lock Horizon
 		PlayerPrefs.SetInt("LockHorizon", LockHorizon ? 1 : 0);
 		// Lock Axis
-		LockTranslation.Write();
-		LockRotation.Write();
+		NavTranslationLock.Write();
+		NavRotationLock.Write();
+		ManipulateTranslationLock.Write();
+		ManipulateRotationLock.Write();
 		// Sensitivity
 		for (int gear = 0; gear < Gears; gear++) {
-			PlayerPrefs.SetFloat(TransSensKey + gear, TransSens[gear]);
-			PlayerPrefs.SetFloat(TransSensMinKey + gear, TransSensMin[gear]);
-			PlayerPrefs.SetFloat(TransSensMaxKey + gear, TransSensMax[gear]);
+			PlayerPrefs.SetFloat("Translation sensitivity" + gear, TransSens[gear]);
+			PlayerPrefs.SetFloat("Translation sensitivity minimum" + gear, TransSensMin[gear]);
+			PlayerPrefs.SetFloat("Translation sensitivity maximum" + gear, TransSensMax[gear]);
 		}
-		PlayerPrefs.SetFloat(RotSensKey, RotSens);
-		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
-		PlayerPrefs.SetFloat(RotSensMaxKey, RotSensMax);
+		PlayerPrefs.SetFloat("Rotation sensitivity", RotSens);
+		PlayerPrefs.SetFloat("Rotation sensitivity minimum", RotSensMin);
+		PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
 		// Runtime Editor Navigation
 		PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 		// Axis Inversions
@@ -321,6 +347,9 @@ public static class Settings {
 		WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
 	}
 
+	/// <summary>
+	/// Read settings from PlayerPrefs.
+	/// </summary>
 	public static void Read() {
 		//Debug.Log("Read settings");
 
@@ -336,17 +365,19 @@ public static class Settings {
 		// Lock Horizon
 		LockHorizon = PlayerPrefs.GetInt("LockHorizon", 1) == 1;
 		// Lock Axis
-		LockTranslation.Read();
-		LockRotation.Read();
+		NavTranslationLock.Read();
+		NavRotationLock.Read();
+		ManipulateTranslationLock.Read();
+		ManipulateRotationLock.Read();
 		// Sensitivity
 		for (int gear = 0; gear < Gears; gear++) {
-			TransSens[gear] = PlayerPrefs.GetFloat(TransSensKey + gear, TransSensDefault[gear]);
-			TransSensMin[gear] = PlayerPrefs.GetFloat(TransSensMinKey + gear, TransSensMinDefault[gear]);
-			TransSensMax[gear] = PlayerPrefs.GetFloat(TransSensMaxKey + gear, TransSensMaxDefault[gear]);
+			TransSens[gear] = PlayerPrefs.GetFloat("Translation sensitivity" + gear, TransSensDefault[gear]);
+			TransSensMin[gear] = PlayerPrefs.GetFloat("Translation sensitivity minimum" + gear, TransSensMinDefault[gear]);
+			TransSensMax[gear] = PlayerPrefs.GetFloat("Translation sensitivity maximum" + gear, TransSensMaxDefault[gear]);
 		}
-		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
-		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
-		RotSensMax = PlayerPrefs.GetFloat(RotSensMaxKey, RotSensMaxDefault);
+		RotSens = PlayerPrefs.GetFloat("Rotation sensitivity", RotSensDefault);
+		RotSensMin = PlayerPrefs.GetFloat("Rotation sensitivity minimum", RotSensMinDefault);
+		RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);
 		// Runtime Editor Navigation
 		RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 		// Axis Inversions
@@ -356,6 +387,12 @@ public static class Settings {
 		ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
 	}
 
+	/// <summary>
+	/// Utility function to write axis inversions to PlayerPrefs.
+	/// </summary>
+	/// <param name="translation"></param>
+	/// <param name="rotation"></param>
+	/// <param name="baseName"></param>
 	private static void WriteAxisInversions(Vector3 translation, Vector3 rotation, string baseName) {
 		PlayerPrefs.SetInt(baseName + " invert translation x", translation.x < 0 ? -1 : 1);
 		PlayerPrefs.SetInt(baseName + " invert translation y", translation.y < 0 ? -1 : 1);
@@ -365,6 +402,12 @@ public static class Settings {
 		PlayerPrefs.SetInt(baseName + " invert rotation z", rotation.z < 0 ? -1 : 1);
 	}
 
+	/// <summary>
+	/// Utility function to read axis inversions from PlayerPrefs.
+	/// </summary>
+	/// <param name="translation"></param>
+	/// <param name="rotation"></param>
+	/// <param name="baseName"></param>
 	private static void ReadAxisInversions(ref Vector3 translation, ref Vector3 rotation, string baseName) {
 		translation.x = PlayerPrefs.GetInt(baseName + " invert translation x", 1);
 		translation.y = PlayerPrefs.GetInt(baseName + " invert translation y", 1);
@@ -372,5 +415,28 @@ public static class Settings {
 		rotation.x = PlayerPrefs.GetInt(baseName + " invert rotation x", 1);
 		rotation.y = PlayerPrefs.GetInt(baseName + " invert rotation y", 1);
 		rotation.z = PlayerPrefs.GetInt(baseName + " invert rotation z", 1);
+	}
+
+	/// <summary>
+	/// Utility function for retrieving axis locking settings at runtime.
+	/// </summary>
+	/// <param name="doF"></param>
+	/// <param name="axis"></param>
+	/// <returns></returns>
+	public static bool GetLock(DoF doF, Axis axis) {
+		Locks translationLocks = Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavTranslationLock : ManipulateTranslationLock;
+		Locks rotationLocks = Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavRotationLock : ManipulateRotationLock;
+		Locks locks = doF == DoF.Translation ? translationLocks : rotationLocks;
+
+		switch (axis) {
+			case Axis.X:
+				return (locks.X || locks.All) && !Application.isPlaying;
+			case Axis.Y:
+				return (locks.Y || locks.All) && !Application.isPlaying;
+			case Axis.Z:
+				return (locks.Z || locks.All) && !Application.isPlaying;
+			default:
+				throw new ArgumentOutOfRangeException("axis");
+		}
 	}
 }
