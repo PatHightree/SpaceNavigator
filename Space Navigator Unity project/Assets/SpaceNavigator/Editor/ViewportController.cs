@@ -14,10 +14,10 @@ class ViewportController {
 	private static bool _wasIdle;
 
 	// Rig components
-	[SerializeField]
 	private static GameObject _pivotGO, _cameraGO;
-	[SerializeField]
 	private static Transform _pivot, _camera;
+	private const string PivotName = "Scene camera pivot dummy";
+	private const string CameraName = "Scene camera dummy";
 
 	private static bool _wasHorizonLocked;
 
@@ -254,15 +254,17 @@ class ViewportController {
 	/// This offset is unpredictable, so we have to update our dummy rig each time before using it.
 	/// </summary>
 	private static void InitCameraRig() {
+		_cameraGO = GameObject.Find(CameraName);
+		_pivotGO = GameObject.Find(PivotName);
 		// Create camera rig if one is not already present.
 		if (!_pivotGO) {
-			_cameraGO = new GameObject("Scene camera dummy") { hideFlags = HideFlags.HideAndDontSave };
-			_camera = _cameraGO.transform;
-
-			_pivotGO = new GameObject("Scene camera pivot dummy") { hideFlags = HideFlags.HideAndDontSave };
-			_pivot = _pivotGO.transform;
-			_pivot.parent = _camera;
+			_cameraGO = new GameObject(CameraName) { hideFlags = HideFlags.HideAndDontSave };
+			_pivotGO = new GameObject(PivotName) { hideFlags = HideFlags.HideAndDontSave };
 		}
+		// Reassign these variables, they get destroyed when entering play mode.
+		_camera = _cameraGO.transform;
+		_pivot = _pivotGO.transform;
+		_pivot.parent = _camera;
 
 		SyncRigWithScene();
 	}
