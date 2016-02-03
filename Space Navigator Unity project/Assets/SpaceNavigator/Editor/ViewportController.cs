@@ -52,16 +52,16 @@ class ViewportController {
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
 
+		if (Settings.LockHorizon && !_wasHorizonLocked)
+			StraightenHorizon();
+		_wasHorizonLocked = Settings.LockHorizon;
+
 		// Return if device is idle.
 		if (SpaceNavigator.Translation == Vector3.zero &&
 			SpaceNavigator.Rotation == Quaternion.identity) {
 			_wasIdle = true;
 			return;
 		}
-
-		if (Settings.LockHorizon && !_wasHorizonLocked)
-			StraightenHorizon();
-		_wasHorizonLocked = Settings.LockHorizon;
 
 		switch (Settings.Mode) {
 			case OperationMode.Fly:
