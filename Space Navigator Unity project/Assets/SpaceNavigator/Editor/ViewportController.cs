@@ -20,6 +20,8 @@ class ViewportController {
 	private const string CameraName = "Scene camera dummy";
 
 	private static bool _wasHorizonLocked;
+	private const float _saveInterval = 30;
+	private static float _lastSaveTime;
 
 	static ViewportController() {
 		// Set up callbacks.
@@ -46,6 +48,12 @@ class ViewportController {
 	#endregion - Callbacks -
     
 	static void Update() {
+		// Autosave settings.
+		if (!Application.isPlaying && DateTime.Now.Second - _lastSaveTime > _saveInterval) {
+			Settings.Write();
+			_lastSaveTime = DateTime.Now.Second;
+		}
+
 		// If we don't want the driver to navigate the editor at runtime, exit now.
 		if (Application.isPlaying && !Settings.RuntimeEditorNav) return;
 

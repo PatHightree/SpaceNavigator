@@ -4,6 +4,7 @@ Changelog
 Features
 - Added option to navigate in the editor at runtime.
 - Separate axis lock settings for navigation and manipulation modes.
+- Autosave settings every 30 seconds.
 Fixes
 - Fixed horizon lock, coord sys and snap setting not being saved.
 - Refactored driver settings.
