@@ -98,6 +98,18 @@ public abstract class SpaceNavigator : IDisposable {
 	public float RotSensMin = RotSensMinDefault;
 	public float RotSensMax = RotSensMaxDefault;
 
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+	public const float RotDeadDefault = 30, RotDeadMinDefault = 0, RotDeadMaxDefault = 100f;
+	public float RotDead = RotDeadDefault;
+	public float RotDeadMin = RotDeadMinDefault;
+	public float RotDeadMax = RotDeadMaxDefault;
+
+	public const float TransDeadDefault = 30, TransDeadMinDefault = 0, TransDeadMaxDefault = 100f;
+	public float TransDead = TransDeadDefault;
+	public float TransDeadMin = TransDeadMinDefault;
+	public float TransDeadMax = TransDeadMaxDefault;
+#endif
+
 	// Setting storage keys
 	private const string TransSensKey = "Translation sensitivity";
 	private const string TransSensMinKey = "Translation sensitivity minimum";
@@ -114,6 +126,16 @@ public abstract class SpaceNavigator : IDisposable {
 	private const string LockRotationXKey = "Rotation lock X";
 	private const string LockRotationYKey = "Rotation lock Y";
 	private const string LockRotationZKey = "Rotation lock Z";
+
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+	private const string TransDeadKey = "Translation dead zone size";
+	private const string TransDeadMinKey = "Translation dead zone size minimum";
+	private const string TransDeadMaxKey = "Translation dead zone size maximum";
+
+	private const string RotDeadKey = "Rotation dead zone size";
+	private const string RotDeadMinKey = "Rotation dead zone size minimum";
+	private const string RotDeadMaxKey = "Rotation dead zone size maximum";
+#endif
 	#region - Singleton -
 	public static SpaceNavigator Instance {
 		get {
@@ -213,6 +235,41 @@ public abstract class SpaceNavigator : IDisposable {
 
 		GUILayout.EndHorizontal();
 		#endregion - Sensitivity + gearbox -
+
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+		#region - Dead Zone -
+		GUILayout.BeginVertical();
+		GUILayout.Label("Dead Zone");
+		GUILayout.Space(4);
+
+
+		#region - Translation + rotation -
+		GUILayout.BeginVertical();
+		#region - Translation -
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Translation", GUILayout.Width(67));
+		TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
+		TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
+		TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
+		TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
+		GUILayout.EndHorizontal();
+		#endregion - Translation -
+
+		#region - Rotation -
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Rotation", GUILayout.Width(67));
+		RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
+		RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
+		RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
+		RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
+		GUILayout.EndHorizontal();
+		#endregion - Rotation -
+		GUILayout.EndVertical();
+		#endregion - Translation + rotation -
+
+		GUILayout.EndVertical();
+#endregion - Deadzone -
+
 #endif
 	}
 
@@ -234,6 +291,16 @@ public abstract class SpaceNavigator : IDisposable {
 		RotSens = PlayerPrefs.GetFloat(RotSensKey, RotSensDefault);
 		RotSensMin = PlayerPrefs.GetFloat(RotSensMinKey, RotSensMinDefault);
 		RotSensMax = PlayerPrefs.GetFloat(RotSensMaxKey, RotSensMaxDefault);
+
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+		RotDead = PlayerPrefs.GetFloat(RotDeadKey, RotDeadDefault);
+		RotDeadMin = PlayerPrefs.GetFloat(RotDeadMinKey, RotDeadMinDefault);
+		RotDeadMax = PlayerPrefs.GetFloat(RotDeadMaxKey, RotDeadMaxDefault);
+
+		TransDead = PlayerPrefs.GetFloat(TransDeadKey, TransDeadDefault);
+		TransDeadMin = PlayerPrefs.GetFloat(TransDeadMinKey, TransDeadMinDefault);
+		TransDeadMax = PlayerPrefs.GetFloat(TransDeadMaxKey, TransDeadMaxDefault);
+#endif
 
 		_lockRotationAll = PlayerPrefs.GetInt(LockRotationAllKey, 0) == 1;
 		_lockRotationX = PlayerPrefs.GetInt(LockRotationXKey, 0) == 1;
@@ -257,6 +324,16 @@ public abstract class SpaceNavigator : IDisposable {
 		PlayerPrefs.SetFloat(RotSensKey, RotSens);
 		PlayerPrefs.SetFloat(RotSensMinKey, RotSensMin);
 		PlayerPrefs.SetFloat(RotSensMaxKey, RotSensMax);
+
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+		PlayerPrefs.SetFloat(RotDeadKey, RotDead);
+		PlayerPrefs.SetFloat(RotDeadMinKey, RotDeadMin);
+		PlayerPrefs.SetFloat(RotDeadMaxKey, RotDeadMax);
+
+		PlayerPrefs.SetFloat(TransDeadKey, TransDead);
+		PlayerPrefs.SetFloat(TransDeadMinKey, TransDeadMin);
+		PlayerPrefs.SetFloat(TransDeadMaxKey, TransDeadMax);
+#endif
 
 		PlayerPrefs.SetInt(LockRotationAllKey, _lockRotationAll ? 1 : 0);
 		PlayerPrefs.SetInt(LockRotationXKey, _lockRotationX ? 1 : 0);

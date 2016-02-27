@@ -31,13 +31,13 @@ public class SpaceNavigatorMac : SpaceNavigator {
 		SampleTranslation(ref x, ref y, ref z);
 		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		
-	return (
-		_clientID == 0 ?
+		return (
+		    _clientID == 0 ?
 		Vector3.zero :
-		new Vector3(
-			LockTranslationX || LockTranslationAll ? 0 : SubtractDeadzone(x, TranslationDeadzone),
-			LockTranslationY || LockTranslationAll ? 0 : SubtractDeadzone(-z, TranslationDeadzone),
-			LockTranslationZ || LockTranslationAll ? 0 : SubtractDeadzone(-y, TranslationDeadzone)) * sensitivity * TransSensScale);
+		new Vector3 (
+			    LockTranslationX || LockTranslationAll ? 0 : SubtractDeadzone (x, TransDead),
+			    LockTranslationY || LockTranslationAll ? 0 : SubtractDeadzone (-z, TransDead),
+			    LockTranslationZ || LockTranslationAll ? 0 : SubtractDeadzone (-y, TransDead)) * sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
 		int rx = 0, ry = 0, rz = 0;
@@ -49,16 +49,16 @@ public class SpaceNavigatorMac : SpaceNavigator {
 			Quaternion.identity :
 			Quaternion.Euler(
 				new Vector3(
-					LockRotationX || LockRotationAll ? 0 : SubtractDeadzone(-rx, RotationDeadzone),
-					LockRotationY || LockRotationAll ? 0 : SubtractDeadzone(rz, RotationDeadzone),
-					LockRotationZ || LockRotationAll ? 0 : SubtractDeadzone(ry, RotationDeadzone)) * sensitivity * RotSensScale));
+					LockRotationX || LockRotationAll ? 0 : SubtractDeadzone(-rx, RotDead),
+					LockRotationY || LockRotationAll ? 0 : SubtractDeadzone(rz, RotDead),
+					LockRotationZ || LockRotationAll ? 0 : SubtractDeadzone(ry, RotDead)) * sensitivity * RotSensScale));
 	}
 
-	private float SubtractDeadzone(int value, int deadzone)
+	private float SubtractDeadzone(int value, float deadzone)
 	{
-		int signMultiplier = value < 0 ? -1 : 1;
-		int absoluteValue = Mathf.Abs(value);
-		return Mathf.Max(absoluteValue - Mathf.Abs(deadzone), 0) * signMultiplier;
+		return value < 0
+			? Math.Min(0, value + Math.Abs(deadzone))
+			: Math.Max(0, value - Math.Abs(deadzone));
 	}
 
 	#region - Singleton -
