@@ -12,8 +12,9 @@ public class SpaceNavigatorWindow : EditorWindow {
 	/// Initializes the window.
 	/// </summary>
 	[MenuItem("Window/SpaceNavigator &s")]
-	public static void Init() {
-		SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
+	public static void Init()
+	{
+        SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 
 		if (window) {
 			window.Show();
@@ -36,7 +37,12 @@ public class SpaceNavigatorWindow : EditorWindow {
 	
 	public void OnGUI() {
 		_scrollPos = GUILayout.BeginScrollView(_scrollPos);
-		GUILayout.BeginVertical();
+
+        GUILayout.Space(10);
+        ViewportController.EnableWhilePlaying = GUILayout.Toggle(ViewportController.EnableWhilePlaying, "Enable While Playing");
+        GUILayout.Space(4);
+
+        GUILayout.BeginVertical();
 
 		#region - Operation mode -
 		GUILayout.Label("Operation mode");
@@ -83,12 +89,12 @@ public class SpaceNavigatorWindow : EditorWindow {
 		GUILayout.Label("Lock");
 		GUILayout.Space(4);
 
-		EditorGUI.BeginChangeCheck();
-		ViewportController.LockHorizon = GUILayout.Toggle(ViewportController.LockHorizon, "Horizon");
-		if (EditorGUI.EndChangeCheck() && ViewportController.LockHorizon)
-			ViewportController.StraightenHorizon();
-
-		SpaceNavigator.Instance.OnGUI();
+        EditorGUI.BeginChangeCheck();
+        ViewportController.LockHorizon = GUILayout.Toggle(ViewportController.LockHorizon, "Horizon");
+        if (EditorGUI.EndChangeCheck() && ViewportController.LockHorizon)
+            ViewportController.StraightenHorizon();
+        
+        SpaceNavigator.Instance.OnGUI();
 		#endregion - Locking and sensitivity -
 
 		#region - Axes inversion per mode -
@@ -115,7 +121,7 @@ public class SpaceNavigatorWindow : EditorWindow {
 				rx = ViewportController.GrabMoveInvertRotation.x < 0; ry = ViewportController.GrabMoveInvertRotation.y < 0; rz = ViewportController.GrabMoveInvertRotation.z < 0;
 				break;
 			default:
-				throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException();
 		}
 
 		GUILayout.BeginHorizontal();

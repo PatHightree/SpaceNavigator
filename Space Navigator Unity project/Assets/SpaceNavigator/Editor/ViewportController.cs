@@ -16,6 +16,7 @@ class ViewportController {
 	// Snapping
 	private static Dictionary<Transform, Quaternion> _unsnappedRotations = new Dictionary<Transform, Quaternion>();
 	private static Dictionary<Transform, Vector3> _unsnappedTranslations = new Dictionary<Transform, Vector3>();
+    static public bool EnableWhilePlaying = false;
 	public static bool SnapRotation;
 	public static int SnapAngle = 45;
 	public static bool SnapTranslation;
@@ -46,8 +47,7 @@ class ViewportController {
 		SpaceNavigator.Instance.Dispose();
 	}
 	static void Update() {
-		// This function should only operate while editing.
-		if (Application.isPlaying) return;
+        if (!EnableWhilePlaying && Application.isPlaying) return;
 
 		SceneView sceneView = SceneView.lastActiveSceneView;
 		if (!sceneView) return;
@@ -304,14 +304,16 @@ class ViewportController {
 	#endregion - Snapping -
 
 	#region - Settings -
-	private static void ReadSettings() {
+	private static void ReadSettings()
+	{
 		Mode = (OperationMode)PlayerPrefs.GetInt("Navigation mode", (int)OperationMode.Fly);
 		ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 		ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
 		ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
 		ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
+        EnableWhilePlaying = Convert.ToBoolean(PlayerPrefs.GetInt("Enable while playing", 0));
 
-		SpaceNavigator.Instance.ReadSettings();
+        SpaceNavigator.Instance.ReadSettings();
 	}
 	private static void ReadAxisInversions(ref Vector3 translation, ref Vector3 rotation, string baseName) {
 		translation.x = PlayerPrefs.GetInt(baseName + " invert translation x", 1);
@@ -322,13 +324,14 @@ class ViewportController {
 		rotation.z = PlayerPrefs.GetInt(baseName + " invert rotation z", 1);
 	}
 	public static void WriteSettings() {
-		PlayerPrefs.SetInt("Navigation mode", (int)Mode);
+        PlayerPrefs.SetInt("Navigation mode", (int)Mode);
 		WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 		WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
 		WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
 		WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
+        PlayerPrefs.SetInt("Enable while playing", Convert.ToInt32(EnableWhilePlaying));
 
-		SpaceNavigator.Instance.WriteSettings();
+        SpaceNavigator.Instance.WriteSettings();
 	}
 	private static void WriteAxisInversions(Vector3 translation, Vector3 rotation, string baseName) {
 		PlayerPrefs.SetInt(baseName + " invert translation x", translation.x < 0 ? -1 : 1);
