@@ -1,5 +1,11 @@
 Changelog
 
+1.5.1
+Fixes
+- Merged Stephen Wolter's deadzone fix for drifting on mac.
+- Added SpaceNavigatorDriver namespace.
+- Renamed a script that was conflicting with another sdk.
+
 1.5
 Features
 - Added option to navigate in the editor at runtime.
