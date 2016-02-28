@@ -2,47 +2,50 @@
 using System;
 using UnityEditor;
 
-[Serializable]
-public class SpaceNavigatorWindow : EditorWindow, IDisposable {
+namespace SpaceNavigatorDriver {
 
-	/// <summary>
-	/// Initializes the window.
-	/// </summary>
-	[MenuItem("Window/SpaceNavigator &s")]
-	public static void Init() {
-		SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
+	[Serializable]
+	public class SpaceNavigatorWindow : EditorWindow, IDisposable {
 
-		if (window) {
-			window.Show();
+		/// <summary>
+		/// Initializes the window.
+		/// </summary>
+		[MenuItem("Window/SpaceNavigator &s")]
+		public static void Init() {
+			SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
+
+			if (window) {
+				window.Show();
+			}
 		}
-	}
 
-	public static void OnDisable() {
-		// Write settings to PlayerPrefs when EditorWindow is closed.
-		Settings.Write();
-	}
+		public static void OnDisable() {
+			// Write settings to PlayerPrefs when EditorWindow is closed.
+			Settings.Write();
+		}
 
-	public static void OnDestroy() {
-		// Write settings to PlayerPrefs when EditorWindow is closed.
-		Settings.Write();
-	}
+		public static void OnDestroy() {
+			// Write settings to PlayerPrefs when EditorWindow is closed.
+			Settings.Write();
+		}
 
-	// This does not get called, unfortunately...
-	public void OnApplicationQuit() {
-		ViewportController.OnApplicationQuit();
-	}
-	
-	public void OnSelectionChange() {
-		ViewportController.StoreSelectionTransforms();
-	}
-	
-	public void OnGUI() {
-		Settings.OnGUI();
-	}
+		// This does not get called, unfortunately...
+		public void OnApplicationQuit() {
+			ViewportController.OnApplicationQuit();
+		}
 
-	public void Dispose() {
-		// Write settings to PlayerPrefs when EditorWindow is closed.
-		Settings.Write();
+		public void OnSelectionChange() {
+			ViewportController.StoreSelectionTransforms();
+		}
+
+		public void OnGUI() {
+			Settings.OnGUI();
+		}
+
+		public void Dispose() {
+			// Write settings to PlayerPrefs when EditorWindow is closed.
+			Settings.Write();
+		}
 	}
 }
 #endif

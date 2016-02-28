@@ -1,4 +1,5 @@
 using UnityEngine;
+using SpaceNavigatorDriver;
 
 public class FlyAround : MonoBehaviour {
 	public bool HorizonLock = true;

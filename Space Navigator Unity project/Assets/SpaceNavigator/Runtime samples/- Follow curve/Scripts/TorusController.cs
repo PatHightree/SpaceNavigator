@@ -1,6 +1,7 @@
 using UnityEngine;
+using SpaceNavigatorDriver;
 
-public class Controller : MonoBehaviour {
+public class TorusController : MonoBehaviour {
 	private Transform _camera;
 	private Transform _LookAtTarget;
 	private bool _isControllingTorus = true;
