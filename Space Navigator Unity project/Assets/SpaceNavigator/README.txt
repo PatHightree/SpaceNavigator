@@ -65,6 +65,7 @@ Credits
 -------
 - Thanks to Stephen Wolter for further refinement to the mac drift fix. 
 - Thanks to Enrico Tuttobene for contributing the mac drift fix.
+- Thanks to Kieron Lanning for implementing navigation at runtime.
 - Big thanks to Chase Cobb for motivating me to implement the mac version.
 - Thanks to Manuela Maier and Dave Buchhoffer (@vsaitoo) for testing and development feedback.
 - Thanks to Ewoud Wijma for loaning me the Hackingtosh for building the Mac port.
