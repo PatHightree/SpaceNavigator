@@ -52,6 +52,16 @@ public static class Settings {
 	public static float RotSensMin = RotSensMinDefault;
 	public static float RotSensMax = RotSensMaxDefault;
 
+	public const float RotDeadDefault = 30, RotDeadMinDefault = 0, RotDeadMaxDefault = 100f;
+	public static float RotDead = RotDeadDefault;
+	public static float RotDeadMin = RotDeadMinDefault;
+	public static float RotDeadMax = RotDeadMaxDefault;
+
+	public const float TransDeadDefault = 30, TransDeadMinDefault = 0, TransDeadMaxDefault = 100f;
+	public static float TransDead = TransDeadDefault;
+	public static float TransDeadMin = TransDeadMinDefault;
+	public static float TransDeadMax = TransDeadMaxDefault;
+
 	// Runtime editor navigation
 	public static bool RuntimeEditorNav = true;
 
@@ -301,6 +311,41 @@ public static class Settings {
 		}
 		GUILayout.EndHorizontal();
 		#endregion - Axes inversion per mode -
+
+		#region - Dead Zone -
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+		GUILayout.BeginVertical();
+		GUILayout.Label("Dead Zone");
+		GUILayout.Space(4);
+
+
+		#region - Translation + rotation -
+		GUILayout.BeginVertical();
+		#region - Translation -
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Translation", GUILayout.Width(67));
+		TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
+		TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
+		TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
+		TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
+		GUILayout.EndHorizontal();
+		#endregion - Translation -
+
+		#region - Rotation -
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Rotation", GUILayout.Width(67));
+		RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
+		RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
+		RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
+		RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
+		GUILayout.EndHorizontal();
+		#endregion - Rotation -
+		GUILayout.EndVertical();
+		#endregion - Translation + rotation -
+
+		GUILayout.EndVertical();
+#endif
+		#endregion - Deadzone -
 
 		GUILayout.EndVertical();
 		GUILayout.EndScrollView();

@@ -36,7 +36,7 @@ class SpaceNavigatorWindows : SpaceNavigator {
 	private Device _device;
 	//private Keyboard _keyboard;
 
-	#region - Singleton -
+#region - Singleton -
 	/// <summary>
 	/// Private constructor, prevents a default instance of the <see cref="SpaceNavigatorWindows" /> class from being created.
 	/// </summary>
@@ -59,9 +59,9 @@ class SpaceNavigatorWindows : SpaceNavigator {
 		get { return _subInstance ?? (_subInstance = new SpaceNavigatorWindows()); }
 	}
 	private static SpaceNavigatorWindows _subInstance;
-	#endregion - Singleton -
+#endregion - Singleton -
 
-	#region - IDisposable -
+#region - IDisposable -
 	public override void Dispose() {
 		try {
 			if (_device != null && _device.IsConnected) {
@@ -74,6 +74,6 @@ class SpaceNavigatorWindows : SpaceNavigator {
 			Debug.LogError(ex.ToString());
 		}
 	}
-	#endregion - IDisposable -
+#endregion - IDisposable -
 }
-#endif	// UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#endif    // UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN

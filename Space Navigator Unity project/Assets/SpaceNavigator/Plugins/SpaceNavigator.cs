@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+
+
 public abstract class SpaceNavigator : IDisposable {
 	// Public runtime API
 	public static Vector3 Translation {
@@ -27,7 +29,6 @@ public abstract class SpaceNavigator : IDisposable {
 	public abstract Vector3 GetTranslation();
 	public abstract Quaternion GetRotation();
 
-	// Sensitivity settings
 	#region - Singleton -
 	public static SpaceNavigator Instance {
 		get {
