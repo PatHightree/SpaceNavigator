@@ -22,43 +22,43 @@ public class SpaceNavigatorMac : SpaceNavigator {
 
 	private int _clientID;
 
+	private const int TranslationDeadzone = 30;
+	private const int RotationDeadzone = 30;
+
 	// Public API
 	public override Vector3 GetTranslation() {
 		int x = 0, y = 0, z = 0;
 		SampleTranslation(ref x, ref y, ref z);
 		float sensitivity = Application.isPlaying ? PlayTransSens : TransSens[CurrentGear];
 		
-		// Workaround for drift on mac by Enrico Tuttobene.
-		if (Mathf.Abs(x) == 1) x = 0;
-		if (Mathf.Abs(y) == 1) y = 0;
-		if (Mathf.Abs(z) == 1) z = 0;
-
 		return (
-				   _clientID == 0 ?
-					   Vector3.zero :
-					   new Vector3(
-						   LockTranslationX || LockTranslationAll ? 0 : (float)x,
-						   LockTranslationY || LockTranslationAll ? 0 : -(float)z,
-						   LockTranslationZ || LockTranslationAll ? 0 : -(float)y) * sensitivity * TransSensScale);
+		    _clientID == 0 ?
+		Vector3.zero :
+		new Vector3 (
+			    LockTranslationX || LockTranslationAll ? 0 : SubtractDeadzone (x, TransDead),
+			    LockTranslationY || LockTranslationAll ? 0 : SubtractDeadzone (-z, TransDead),
+			    LockTranslationZ || LockTranslationAll ? 0 : SubtractDeadzone (-y, TransDead)) * sensitivity * TransSensScale);
 	}
 	public override Quaternion GetRotation() {
 		int rx = 0, ry = 0, rz = 0;
 		SampleRotation(ref rx, ref ry, ref rz);
 		float sensitivity = Application.isPlaying ? PlayRotSens : RotSens;
 
-		// Workaround for drift on mac by Enrico Tuttobene.
-		if (Mathf.Abs(rx) == 1) rx = 0;
-		if (Mathf.Abs(ry) == 1) ry = 0;
-		if (Mathf.Abs(rz) == 1) rz = 0;
-
 		return (
-				   _clientID == 0 ?
-					   Quaternion.identity :
-					   Quaternion.Euler(
-						   new Vector3(
-							   LockRotationX || LockRotationAll ? 0 : -(float)rx,
-							   LockRotationY || LockRotationAll ? 0 : (float)rz,
-							   LockRotationZ || LockRotationAll ? 0 : (float)ry) * sensitivity * RotSensScale));
+			_clientID == 0 ?
+			Quaternion.identity :
+			Quaternion.Euler(
+				new Vector3(
+					LockRotationX || LockRotationAll ? 0 : SubtractDeadzone(-rx, RotDead),
+					LockRotationY || LockRotationAll ? 0 : SubtractDeadzone(rz, RotDead),
+					LockRotationZ || LockRotationAll ? 0 : SubtractDeadzone(ry, RotDead)) * sensitivity * RotSensScale));
+	}
+
+	private float SubtractDeadzone(int value, float deadzone)
+	{
+		return value < 0
+			? Math.Min(0, value + Math.Abs(deadzone))
+			: Math.Max(0, value - Math.Abs(deadzone));
 	}
 
 	#region - Singleton -

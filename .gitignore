@@ -7,6 +7,9 @@ Temp/
 Thumbs.db
 Thumbs.db.meta
 
+#ignore thumbnails created by OSX
+.DS_Store
+
 #Ignore files build by Visual Studio
 *.sln
 *.sln.DotSettings
