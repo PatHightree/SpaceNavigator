@@ -52,10 +52,20 @@ When installing a newer version of the plugin, please follow these steps:
 If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
 When this happens, choose the default layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
 
-### Pro tip
+### Pro tip 1
 Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directory.  
 - SpaceNavigator is added to the packages list in the project creation in wizard.  
 - Easy to add later by right-clicking in *Project View* and choosing *Import Package*.  
+
+### Pro tip 2
+The 3dconnexion driver comes with a keyboard, mouse, joystick emulator.  
+Personally I have never needed it, and some games and applications receive really erattic joystic input from it.  
+Here's how to disable it On Windows 10:  
+- Open the device manager by pressing Windows-X and choosing Device Manager.  
+- Navigate to Human Interface Devices/HID-compliant game controller.  
+- Select it and click the down arrow button.  
+- If there are more entries called HID-compliant game controller,  
+disable the one which properties say Location: on #Dconnexion KMJ Emulator.  
 
 Credits
 -------
