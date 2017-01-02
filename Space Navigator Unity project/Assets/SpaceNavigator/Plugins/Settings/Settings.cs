@@ -87,6 +87,8 @@ namespace SpaceNavigatorDriver {
 
 		public static void OnGUI() {
 #if UNITY_EDITOR
+			EditorGUI.BeginChangeCheck();
+
 			_scrollPos = GUILayout.BeginScrollView(_scrollPos);
 			GUILayout.BeginVertical();
 
@@ -351,6 +353,9 @@ namespace SpaceNavigatorDriver {
 
 			GUILayout.EndVertical();
 			GUILayout.EndScrollView();
+
+			if (EditorGUI.EndChangeCheck())
+				Write();
 #endif
 		}
 
