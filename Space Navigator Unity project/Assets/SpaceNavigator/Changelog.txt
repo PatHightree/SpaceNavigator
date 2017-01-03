@@ -1,5 +1,10 @@
 Changelog
 
+1.5.2
+Fixes
+- Fixed sceneview camera pos/rot being reset on play/stop.
+- Settings are now saved immediately after any modification.
+
 1.5.1
 Fixes
 - Merged Stephen Wolter's deadzone fix for drifting on mac.
