@@ -62,6 +62,8 @@ namespace SpaceNavigatorDriver {
 			SceneView sceneView = SceneView.lastActiveSceneView;
 			if (!sceneView) return;
 
+			SyncRigWithScene();
+
 			if (Settings.LockHorizon && !_wasHorizonLocked)
 				StraightenHorizon();
 			_wasHorizonLocked = Settings.LockHorizon;
