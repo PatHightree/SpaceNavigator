@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace SpaceNavigatorDriver {
@@ -52,7 +51,7 @@ namespace SpaceNavigatorDriver {
 				if (!_device.IsConnected)
 					_device.Connect();
 			}
-			catch (COMException ex) {
+			catch (Exception ex) {
 				Debug.LogError(ex.ToString());
 			}
 		}
@@ -72,7 +71,7 @@ namespace SpaceNavigatorDriver {
 					GC.Collect();
 				}
 			}
-			catch (COMException ex) {
+			catch (Exception ex) {
 				Debug.LogError(ex.ToString());
 			}
 		}
