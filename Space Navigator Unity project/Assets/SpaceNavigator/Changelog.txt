@@ -1,5 +1,9 @@
 Changelog
 
+1.5.3
+Fixes
+- Fixed EditorApplication.playmodeStateChanged' is obsolete message.
+
 1.5.2
 Fixes
 - Fixed sceneview camera pos/rot being reset on play/stop.
