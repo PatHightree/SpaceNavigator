@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+(c) Copyright 3Dconnexion. All rights reserved. 
+$Revision:$
+
+This cfg file is a starting point for ISVs that support V3DCMDs through the 3Dx SDK.
+
+V3DCMDs are as far removed as possible from the hardware buttons that generated them.  
+Any button on any devicce can be assigned to a V3DCMD.
+Some devices will generate very few V3DCMDs because they have very few buttons.  
+High end devices will generate most of them.
+
+It is very important for all apps to use V3DCMDs instead of earlier mechanisms so they have the best chance
+of working when new 3Dx devices are released.
+
+Naturally, over time, new V3DCMDs will be added to support unforeseen functionality.
+These buttons won't be supported natively until the applications are updated with the new list of V3DCMDs.  
+But all other the buttons will work regardless of what physical button generates the V3DCMD.  
+
+Generally the driver and/or 3Dx-plugins will probably do something useful with these new buttons
+until the apps catch up.
+
+-->
+<AppCfg Default="true" xmlns="" CfgFormatVersion="1.2" ThisFileVersion="1.1">
+  <AppInfo>
+    <Signature>
+      <Name>TestSiapp</Name>
+      <ExecutableName>TestSiapp.exe</ExecutableName>
+      <VersionRange>
+        <Min>1.0</Min>
+        <Max>1.0</Max>
+      </VersionRange>
+      <Transport>S80</Transport>
+    </Signature>
+    <Options>
+      <IgnoreMouseWheelInertia>true</IgnoreMouseWheelInertia>
+      <SendDeviceChangeEvent>false</SendDeviceChangeEvent>
+    </Options>
+  </AppInfo>
+  <CfgProperties>
+    <Grab>None</Grab>
+  </CfgProperties>
+  <Settings>
+    <ResponseCurve>1.7</ResponseCurve>
+  </Settings>
+  <ButtonActions xmlns:driver_images="./images/3DxService/">
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_MENU_OPTIONS</ID>
+      <Name>Your App Menu</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F1</ID>
+      <Name>Your App cmd 1</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F2</ID>
+      <Name>Your App cmd 2</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F3</ID>
+      <Name>Your App cmd 3</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F4</ID>
+      <Name>Your App cmd 4</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F5</ID>
+      <Name>Your App cmd 5</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F6</ID>
+      <Name>Your App cmd 6</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F7</ID>
+      <Name>Your App cmd 7</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F8</ID>
+      <Name>Your App cmd 8</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F9</ID>
+      <Name>Your App cmd 9</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F10</ID>
+      <Name>Your App cmd 10</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F11</ID>
+      <Name>Your App cmd 11</Name>
+    </ButtonAction>
+    <ButtonAction Type="V3DCMD">
+      <ID>V3DCMD_KEY_F12</ID>
+      <Name>Your App cmd 12</Name>
+    </ButtonAction>
+	<ButtonAction Type="Menu">
+		<ID>RadialMenu_SampleRM</ID>
+		<Name>SampleRM</Name>
+		<Image>
+			<Source>[driver_images:HIDMouse_RadialMenu.png]</Source>
+		</Image>
+		<MenuID>MenuRM_Sample</MenuID>
+	</ButtonAction>
+  </ButtonActions>
+
+  <Menus>
+    <Executable>3DxPieMenus.exe</Executable>
+    <Menu Type="Radial">
+      <Name>SampleRM</Name>
+      <ID>MenuRM_Sample</ID>
+      <GesturesEnabled>true</GesturesEnabled>
+      <Button>
+        <Input>
+          <ActionID>MenuButton_1</ActionID>
+        </Input>
+        <Output>
+          <ActionID>V3DCMD_KEY_F1</ActionID>
+        </Output>
+      </Button>
+      <Button>
+        <Input>
+          <ActionID>MenuButton_2</ActionID>
+        </Input>
+        <Output>
+          <ActionID>V3DCMD_KEY_F2</ActionID>
+        </Output>
+      </Button>
+      <Button>
+        <Input>
+          <ActionID>MenuButton_3</ActionID>
+        </Input>
+        <Output>
+          <ActionID>V3DCMD_KEY_F3</ActionID>
+        </Output>
+      </Button>
+      <Button>
+        <Input>
+          <ActionID>MenuButton_4</ActionID>
+        </Input>
+        <Output>
+          <ActionID>V3DCMD_KEY_F4</ActionID>
+        </Output>
+      </Button>
+    </Menu>
+  </Menus>
+
+  <Devices>
+    <Device>
+      <Name>Standard 3D Mouse</Name>
+      <VendorID>0</VendorID>
+      <ProductID>0</ProductID>
+      <AxisFilter>None</AxisFilter>
+      <CurrentButtonBank>Default</CurrentButtonBank>
+      <ButtonBank Default="true">
+        <Name>STR_DEFAULT_BUTTONBANK</Name>
+        <ID>Default</ID>
+        <Button>
+          <Input>
+            <ActionID>V3DK_MENU</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_MENU_OPTIONS</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>V3DK_FIT</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_VIEW_FIT</ActionID>
+          </Output>
+        </Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_TOP</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_TOP</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_LEFT</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_LEFT</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_RIGHT</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_RIGHT</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_FRONT</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_FRONT</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_BOTTOM</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_BOTTOM</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_BACK</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_BACK</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_ROLL_CW</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_ROLLCW</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_ROLL_CCW</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_ROLLCCW</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_ISO1</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_ISO1</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_ISO2</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_VIEW_ISO2</ActionID>
+			</Output>
+		</Button>
+        <Button>
+          <Input>
+            <ActionID>V3DK_1</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_KEY_F1</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>V3DK_2</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_KEY_F2</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>V3DK_3</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_KEY_F3</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>V3DK_4</ActionID>
+          </Input>
+          <Output>
+            <ActionID>V3DCMD_KEY_F4</ActionID>
+          </Output>
+        </Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_5</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F5</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_6</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F6</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_7</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F7</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_8</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F8</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_9</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F9</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_10</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F10</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_11</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F11</ActionID>
+			</Output>
+		</Button>
+		<Button>
+			<Input>
+				<ActionID>V3DK_12</ActionID>
+			</Input>
+			<Output>
+				<ActionID>V3DCMD_KEY_F12</ActionID>
+			</Output>
+		</Button>	
+      </ButtonBank>
+    </Device>
+    <Device>
+      <Name>SpaceNavigator</Name>
+      <VendorID>46d</VendorID>
+      <ProductID>c626</ProductID>
+      <CurrentButtonBank>Default</CurrentButtonBank>
+      <ButtonBank Default="true">
+        <Name>STR_DEFAULT_BUTTONBANK</Name>
+        <ID>Default</ID>
+        <Button ReadOnly="true">
+          <Input>
+            <ActionID>HIDButton_1</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_MenuRM1</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>HIDButton_2</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_SampleRM</ActionID>
+          </Output>
+        </Button>
+      </ButtonBank>
+    </Device>
+    <Device>
+      <Name>SpaceNavigator for Notebooks</Name>
+      <VendorID>46d</VendorID>
+      <ProductID>c628</ProductID>
+      <CurrentButtonBank>Default</CurrentButtonBank>
+      <ButtonBank Default="true">
+        <Name>STR_DEFAULT_BUTTONBANK</Name>
+        <ID>Default</ID>
+        <Button ReadOnly="true">
+          <Input>
+            <ActionID>HIDButton_1</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_MenuRM1</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>HIDButton_2</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_SampleRM</ActionID>
+          </Output>
+        </Button>
+      </ButtonBank>
+    </Device>
+    <Device>
+      <Name>SpaceMouse Wireless</Name>
+      <VendorID>256f</VendorID>
+      <ProductID>c62e</ProductID>
+      <CurrentButtonBank>Default</CurrentButtonBank>
+      <ButtonBank Default="true">
+        <Name>STR_DEFAULT_BUTTONBANK</Name>
+        <ID>Default</ID>
+        <Button ReadOnly="true">
+          <Input>
+            <ActionID>HIDButton_1</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_MenuRM1</ActionID>
+          </Output>
+        </Button>
+        <Button>
+          <Input>
+            <ActionID>HIDButton_2</ActionID>
+          </Input>
+          <Output>
+            <ActionID>RadialMenu_SampleRM</ActionID>
+          </Output>
+        </Button>
+      </ButtonBank>
+    </Device>
+  </Devices>
+  <UI>
+	<ButtonFlyouts>
+		<Category Sort="false">
+			<ID>YourApplicationName</ID><Name>Your Application Name</Name>
+			<ButtonAction><ID>V3DCMD_MENU_OPTIONS</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F1</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F2</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F3</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F4</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F5</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F6</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F7</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F8</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F9</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F10</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F11</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_KEY_F12</ID></ButtonAction>					
+		</Category>
+		<Category Sort="false">
+			<ID>UI_Views</ID><Name>STR_UI_VIEWS</Name>
+			<ButtonAction><ID>V3DCMD_VIEW_FIT</ID></ButtonAction>					
+			<ButtonAction><ID>V3DCMD_VIEW_1</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_2</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_3</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_SAVE_VIEW_1</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_SAVE_VIEW_2</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_SAVE_VIEW_3</ID></ButtonAction>										
+			<ButtonAction><ID>V3DCMD_VIEW_TOP</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_LEFT</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_RIGHT</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_FRONT</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_BOTTOM</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_BACK</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_ROLLCW</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_ROLLCCW</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_ISO1</ID></ButtonAction>
+			<ButtonAction><ID>V3DCMD_VIEW_ISO2</ID></ButtonAction>
+		</Category>
+	</ButtonFlyouts>
+  </UI>
+</AppCfg>
