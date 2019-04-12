@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -11,29 +11,39 @@ namespace SpaceNavigatorDriver {
 		private const float TransSensScale = 0.0001f, RotSensScale = 0.0008f;
 
 		// Public API
-		public override Vector3 GetTranslation() {
+		public override Vector3 GetTranslation()
+		{
+		    if (SubInstance._sensor != null && Translation == null)
+		        Translation = SubInstance._sensor.Translation;
+
 			float sensitivity = Application.isPlaying ? Settings.PlayTransSens : Settings.TransSens[Settings.CurrentGear];
 			return (SubInstance._sensor == null ?
 						Vector3.zero :
 						new Vector3(
-							Settings.GetLock(DoF.Translation, Axis.X) ? 0 : (float)SubInstance._sensor.Translation.X,
-							Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : (float)SubInstance._sensor.Translation.Y,
-							Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : -(float)SubInstance._sensor.Translation.Z) *
+							Settings.GetLock(DoF.Translation, Axis.X) ? 0 : (float)Translation.X,
+							Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : (float)Translation.Y,
+							Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : -(float)Translation.Z) *
 						sensitivity * TransSensScale);
 		}
 		public override Quaternion GetRotation() {
-			float sensitivity = Application.isPlaying ? Settings.PlayRotSens : Settings.RotSens;
+		    if (SubInstance._sensor != null && Rotation == null)
+		        Rotation = SubInstance._sensor.Rotation;
+
+            float sensitivity = Application.isPlaying ? Settings.PlayRotSens : Settings.RotSens;
 			return (SubInstance._sensor == null ?
 						Quaternion.identity :
 						Quaternion.AngleAxis(
-							(float)SubInstance._sensor.Rotation.Angle * sensitivity * RotSensScale,
+							(float)Rotation.Angle * sensitivity * RotSensScale,
 							new Vector3(
-								Settings.GetLock(DoF.Rotation, Axis.X) ? 0 : -(float)SubInstance._sensor.Rotation.X,
-								Settings.GetLock(DoF.Rotation, Axis.Y) ? 0 : -(float)SubInstance._sensor.Rotation.Y,
-								Settings.GetLock(DoF.Rotation, Axis.Z) ? 0 : (float)SubInstance._sensor.Rotation.Z)));
+								Settings.GetLock(DoF.Rotation, Axis.X) ? 0 : -(float)Rotation.X,
+								Settings.GetLock(DoF.Rotation, Axis.Y) ? 0 : -(float)Rotation.Y,
+								Settings.GetLock(DoF.Rotation, Axis.Z) ? 0 : (float)Rotation.Z)));
 		}
 
 		// Device variables
+	    private AngleAxis Rotation;
+        private Vector3D Translation;
+
 		private Sensor _sensor;
 		private Device _device;
 		//private Keyboard _keyboard;
@@ -53,7 +63,7 @@ namespace SpaceNavigatorDriver {
 					_device.Connect();
 			}
 			catch (COMException ex) {
-				Debug.LogError(ex.ToString());
+				//Debug.LogError(ex.ToString());
 			}
 		}
 
