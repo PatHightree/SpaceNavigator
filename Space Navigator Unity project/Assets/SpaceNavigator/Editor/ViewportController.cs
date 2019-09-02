@@ -110,6 +110,18 @@ namespace SpaceNavigatorDriver {
 		static void Fly(SceneView sceneView, Vector3 translationInversion, Vector3 rotationInversion) {
 			SyncRigWithScene();
 
+			
+			//calculate distance to selected object or world center, to adjust fly speed
+			Vector3 targetPosition = (Selection.activeTransform != null) ? Selection.activeTransform.position : new Vector3();
+			float distanceToTarget = (_camera.position - targetPosition).magnitude;
+			float flySpeedAdjustment = Mathf.Pow(distanceToTarget * 0.3f, 1.1f);
+			if (flySpeedAdjustment > 1000f) flySpeedAdjustment = 1000f; //limit maximum speed, so that camera cannot exit valid value-range too fast.
+			
+
+			// Apply inversion of axes for fly/grabmove mode.
+			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, translationInversion) * flySpeedAdjustment;
+			
+			
 			// Apply inversion of axes for fly/grabmove mode.
 			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, translationInversion);
 			Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, rotationInversion);
