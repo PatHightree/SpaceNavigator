@@ -326,7 +326,6 @@ namespace SpaceNavigatorDriver {
 		}
 		#endregion - Snapping -
 		
-		
 		private static float cameraFlySpeedAdjustment() {
 
 			if (Settings.Mode == OperationMode.Fly && !Settings.EnableCameraFlyspeedAdjustmentFlymode) return 1f;

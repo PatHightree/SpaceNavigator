@@ -54,8 +54,8 @@ namespace SpaceNavigatorDriver {
 		public static float RotSensMin = RotSensMinDefault;
 		public static float RotSensMax = RotSensMaxDefault;
 		
-		public static bool EnableCameraSpeedAdjustmentFlymode = true;
-		public static bool EnableCameraSpeedAdjustmentOrbitmode = true;
+		public static bool EnableCameraFlyspeedAdjustmentFlymode = true;
+		public static bool EnableCameraFlyspeedAdjustmentOrbitmode = true;
 		public static int FlyspeedSlowdownDistance = 100000;
 		public static float FlyspeedExponent = 1.05f;
 		public static float FlyspeedConstant = 0.1f;
