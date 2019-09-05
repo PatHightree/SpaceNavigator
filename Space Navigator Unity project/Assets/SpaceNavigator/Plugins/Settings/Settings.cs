@@ -53,6 +53,12 @@ namespace SpaceNavigatorDriver {
 		public static float RotSens = RotSensDefault;
 		public static float RotSensMin = RotSensMinDefault;
 		public static float RotSensMax = RotSensMaxDefault;
+		
+		public static bool EnableCameraSpeedAdjustmentFlymode = true;
+		public static bool EnableCameraSpeedAdjustmentOrbitmode = true;
+		public static int FlyspeedSlowdownDistance = 100000;
+		public static float FlyspeedExponent = 1.05f;
+		public static float FlyspeedConstant = 0.1f;
 
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 	public const float RotDeadDefault = 30, RotDeadMinDefault = 0, RotDeadMaxDefault = 100f;

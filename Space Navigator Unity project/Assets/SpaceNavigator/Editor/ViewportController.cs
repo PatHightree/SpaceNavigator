@@ -110,16 +110,9 @@ namespace SpaceNavigatorDriver {
 		static void Fly(SceneView sceneView, Vector3 translationInversion, Vector3 rotationInversion) {
 			SyncRigWithScene();
 
-			
-			//calculate distance to selected object or world center, to adjust fly speed
-			Vector3 targetPosition = (Selection.activeTransform != null) ? Selection.activeTransform.position : new Vector3();
-			float distanceToTarget = (_camera.position - targetPosition).magnitude;
-			float flySpeedAdjustment = Mathf.Pow(distanceToTarget * 0.3f, 1.1f);
-			if (flySpeedAdjustment > 1000f) flySpeedAdjustment = 1000f; //limit maximum speed, so that camera cannot exit valid value-range too fast.
-			
 
 			// Apply inversion of axes for fly/grabmove mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, translationInversion) * flySpeedAdjustment;
+			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, translationInversion) * cameraFlySpeedAdjustment();
 			
 			
 			// Apply inversion of axes for fly/grabmove mode.
@@ -154,9 +147,9 @@ namespace SpaceNavigatorDriver {
 			}
 
 			SyncRigWithScene();
-
+			
 			// Apply inversion of axes for orbit mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.OrbitInvertTranslation);
+			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.OrbitInvertTranslation) * cameraFlySpeedAdjustment();
 			Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.OrbitInvertRotation);
 
 			_camera.Translate(translation, Space.Self);
@@ -332,5 +325,26 @@ namespace SpaceNavigatorDriver {
 				Mathf.RoundToInt(v.z / snap) * snap);
 		}
 		#endregion - Snapping -
+		
+		
+		private static float cameraFlySpeedAdjustment() {
+
+			if (Settings.Mode == OperationMode.Fly && !Settings.EnableCameraFlyspeedAdjustmentFlymode) return 1f;
+			if (Settings.Mode == OperationMode.Orbit && !Settings.EnableCameraFlyspeedAdjustmentOrbitmode) return 1f;
+
+			//calculate distance to selected object or world center, to adjust fly speed
+			Vector3 targetPosition = (Selection.activeTransform != null) ? Selection.activeTransform.position : new Vector3();
+			float distanceToTarget = (_camera.position - targetPosition).magnitude;
+			float flySpeedAdjustment = 1f;
+
+			if (distanceToTarget <= Settings.FlyspeedSlowdownDistance) {
+				//this is the practical maximum camera distance in Unity 2019.2, as with bigger distances the gizmos disappear
+				flySpeedAdjustment = Mathf.Pow(distanceToTarget * Settings.FlyspeedConstant, Settings.FlyspeedExponent);
+			} else {
+				flySpeedAdjustment = Mathf.Pow(Settings.FlyspeedSlowdownDistance * Settings.FlyspeedConstant, Settings.FlyspeedExponent) + (distanceToTarget - Settings.FlyspeedSlowdownDistance) * (Settings.FlyspeedSlowdownDistance / distanceToTarget);
+			}
+
+			return flySpeedAdjustment;
+		}
 	}
 }
