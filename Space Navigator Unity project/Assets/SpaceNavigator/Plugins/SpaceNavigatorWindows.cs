@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
 using _3Dconnexion;
@@ -29,7 +29,7 @@ namespace SpaceNavigatorDriver
         private bool isrunning;
 
         private const float TransSensScale = 0.0001f, RotSensScale = 0.0008f;
-        private int TX, TY, TZ, RX, RY, RZ;
+        private float TX, TY, TZ, RX, RY, RZ;
 
         #region Setup
 
@@ -103,10 +103,10 @@ namespace SpaceNavigatorDriver
                         RY = motionEvent.spwData.mData[4];
                         RZ = motionEvent.spwData.mData[5];
 
-                            string motionData = string.Format(templateTR, "",
-                                motionEvent.spwData.mData[0], motionEvent.spwData.mData[1], motionEvent.spwData.mData[2], // TX, TY, TZ
-                                motionEvent.spwData.mData[3], motionEvent.spwData.mData[4], motionEvent.spwData.mData[5], // RX, RY, RZ
-                                motionEvent.spwData.period); // Period (normally 16 ms)
+                        string motionData = string.Format(templateTR, "",
+                            motionEvent.spwData.mData[0], motionEvent.spwData.mData[1], motionEvent.spwData.mData[2], // TX, TY, TZ
+                            motionEvent.spwData.mData[3], motionEvent.spwData.mData[4], motionEvent.spwData.mData[5], // RX, RY, RZ
+                            motionEvent.spwData.period); // Period (normally 16 ms)
                         Log("Motion event " + motionData);
 
                         break;
@@ -148,20 +148,20 @@ namespace SpaceNavigatorDriver
         public override Vector3 GetTranslation()
         {
             float sensitivity = Application.isPlaying ? Settings.PlayTransSens : Settings.TransSens[Settings.CurrentGear];
-            return (new Vector3(
-                      Settings.GetLock(DoF.Translation, Axis.X) ? 0 : (float) TX / 2000f,
-                      Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : (float) TY / 2000f,
-                      Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : -(float) TZ / 2000f) * (sensitivity * TransSensScale));
+            return sensitivity * TransSensScale *
+                   new Vector3(
+                       Settings.GetLock(DoF.Translation, Axis.X) ? 0 : TX,
+                       Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : TY,
                        Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : TZ);
         }
 
         public override Quaternion GetRotation()
         {
             float sensitivity = Application.isPlaying ? Settings.PlayRotSens : Settings.RotSens;
-            return (Quaternion.Euler(
-                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.X) ? 0 : -(float) RX / 2000f),
-                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.Y) ? 0 : -(float) RY / 2000f),
-                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.Z) ? 0 : (float) RZ / 2000f)));
+            return Quaternion.Euler(
+                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.X) ? 0 : -RX),
+                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.Y) ? 0 : -RY),
+                sensitivity * RotSensScale * (Settings.GetLock(DoF.Rotation, Axis.Z) ? 0 : -RZ));
         }
 
         #endregion
