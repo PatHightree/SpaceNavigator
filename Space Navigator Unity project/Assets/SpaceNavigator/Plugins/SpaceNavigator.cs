@@ -29,6 +29,13 @@ namespace SpaceNavigatorDriver {
 		public abstract Vector3 GetTranslation();
 		public abstract Quaternion GetRotation();
 
+		private static bool DebugLog = false;
+		protected void Log(string _msg)
+		{
+			if (DebugLog)
+				Debug.Log(_msg);
+		}
+
 		#region - Singleton -
 		public static SpaceNavigator Instance {
 			get {

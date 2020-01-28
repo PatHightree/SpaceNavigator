@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
 using _3Dconnexion;
@@ -9,14 +9,10 @@ namespace SpaceNavigatorDriver
 
     class SpaceNavigatorWindows : SpaceNavigator
     {
-        private const bool DebugLog = true;
-        
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         static extern IntPtr GetForegroundWindow();
-
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
         [DllImport("user32.dll")]
         static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
@@ -65,18 +61,18 @@ namespace SpaceNavigatorDriver
             res = SiApp.SiInitialize();
             if (res != SiApp.SpwRetVal.SPW_NO_ERROR)
                 Debug.LogError("Initialize function failed");
-            Debug.Log("SiInitialize" + res);
+            Log("SiInitialize" + res);
 
             SiApp.SiOpenData openData = new SiApp.SiOpenData();
             SiApp.SiOpenWinInit(ref openData, hMainWindow);
             if (openData.hWnd == IntPtr.Zero)
                 Debug.LogError("Handle is empty");
-            Debug.Log("SiOpenWinInit" + openData.hWnd + "(window handle)");
+            Log("SiOpenWinInit" + openData.hWnd + "(window handle)");
 
             devHdl = SiApp.SiOpen(appName, SiApp.SI_ANY_DEVICE, IntPtr.Zero, SiApp.SI_EVENT, ref openData);
             if (devHdl == IntPtr.Zero)
                 Debug.LogError("Open returns empty device handle");
-            Debug.Log("SiOpen" + devHdl + "(device handle)");
+            Log("SiOpen" + devHdl + "(device handle)");
         }
 
         #endregion
@@ -93,7 +89,7 @@ namespace SpaceNavigatorDriver
 
             if (val == SiApp.SpwRetVal.SI_IS_EVENT)
             {
-                Debug.Log("SiGetEventWinInit: " + eventData.msg);
+                Log("SiGetEventWinInit: " + eventData.msg);
 
                 SiApp.SiSpwEvent_JustType sEventType = PtrToStructure<SiApp.SiSpwEvent_JustType>(eventPtr);
                 switch (sEventType.type)
@@ -107,49 +103,34 @@ namespace SpaceNavigatorDriver
                         RY = motionEvent.spwData.mData[4];
                         RZ = motionEvent.spwData.mData[5];
 
-                        if (DebugLog)
-                        {
                             string motionData = string.Format(templateTR, "",
                                 motionEvent.spwData.mData[0], motionEvent.spwData.mData[1], motionEvent.spwData.mData[2], // TX, TY, TZ
                                 motionEvent.spwData.mData[3], motionEvent.spwData.mData[4], motionEvent.spwData.mData[5], // RX, RY, RZ
                                 motionEvent.spwData.period); // Period (normally 16 ms)
-                            Debug.Log("Motion event " + motionData);
-                        }
+                        Log("Motion event " + motionData);
 
                         break;
 
                     case SiApp.SiEventType.SI_ZERO_EVENT:
-                        if (DebugLog)
-                        {
-                            Debug.Log("Zero event");
-                        }
+                        Log("Zero event");
                         break;
 
                     case SiApp.SiEventType.SI_CMD_EVENT:
                         SiApp.SiSpwEvent_CmdEvent cmdEvent = PtrToStructure<SiApp.SiSpwEvent_CmdEvent>(eventPtr);
                         SiApp.SiCmdEventData cmd = cmdEvent.cmdEventData;
-                        if (DebugLog)
-                        {
-                            Debug.LogFormat("SI_APP_EVENT: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0);
-                            Debug.LogFormat("V3DCMD event: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0);
-                        }
+                        Log(string.Format("SI_APP_EVENT: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0));
+                        Log(string.Format("V3DCMD event: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0));
                         break;
 
                     case SiApp.SiEventType.SI_APP_EVENT:
                         SiApp.SiSpwEvent_AppCommand appEvent = PtrToStructure<SiApp.SiSpwEvent_AppCommand>(eventPtr);
                         SiApp.SiAppCommandData data = appEvent.appCommandData;
-                        if (DebugLog)
-                        {
-                            Debug.LogFormat("SI_APP_EVENT: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0);
-                            Debug.LogFormat("App event: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0);
-                        }
+                        Log(string.Format("SI_APP_EVENT: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0));
+                        Log(string.Format("App event: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0));
                         break;
                 }
 
-                // if (DebugLog)
-                // {
-                //     Debug.LogFormat("SiGetEvent {0}({1})", sEventType.type, val);
-                // }
+                Log(string.Format("SiGetEvent {0}({1})", sEventType.type, val));
             }
 
             Marshal.FreeHGlobal(eventPtr);
@@ -171,6 +152,7 @@ namespace SpaceNavigatorDriver
                       Settings.GetLock(DoF.Translation, Axis.X) ? 0 : (float) TX / 2000f,
                       Settings.GetLock(DoF.Translation, Axis.Y) ? 0 : (float) TY / 2000f,
                       Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : -(float) TZ / 2000f) * (sensitivity * TransSensScale));
+                       Settings.GetLock(DoF.Translation, Axis.Z) ? 0 : TZ);
         }
 
         public override Quaternion GetRotation()
@@ -199,7 +181,6 @@ namespace SpaceNavigatorDriver
 
         public override void Dispose()
         {
-            Debug.Log("Uninstall Hook");
             if (!isrunning) return;
             SetWindowLongPtr(hMainWindow, -4, oldWndProcPtr);
             hMainWindow = IntPtr.Zero;
@@ -207,6 +188,7 @@ namespace SpaceNavigatorDriver
             newWndProcPtr = IntPtr.Zero;
             newWndProc = null;
             isrunning = false;
+            Log("Uninstalled Hook");
         }
 
         #endregion - IDisposable -
