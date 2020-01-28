@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using _3Dconnexion;
 
+[ExecuteInEditMode]
 public class MyWMListener : MonoBehaviour
 {
     [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
@@ -24,7 +25,7 @@ public class MyWMListener : MonoBehaviour
     private SiApp.SpwRetVal res;
     private bool isrunning;
 
-    private void Start()
+    private void OnEnable()
     {
         if (isrunning) return;
 
