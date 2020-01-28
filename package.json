@@ -1,0 +1,22 @@
+{
+  "name": "com.pathightree.spacenavigator",
+  "version": "2.0.1",
+  "displayName": "Space Navigator Driver",
+  "description": "This driver lets you fly around your scene and allows you to move stuff around.",
+  "unity": "2019.3",
+  "unityRelease": "0f6",
+  "dependencies": { },
+ "keywords": [
+    "SpaceNavigator",
+    "SpaceMouse"
+    "3DConnexion",
+    "Space",
+    "Navigator",
+    "Mouse"
+  ],
+  "author": {
+    "name": "Patrick Hogenboom",
+    "email": "patrickhightree@gmail.com",
+    "url": "https://github.com/PatHightree/SpaceNavigator"
+  }
+}
