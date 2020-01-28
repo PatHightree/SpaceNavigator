@@ -6,30 +6,30 @@ using _3Dconnexion;
 public class MyWMListener : MonoBehaviour
 {
     [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-    public static extern IntPtr GetForegroundWindow();
+    static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")]
     static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
     [DllImport("user32.dll")]
     static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-    public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+    private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
     private const string templateTR = "TX: {1,-7}{0}TY: {2,-7}{0}TZ: {3,-7}{0}RX: {4,-7}{0}RY: {5,-7}{0}RZ: {6,-7}{0}P: {7}";
-    private string appName = "SpaceNavigator Unity Plugin";
+    private const string appName = "SpaceNavigator Unity Plugin";
     private IntPtr hMainWindow;
     private IntPtr oldWndProcPtr;
     private IntPtr newWndProcPtr;
     private WndProcDelegate newWndProc;
     private IntPtr devHdl = IntPtr.Zero;
     private SiApp.SpwRetVal res;
-    bool isrunning = false;
+    private bool isrunning;
 
-    void Start()
+    private void Start()
     {
         if (isrunning) return;
 
         hMainWindow = GetForegroundWindow();
-        newWndProc = new WndProcDelegate(wndProc);
+        newWndProc = wndProc;
         newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
         oldWndProcPtr = SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
         isrunning = true;
@@ -37,13 +37,14 @@ public class MyWMListener : MonoBehaviour
         InitializeSiApp();
     }
 
-    IntPtr wndProc(IntPtr _hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+    private IntPtr wndProc(IntPtr _hWnd, uint msg, IntPtr wParam, IntPtr lParam)
     {
         TrackMouseEvents(msg, wParam, lParam);
 
         return CallWindowProc(oldWndProcPtr, _hWnd, msg, wParam, lParam);
     }
-    void OnDisable()
+
+    private void OnDisable()
     {
         Debug.Log("Uninstall Hook");
         if (!isrunning) return;
@@ -60,7 +61,7 @@ public class MyWMListener : MonoBehaviour
         res = SiApp.SiInitialize();
         if (res != SiApp.SpwRetVal.SPW_NO_ERROR)
             Debug.LogError("Initialize function failed");
-        Debug.Log("SiInitialize" + res.ToString());
+        Debug.Log("SiInitialize" + res);
 
         SiApp.SiOpenData openData = new SiApp.SiOpenData();
         SiApp.SiOpenWinInit(ref openData, hMainWindow);
@@ -84,7 +85,7 @@ public class MyWMListener : MonoBehaviour
 
         if (val == SiApp.SpwRetVal.SI_IS_EVENT)
         {
-            Debug.Log("SiGetEventWinInit: " + eventData.msg.ToString());
+            Debug.Log("SiGetEventWinInit: " + eventData.msg);
 
             SiApp.SiSpwEvent_JustType sEventType = PtrToStructure<SiApp.SiSpwEvent_JustType>(eventPtr);
             switch (sEventType.type)
@@ -105,19 +106,19 @@ public class MyWMListener : MonoBehaviour
                 case SiApp.SiEventType.SI_CMD_EVENT:
                     SiApp.SiSpwEvent_CmdEvent cmdEvent = PtrToStructure<SiApp.SiSpwEvent_CmdEvent>(eventPtr);
                     SiApp.SiCmdEventData cmd = cmdEvent.cmdEventData;
-                    Debug.LogFormat("SI_APP_EVENT: ", string.Format("V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0));
+                    Debug.LogFormat("SI_APP_EVENT: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0);
                     Debug.LogFormat("V3DCMD event: V3DCMD = {0}, pressed = {1}", cmd.functionNumber, cmd.pressed > 0);
                     break;
 
                 case SiApp.SiEventType.SI_APP_EVENT:
                     SiApp.SiSpwEvent_AppCommand appEvent = PtrToStructure<SiApp.SiSpwEvent_AppCommand>(eventPtr);
                     SiApp.SiAppCommandData data = appEvent.appCommandData;
-                    Debug.LogFormat("SI_APP_EVENT: ", string.Format("appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0));
+                    Debug.LogFormat("SI_APP_EVENT: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0);
                     Debug.LogFormat("App event: appCmdID = \"{0}\", pressed = {1}", data.id.appCmdID, data.pressed > 0);
                     break;
             }
 
-            Debug.LogFormat("SiGetEvent", string.Format("{0}({1})", sEventType.type, val));
+            Debug.LogFormat("SiGetEvent {0}({1})", sEventType.type, val);
         }
 
         Marshal.FreeHGlobal(eventPtr);
