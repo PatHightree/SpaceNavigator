@@ -1,5 +1,6 @@
-#SpaceNavigator
-SpaceNavigator driver for Unity3D
+SpaceNavigator
+---------
+3DConnexion SpaceNavigator driver for Unity3D
 
 This driver lets you fly around your scene and allows you to move stuff around.  
 You can also use it at runtime via scripting.  
@@ -57,15 +58,17 @@ Copy the SpaceNavigator.unitypackage to *Unity/Editor/Standard Packages* directo
 - SpaceNavigator is added to the packages list in the project creation in wizard.  
 - Easy to add later by right-clicking in *Project View* and choosing *Import Package*.  
 
-### Pro tip 2
+### Pro tip 2 : Disable 3DConnexion KMJ Emulator
 The 3dconnexion driver comes with a keyboard, mouse, joystick emulator.  
-Personally I have never needed it, and some games and applications receive really erattic joystic input from it.  
-Here's how to disable it On Windows 10:  
+Personally I have never needed it and it interferes with some games and applications.  
+Here's how to disable it on Windows 10:  
 - Open the device manager by pressing Windows-X and choosing Device Manager.  
 - Navigate to Human Interface Devices/HID-compliant game controller.  
 - Select it and click the down arrow button.  
 - If there are more entries called HID-compliant game controller,  
 disable the one which properties say Location: on #Dconnexion KMJ Emulator.  
+
+![](Disable_KMJ_emulator.png)
 
 Credits
 -------
