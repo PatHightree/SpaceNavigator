@@ -6,10 +6,17 @@ namespace UnityEngine.InputSystem.LowLevel
     public class SpaceNavigatorTester : MonoBehaviour
     {
         public bool HorizonLock = true;
+        
         private void Update()
         {
+            Navigate();
+        }
+
+        private void Navigate()
+        {
+            if (SpaceNavigatorHID.current == null) return;
+
             transform.Translate(SpaceNavigatorHID.current.Translation.ReadValue(), Space.Self);
-            
             if (HorizonLock)
             {
                 transform.Rotate(Vector3.up, SpaceNavigatorHID.current.Rotation.ReadValue().y, Space.World);
@@ -17,11 +24,8 @@ namespace UnityEngine.InputSystem.LowLevel
             }
             else
             {
-                transform.Rotate(Vector3.right, SpaceNavigatorHID.current.Rotation.ReadValue().x, Space.Self);
-                transform.Rotate(Vector3.up, SpaceNavigatorHID.current.Rotation.ReadValue().y, Space.Self);
-                transform.Rotate(Vector3.forward, SpaceNavigatorHID.current.Rotation.ReadValue().z, Space.Self);
+                transform.Rotate(SpaceNavigatorHID.current.Rotation.ReadValue(), Space.Self);
             }
-                
         }
     }
 }
