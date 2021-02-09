@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/SpaceNavigator test/SpaceNavigator test.unity
+    guid: 229f99e02be88d248a0b9e7eb809affa
   m_configObjects: {}
