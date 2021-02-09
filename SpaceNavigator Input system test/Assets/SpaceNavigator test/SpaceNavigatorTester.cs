@@ -10,6 +10,9 @@ namespace UnityEngine.InputSystem.LowLevel
         private void Update()
         {
             Navigate();
+            
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+                Application.Quit();
         }
 
         private void Navigate()
