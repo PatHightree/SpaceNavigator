@@ -62,7 +62,7 @@ namespace UnityEngine.InputSystem.LowLevel
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion")
-                    .WithProduct("SpaceNavigator"));
+                    .WithProduct(".*"));
         }
 
         // In the player, trigger the calling of our static constructor
