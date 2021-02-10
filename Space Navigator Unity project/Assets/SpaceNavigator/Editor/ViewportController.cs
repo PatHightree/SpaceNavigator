@@ -45,7 +45,6 @@ namespace SpaceNavigatorDriver {
 		public static void OnApplicationQuit() {
 			Settings.Write();
 			DisposeCameraRig();
-			SpaceNavigator.Instance.Dispose();
 		}
 		#endregion - Callbacks -
 
@@ -69,8 +68,8 @@ namespace SpaceNavigatorDriver {
 			_wasHorizonLocked = Settings.LockHorizon;
 
 			// Return if device is idle.
-			if (SpaceNavigator.Translation == Vector3.zero &&
-				SpaceNavigator.Rotation == Quaternion.identity) {
+			if (SpaceNavigatorHID.current.Translation.ReadValue() == Vector3.zero &&
+			    SpaceNavigatorHID.current.Rotation.ReadValue() == Vector3.zero) {
 				_wasIdle = true;
 				return;
 			}
@@ -111,8 +110,8 @@ namespace SpaceNavigatorDriver {
 			SyncRigWithScene();
 
 			// Apply inversion of axes for fly/grabmove mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, translationInversion);
-			Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, rotationInversion);
+			Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
+			Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
 
 			_camera.Translate(translation, Space.Self);
 			if (sceneView.orthographic)
@@ -144,8 +143,8 @@ namespace SpaceNavigatorDriver {
 			SyncRigWithScene();
 
 			// Apply inversion of axes for orbit mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.OrbitInvertTranslation);
-			Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.OrbitInvertRotation);
+			Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.OrbitInvertTranslation);
+			Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.OrbitInvertRotation);
 
 			_camera.Translate(translation, Space.Self);
 
@@ -165,8 +164,8 @@ namespace SpaceNavigatorDriver {
 		}
 		static void Telekinesis(SceneView sceneView) {
 			// Apply inversion of axes for telekinesis mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.TelekinesisInvertTranslation);
-			Quaternion rotation = Quaternion.Euler(Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.TelekinesisInvertRotation));
+			Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
+			Quaternion rotation = Quaternion.Euler(Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation));
 
 			// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 			if (_wasIdle)
@@ -212,8 +211,8 @@ namespace SpaceNavigatorDriver {
 		}
 		static void GrabMove(SceneView sceneView) {
 			// Apply inversion of axes for grab move mode.
-			Vector3 translation = Vector3.Scale(SpaceNavigator.Translation, Settings.GrabMoveInvertTranslation);
-			Vector3 rotation = Vector3.Scale(SpaceNavigator.Rotation.eulerAngles, Settings.GrabMoveInvertRotation);
+			Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
+			Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
 
 			// Store the selection's transforms because the user could have edited them since we last used them via the inspector.
 			if (_wasIdle)
