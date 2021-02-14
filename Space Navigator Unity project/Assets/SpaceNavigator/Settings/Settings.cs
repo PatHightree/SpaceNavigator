@@ -14,9 +14,7 @@ namespace SpaceNavigatorDriver {
 
 	[Serializable]
 	public static class Settings {
-		[SerializeField]
 		public static OperationMode Mode;
-		[SerializeField]
 		public static CoordinateSystem CoordSys;
 
 		// Snapping
@@ -27,13 +25,9 @@ namespace SpaceNavigatorDriver {
 
 		// Locking
 		public static bool LockHorizon = true;
-		[SerializeField]
 		public static Locks NavTranslationLock;
-		[SerializeField]
 		public static Locks NavRotationLock;
-		[SerializeField]
 		public static Locks ManipulateTranslationLock;
-		[SerializeField]
 		public static Locks ManipulateRotationLock;
 
 		// Sensitivity
@@ -243,20 +237,20 @@ namespace SpaceNavigatorDriver {
 			bool tx, ty, tz, rx, ry, rz;
 			switch (Settings.Mode) {
 				case OperationMode.Fly:
-					tx = Settings.FlyInvertTranslation.x < 0; ty = Settings.FlyInvertTranslation.y < 0; tz = Settings.FlyInvertTranslation.z < 0;
-					rx = Settings.FlyInvertRotation.x < 0; ry = Settings.FlyInvertRotation.y < 0; rz = Settings.FlyInvertRotation.z < 0;
+					tx = FlyInvertTranslation.x < 0; ty = FlyInvertTranslation.y < 0; tz = FlyInvertTranslation.z < 0;
+					rx = FlyInvertRotation.x < 0; ry = FlyInvertRotation.y < 0; rz = FlyInvertRotation.z < 0;
 					break;
 				case OperationMode.Orbit:
-					tx = Settings.OrbitInvertTranslation.x < 0; ty = Settings.OrbitInvertTranslation.y < 0; tz = Settings.OrbitInvertTranslation.z < 0;
-					rx = Settings.OrbitInvertRotation.x < 0; ry = Settings.OrbitInvertRotation.y < 0; rz = Settings.OrbitInvertRotation.z < 0;
+					tx = OrbitInvertTranslation.x < 0; ty = OrbitInvertTranslation.y < 0; tz = OrbitInvertTranslation.z < 0;
+					rx = OrbitInvertRotation.x < 0; ry = OrbitInvertRotation.y < 0; rz = OrbitInvertRotation.z < 0;
 					break;
 				case OperationMode.Telekinesis:
-					tx = Settings.TelekinesisInvertTranslation.x < 0; ty = Settings.TelekinesisInvertTranslation.y < 0; tz = Settings.TelekinesisInvertTranslation.z < 0;
-					rx = Settings.TelekinesisInvertRotation.x < 0; ry = Settings.TelekinesisInvertRotation.y < 0; rz = Settings.TelekinesisInvertRotation.z < 0;
+					tx = TelekinesisInvertTranslation.x < 0; ty = TelekinesisInvertTranslation.y < 0; tz = TelekinesisInvertTranslation.z < 0;
+					rx = TelekinesisInvertRotation.x < 0; ry = TelekinesisInvertRotation.y < 0; rz = TelekinesisInvertRotation.z < 0;
 					break;
 				case OperationMode.GrabMove:
-					tx = Settings.GrabMoveInvertTranslation.x < 0; ty = Settings.GrabMoveInvertTranslation.y < 0; tz = Settings.GrabMoveInvertTranslation.z < 0;
-					rx = Settings.GrabMoveInvertRotation.x < 0; ry = Settings.GrabMoveInvertRotation.y < 0; rz = Settings.GrabMoveInvertRotation.z < 0;
+					tx = GrabMoveInvertTranslation.x < 0; ty = GrabMoveInvertTranslation.y < 0; tz = GrabMoveInvertTranslation.z < 0;
+					rx = GrabMoveInvertRotation.x < 0; ry = GrabMoveInvertRotation.y < 0; rz = GrabMoveInvertRotation.z < 0;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -271,16 +265,16 @@ namespace SpaceNavigatorDriver {
 			if (EditorGUI.EndChangeCheck()) {
 				switch (Settings.Mode) {
 					case OperationMode.Fly:
-						Settings.FlyInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
+						FlyInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
 						break;
 					case OperationMode.Orbit:
-						Settings.OrbitInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
+						OrbitInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
 						break;
 					case OperationMode.Telekinesis:
-						Settings.TelekinesisInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
+						TelekinesisInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
 						break;
 					case OperationMode.GrabMove:
-						Settings.GrabMoveInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
+						GrabMoveInvertTranslation = new Vector3(tx ? -1 : 1, ty ? -1 : 1, tz ? -1 : 1);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
@@ -298,16 +292,16 @@ namespace SpaceNavigatorDriver {
 			if (EditorGUI.EndChangeCheck()) {
 				switch (Settings.Mode) {
 					case OperationMode.Fly:
-						Settings.FlyInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
+						FlyInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
 						break;
 					case OperationMode.Orbit:
-						Settings.OrbitInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
+						OrbitInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
 						break;
 					case OperationMode.Telekinesis:
-						Settings.TelekinesisInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
+						TelekinesisInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
 						break;
 					case OperationMode.GrabMove:
-						Settings.GrabMoveInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
+						GrabMoveInvertRotation = new Vector3(rx ? -1 : 1, ry ? -1 : 1, rz ? -1 : 1);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
