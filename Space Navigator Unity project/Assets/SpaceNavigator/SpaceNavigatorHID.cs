@@ -40,7 +40,7 @@ namespace SpaceNavigatorDriver
         [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=-100")] 
         [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=100")] 
         [InputControl(name = "rotation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=100")]
-        public ReportFormat1 report2;
+        public ReportFormat2 report2;
 
         // 3rd report
         [InputControl(name = "button1", bit = 0, format = "BIT", layout = "Button", displayName = "Button 1")] 
