@@ -1,0 +1,18 @@
+{
+  "name": "com.pathightree.spacenavigator-driver",
+  "version": "2.0.0.0a1",
+  "displayName": "SpaceNavigator Driver",
+  "description": "Driver for 3DConnexion devices\nThis driver lets you fly around your scene and allows you to move stuff around.\nYou can also use it at runtime via scripting.",
+  "unity": "2020",
+  "keywords": [
+    "3DConnexion",
+    "SpaceNavigator",
+    "SpaceMouse"
+  ],
+  "license": "MIT license",
+  "author": {
+    "name": "Patrick Hogenboom",
+    "url": "https://github.com/PatHightree/SpaceNavigator"
+  },
+  "type": "tool"
+}
