@@ -5,7 +5,7 @@
   "description": "Driver for 3DConnexion devices\nThis driver lets you fly around your scene and allows you to move stuff around.\nYou can also use it at runtime via scripting.",
   "unity": "2019.1",
   "dependencies": {
-    "com.unity.inputsystem": ""
+    "com.unity.inputsystem": "1.0.0"
   },
   "keywords": [
     "3DConnexion",
