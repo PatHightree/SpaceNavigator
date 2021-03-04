@@ -1,5 +1,9 @@
 Changelog
 
+2.0.0-alpha.1
+- Refactored driver to work on the new Unity Input System.
+- Restructured project as a Unity custom package.
+
 1.5.2
 Fixes
 - Fixed sceneview camera pos/rot being reset on play/stop.
