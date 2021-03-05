@@ -23,5 +23,11 @@
     "email": "spacenavigator.driver@pm.me",
     "url": "https://github.com/PatHightree/SpaceNavigator"
   },
+  "samples":[
+  {
+    "displayName": "Runtime samples",
+    "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
+    "path": "Runtime samples"
+  }],
   "type": "tool"
 }
