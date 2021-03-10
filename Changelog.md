@@ -1,4 +1,8 @@
-Changelog
+# Changelog
+
+2.0.0-alpha.2 to 8  
+- Package manager + git experiments
+- Prepare for beta publishing
 
 2.0.0-alpha.1
 - Refactored driver to work on the new Unity Input System.
