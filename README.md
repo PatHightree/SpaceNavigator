@@ -64,6 +64,10 @@ When upgrading from a pre 2.0.0 version of the plugin, please follow these steps
 If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
 When this happens, choose the default layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
 
+## Upgrading from 2.x
+At this time the Package Manager window does not show all available versions in a git repo.  
+So until this changes, the upgrade process consists of removing the old version and installing a new one as described in the [Download](#download) section.
+
 ## Samples
 The package also contains a couple of samples of runtime applications :
 - Fly around.unity: Fly around with a sphere while knocking over some cubes.
