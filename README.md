@@ -14,7 +14,7 @@ In **GrabMove** mode the stuff will be linked to your camera so you can take it 
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
 If you have feedback, please use this [thread](http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource) on the Unity forums.  
-The source code is available on [Github](https://github.com/PatHightree/NewSpaceNavigator).
+The source code is available on [Github](https://github.com/PatHightree/SpaceNavigator).
 
 ## New foundation, new requirements
 As of version 2.0.0, the driver communicates directly with the HID device via Unity's new Input System.  
@@ -27,16 +27,16 @@ It also means that **your project is required to use the new Input System**.
   - From git url :
     - Click the + button in the top left of the Package Manager window
     - Choose *Add package from GIT url...*
-    - Enter https://github.com/PatHightree/NewSpaceNavigator.git  
+    - Enter https://github.com/PatHightree/SpaceNavigator.git  
       Note, for this you need to have git installed on your system !
   - From disk :
-    - Download the driver from the github [releases page](https://github.com/PatHightree/NewSpaceNavigator/releases)
+    - Download the driver from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases)
     - Click the + button in the top left of the Package Manager window
     - Choose *Add package from disk...*
 - ~~The full [package](http://u3d.as/51X) is available on the Unity asset store.~~  
   *Todo: Update asset store package to v2.0.0*  
   
-If you want to install a specific version, download it from the github [releases page](https://github.com/PatHightree/NewSpaceNavigator/releases) and install it via the *From Disk* method.
+If you want to install a specific version, download it from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases) and install it via the *From Disk* method.
 
 ## Installation
 - Add the driver to your project as described in the [Download](#download) section
