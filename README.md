@@ -30,13 +30,13 @@ It also means that **your project is required to use the new Input System**.
     - Enter https://github.com/PatHightree/NewSpaceNavigator.git  
       Note, for this you need to have git installed on your system !
   - From disk :
-    - Download the driver from the github [relases page](https://github.com/PatHightree/NewSpaceNavigator/releases)
+    - Download the driver from the github [releases page](https://github.com/PatHightree/NewSpaceNavigator/releases)
     - Click the + button in the top left of the Package Manager window
-    - Choose *Add package from GIT url...*
+    - Choose *Add package from disk...*
 - ~~The full [package](http://u3d.as/51X) is available on the Unity asset store.~~  
   *Todo: Update asset store package to v2.0.0*  
   
-If you want to install a specific version, download it from the github [relases page](https://github.com/PatHightree/NewSpaceNavigator/releases) and install it via the *From Disk* method.
+If you want to install a specific version, download it from the github [releases page](https://github.com/PatHightree/NewSpaceNavigator/releases) and install it via the *From Disk* method.
 
 ## Installation
 - Add the driver to your project as described in the [Download](#download) section
