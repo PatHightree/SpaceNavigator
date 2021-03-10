@@ -1,5 +1,8 @@
 # Changelog
 
+2.0.0-beta.1
+- Changed git package url in readme to /develop branch for beta release
+
 2.0.0-alpha.2 to 8  
 - Package manager + git experiments
 - Prepare for beta publishing

@@ -27,7 +27,7 @@ It also means that **your project is required to use the new Input System**.
   - From git url :
     - Click the + button in the top left of the Package Manager window
     - Choose *Add package from GIT url...*
-    - Enter https://github.com/PatHightree/SpaceNavigator.git  
+    - Enter https://github.com/PatHightree/SpaceNavigator.git#develop  
       Note, for this you need to have git installed on your system !
   - From disk :
     - Download the driver from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases)
