@@ -1,5 +1,6 @@
 using UnityEngine;
 using SpaceNavigatorDriver;
+using UnityEngine.InputSystem;
 
 public class TorusController : MonoBehaviour {
 	private Transform _camera;
@@ -16,7 +17,7 @@ public class TorusController : MonoBehaviour {
 	}
 
 	public void Update() {
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Keyboard.current.spaceKey.wasPressedThisFrame)
 			_isControllingTorus = !_isControllingTorus;
 
 		if (_isControllingTorus) {
