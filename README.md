@@ -1,4 +1,4 @@
-#SpaceNavigator
+# SpaceNavigator
 A Unity3D driver for the SpaceNavigator and other 3DConnexion devices.
 
 This driver lets you fly around your scene and allows you to move items around.  
@@ -16,13 +16,13 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 If you have feedback, please use this [thread](http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource) on the Unity forums.  
 The source code is available on [Github](https://github.com/PatHightree/NewSpaceNavigator).
 
-##New foundation, new requirements
+## New foundation, new requirements
 As of version 2.0.0, the driver communicates directly with the HID device via Unity's new Input System.  
 This means that it **no longer requires the 3DConnexion driver** to be running or even installed.  
 It also means that **your project is required to use the new Input System**.   
 (this [page](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) can help with upgrading to the new Input System)
 
-##Download
+## <a name="download"></a>Download
 - The driver can now be downloaded via the Package Manager window
   - From git url :
     - Click the + button in the top left of the Package Manager window
@@ -38,8 +38,8 @@ It also means that **your project is required to use the new Input System**.
   
 If you want to install a specific version, download it from the github [relases page](https://github.com/PatHightree/NewSpaceNavigator/releases) and install it via the *From Disk* method.
 
-##Installation
-- Add the driver to your project as described in the [Download](#markdown-header-Download) section
+## Installation
+- Add the driver to your project as described in the [Download](#download) section
 - If your project was not yet using the new Input System  
   - Close and reopen the project
   - A popup will ask you to switch to the new Input System, choose **Yes**
@@ -48,12 +48,12 @@ If you want to install a specific version, download it from the github [relases 
     [Here](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) is an overview of common old Input usages and their new equivalents 
 - Fly away
 
-##Upgrading from 1.x
+## Upgrading from 1.x
 When upgrading from a pre 2.0.0 version of the plugin, please follow these steps :
 - Close the SpaceNavigator editor window
 - Delete the SpaceNavigator folder from your project
 - Delete Plugins\3DConnexionWrapperU4.bundle from your project
-- Add the driver to your project as described in the [Download](#markdown-header-Download) section
+- Add the driver to your project as described in the [Download](#download) section
 - Close and reopen the project
 - A popup will ask you to switch to the new Input System, choose **Yes**
 - The project will close and reopen itself
@@ -64,18 +64,19 @@ When upgrading from a pre 2.0.0 version of the plugin, please follow these steps
 If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
 When this happens, choose the default layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
 
-##Samples
+## Samples
 The package also contains a couple of samples of runtime applications :
 - Fly around.unity: Fly around with a sphere while knocking over some cubes.
 - Folow curve.unity: Make your torus follow the curve, but don't touch it!  
 
 To install these samples, open the SpaceNavigator package in the Package Manager window and click the Import button in the Samples section.
 
-##Known bugs and limitations
+## Known bugs and limitations
 - Grab Mode only works in the camera coordinate system
 
-##Credits
-- Big thanks to William Iturzaeta from Canon Medical Systems USA, for hiring me to make this project compatible with Unity 2020  
+## Credits
+- Big thanks to William Iturzaeta from Canon Medical Systems USA,  
+  for hiring me to make this project compatible with Unity 2020  
   The proceeds of this job will be donated to cancer research
 - Thanks to Stephen Wolter for further refinement to the mac drift fix 
 - Thanks to Enrico Tuttobene for contributing the mac drift fix
