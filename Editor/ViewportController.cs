@@ -129,6 +129,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
 
+            // Apply locks
+            translation.Scale(Settings.GetLocks(DoF.Translation));
+            rotation.Scale(Settings.GetLocks(DoF.Rotation));
+            
             _camera.Translate(translation, Space.Self);
             if (sceneView.orthographic)
                 sceneView.size -= translation.z;
@@ -169,6 +173,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.OrbitInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.OrbitInvertRotation);
 
+            // Apply locks
+            translation.Scale(Settings.GetLocks(DoF.Translation));
+            rotation.Scale(Settings.GetLocks(DoF.Rotation));
+            
             _camera.Translate(translation, Space.Self);
 
             if (Settings.LockHorizon)
@@ -193,8 +201,14 @@ namespace SpaceNavigatorDriver
         {
             // Apply inversion of axes for telekinesis mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
-            Quaternion rotation = Quaternion.Euler(Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation));
+            Vector3 rot = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation);
+            
+            // Apply locks
+            translation.Scale(Settings.GetLocks(DoF.Translation));
+            rot.Scale(Settings.GetLocks(DoF.Rotation));
 
+            Quaternion rotation = Quaternion.Euler(rot);
+            
             // Store the selection's transforms because the user could have edited them since we last used them via the inspector.
             if (_wasIdle)
                 StoreSelectionTransforms();
@@ -249,6 +263,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
 
+            // Apply locks
+            translation.Scale(Settings.GetLocks(DoF.Translation));
+            rotation.Scale(Settings.GetLocks(DoF.Rotation));
+            
             // Store the selection's transforms because the user could have edited them since we last used them via the inspector.
             if (_wasIdle)
                 StoreSelectionTransforms();

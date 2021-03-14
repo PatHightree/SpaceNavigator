@@ -464,15 +464,13 @@ namespace SpaceNavigatorDriver {
 		}
 
 		/// <summary>
-		/// Utility function for retrieving axis locking settings at runtime.
+		/// Utility function to determine whether a specific axis is locked for the specified DoF.
 		/// </summary>
 		/// <param name="doF"></param>
 		/// <param name="axis"></param>
 		/// <returns></returns>
 		public static bool GetLock(DoF doF, Axis axis) {
-			Locks translationLocks = Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavTranslationLock : ManipulateTranslationLock;
-			Locks rotationLocks = Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavRotationLock : ManipulateRotationLock;
-			Locks locks = doF == DoF.Translation ? translationLocks : rotationLocks;
+			Locks locks = doF == DoF.Translation ? GetCurrentTranslationLocks() : GetCurrentRotationLocks();
 
 			switch (axis) {
 				case Axis.X:
@@ -485,5 +483,23 @@ namespace SpaceNavigatorDriver {
 					throw new ArgumentOutOfRangeException("axis");
 			}
 		}
+
+		/// <summary>
+		/// Returns a vector which can be multiplied with an input vector to apply the current locks of the specified DoF. 
+		/// </summary>
+		/// <param name="doF"></param>
+		/// <returns></returns>
+		public static Vector3 GetLocks(DoF doF)
+		{
+			Locks locks = doF == DoF.Translation ? GetCurrentTranslationLocks() : GetCurrentRotationLocks();
+
+			return new Vector3(
+				(locks.X || locks.All) && !Application.isPlaying ? 0 : 1,
+				(locks.Y || locks.All) && !Application.isPlaying ? 0 : 1,
+				(locks.Z || locks.All) && !Application.isPlaying ? 0 : 1);
+		}
+		
+		private static Locks GetCurrentRotationLocks() =>  Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavRotationLock : ManipulateRotationLock;
+		private static Locks GetCurrentTranslationLocks() => Mode == OperationMode.Fly || Mode == OperationMode.Orbit ? NavTranslationLock : ManipulateTranslationLock;
 	}
 }
