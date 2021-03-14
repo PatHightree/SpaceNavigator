@@ -38,14 +38,20 @@ It also means that **your project is required to use the new Input System**.
   
 If you want to install a specific version, download it from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases) and install it via the *From Disk* method.
 
-## Installation
+## <a name="installation"></a>Installation
 - Add the driver to your project as described in the [Download](#download) section
-- If your project was not yet using the new Input System  
-  - Close and reopen the project
-  - A popup will ask you to switch to the new Input System, choose **Yes**
-  - The project will close and reopen itself
-  - You will have to modify any code which used the old Input System  
-    [Here](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) is an overview of common old Input usages and their new equivalents 
+- If your project was not yet using the new Input System, you have 2 options :
+  - Use both input systems simultaneously 
+    - Close and reopen the project
+    - A popup will ask you to switch to the new Input System, choose **NO**
+    - Set *Project Settings/Player/Active Input Handling* to **Both**  
+    See this [tip](#tip_project_settings)
+  - Switch to the New Input System
+    - Close and reopen the project
+    - A popup will ask you to switch to the new Input System, choose **Yes**
+    - The project will close and reopen itself
+    - You will have to modify any code which used the old Input System  
+      [Here](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) is an overview of common old Input usages and their new equivalents 
 - Fly away
 
 ## Upgrading from 1.x
@@ -54,12 +60,7 @@ When upgrading from a pre 2.0.0 version of the plugin, please follow these steps
 - Delete the SpaceNavigator folder from your project
 - Delete Plugins\3DConnexionWrapperU4.bundle from your project
 - Add the driver to your project as described in the [Download](#download) section
-- Close and reopen the project
-- A popup will ask you to switch to the new Input System, choose **Yes**
-- The project will close and reopen itself
-- You will have to modify any code which used the old Input System  
-  [Here](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) is an overview of common old Input usages and their new equivalents
-- Fly away
+- Install the driver by following the steps in the [Installation](#installation) section
 
 If you delete the folder while the SpaceNavigator window is still open, Unity will throw some errors.
 When this happens, choose the default layout from the layout dropdown in the top right of Unity's UI and everything should return to normal.
@@ -76,6 +77,7 @@ The package also contains a couple of samples of runtime applications :
 To install these samples, open the SpaceNavigator package in the Package Manager window and click the Import button in the Samples section.
 
 ## Known bugs and limitations
+- The New Input System package must be active for this driver to work
 - Grab Mode only works in the camera coordinate system
 
 ## Credits
@@ -91,7 +93,10 @@ To install these samples, open the SpaceNavigator package in the Package Manager
 - Quaternion math by Minahito
   http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 
-### Tip : Disable 3DConnexion KMJ Emulator
+## <a name="tip_project_settings"></a>Tip : You can switch input systems in Project Settings
+![](Documentation~/ProjectSettings_ActiveInputHandling.png)
+
+## Tip : Disable 3DConnexion KMJ Emulator
 If you're using the 3dconnexion driver, it comes with a keyboard, mouse, joystick emulator.  
 Personally I have never needed it and it interferes with some games and applications.  
 Here's how to disable it on Windows 10:

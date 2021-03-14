@@ -1,5 +1,9 @@
 # Changelog
 
+2.0.0-beta.2
+- Added error message when new input system is not active
+- Added option to have both input systems active to readme
+
 2.0.0-beta.1
 - Changed git package url in readme to /develop branch for beta release
 
