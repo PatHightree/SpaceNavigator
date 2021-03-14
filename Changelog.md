@@ -1,5 +1,10 @@
 # Changelog
 
+2.0.0-beta.3
+- Sensitivity settings are applied in editor
+- Axis locks are applied in editor
+- Excluded ViewportController editor-only code from build
+
 2.0.0-beta.2
 - Added error message when new input system is not active
 - Added option to have both input systems active to readme

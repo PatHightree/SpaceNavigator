@@ -129,6 +129,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
 
+            // Apply sensitivity
+            translation *= Settings.TransSens[Settings.CurrentGear];
+            rotation *= Settings.RotSens;
+            
             // Apply locks
             translation.Scale(Settings.GetLocks(DoF.Translation));
             rotation.Scale(Settings.GetLocks(DoF.Rotation));
@@ -173,6 +177,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.OrbitInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.OrbitInvertRotation);
 
+            // Apply sensitivity
+            translation *= Settings.TransSens[Settings.CurrentGear];
+            rotation *= Settings.RotSens;
+            
             // Apply locks
             translation.Scale(Settings.GetLocks(DoF.Translation));
             rotation.Scale(Settings.GetLocks(DoF.Rotation));
@@ -202,6 +210,10 @@ namespace SpaceNavigatorDriver
             // Apply inversion of axes for telekinesis mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
             Vector3 rot = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation);
+            
+            // Apply sensitivity
+            translation *= Settings.TransSens[Settings.CurrentGear];
+            rot *= Settings.RotSens;
             
             // Apply locks
             translation.Scale(Settings.GetLocks(DoF.Translation));
@@ -263,6 +275,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
 
+            // Apply sensitivity
+            translation *= Settings.TransSens[Settings.CurrentGear];
+            rotation *= Settings.RotSens;
+            
             // Apply locks
             translation.Scale(Settings.GetLocks(DoF.Translation));
             rotation.Scale(Settings.GetLocks(DoF.Rotation));
