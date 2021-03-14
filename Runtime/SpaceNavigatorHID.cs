@@ -61,6 +61,11 @@ namespace SpaceNavigatorDriver
 
         static SpaceNavigatorHID()
         {
+#if !ENABLE_INPUT_SYSTEM
+            Debug.LogError("SpaceNavigator Driver cannot function because the <b>New Input System Package</b> is not active !\n" +
+                           "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
+#endif
+
             InputSystem.RegisterLayout<SpaceNavigatorHID>(
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
