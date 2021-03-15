@@ -71,6 +71,7 @@ namespace SpaceNavigatorDriver
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion")
                     .WithProduct(".*"));
+            DebugLog("SpaceNavigator Driver : RegisterLayout");
         }
 
         // In the player, trigger the calling of our static constructor
@@ -90,6 +91,8 @@ namespace SpaceNavigatorDriver
             Button2 = GetChildControl<ButtonControl>("button2");
             Rotation = GetChildControl<Vector3Control>("rotation");
             Translation = GetChildControl<Vector3Control>("translation");
+
+            DebugLog("SpaceNavigator Driver : FinishSetup");
         }
 
         // We can also expose a '.current' getter equivalent to 'Gamepad.current'.
@@ -100,6 +103,7 @@ namespace SpaceNavigatorDriver
         {
             base.MakeCurrent();
             current = this;
+            DebugLog("SpaceNavigator Driver : MakeCurrent");
         }
 
         // When one of our custom devices is removed, we want to make sure that if
@@ -109,6 +113,7 @@ namespace SpaceNavigatorDriver
             base.OnRemoved();
             if (current == this)
                 current = null;
+            DebugLog("SpaceNavigator Driver : OnRemoved");
         }
         public void OnNextUpdate()
         {
@@ -116,6 +121,8 @@ namespace SpaceNavigatorDriver
 
         public unsafe void OnStateEvent(InputEventPtr eventPtr)
         {
+            DebugLog("SpaceNavigator Driver : Enter OnStateEvent");
+
             // Refuse delta events.
             if (eventPtr.IsA<DeltaStateEvent>())
                 return;
@@ -123,6 +130,8 @@ namespace SpaceNavigatorDriver
             var stateEventPtr = StateEvent.From(eventPtr);
             if (stateEventPtr->stateFormat != new FourCC('H', 'I', 'D'))
                 return;
+
+            DebugLog("SpaceNavigator Driver : stateEventPtr->stateFormat ok");
 
             var reportPtr = (byte*) stateEventPtr->state;
             var reportId = *reportPtr;
@@ -137,15 +146,26 @@ namespace SpaceNavigatorDriver
             UnsafeUtility.MemCpy(&newState, (byte*) currentStatePtr + stateBlock.byteOffset, sizeof(SpaceNavigatorHIDState));
 
             if (reportId == 1)
+            {
                 UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(ReportFormat1));
+                DebugLog("SpaceNavigator Driver : Copied report1");
+            }
             else if (reportId == 2)
+            {
                 UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(ReportFormat2));
+                DebugLog("SpaceNavigator Driver : Copied report2");
+            }
             else if (reportId == 3)
+            {
                 UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(ReportFormat3));
+                DebugLog("SpaceNavigator Driver : Copied report3");
+            }
 
             // Apply the state change. Don't simply MemCpy over currentStatePtr as that will lead to various
             // malfunctions. The system needs to do the memcpy itself.
             InputState.Change(this, newState, eventPtr: eventPtr);
+            
+            DebugLog("SpaceNavigator Driver : Exit OnStateEvent");
         }
 
         public bool GetStateOffsetForEvent(InputControl control, InputEventPtr eventPtr, ref uint offset)
@@ -153,6 +173,13 @@ namespace SpaceNavigatorDriver
             // If this isn't implemented, some stuff like auto-switching won't work correctly.
             // If you want to implement this, return a state offset corresponding to the control in the given input event.
             return false;
+        }
+
+        public static void DebugLog(string _message)
+        {
+#if SPACENAVIGATOR_DEBUG
+            Debug.Log(_message);
+#endif
         }
     }
 }

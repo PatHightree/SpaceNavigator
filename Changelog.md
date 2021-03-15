@@ -1,5 +1,9 @@
 # Changelog
 
+2.0.0-beta.4
+- Added debug logs  
+  Enable logging by adding SPACENAVIGATOR_DEBUG to Project Settings/Player/Scripting Define Symbols
+
 2.0.0-beta.3
 - Sensitivity settings are applied in editor
 - Axis locks are applied in editor
