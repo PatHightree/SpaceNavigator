@@ -12,11 +12,7 @@ namespace SpaceNavigatorDriver
     public struct ReportFormat1
     {
         public Vector3 translation;
-    }
-
-    public struct ReportFormat2
-    {
-        public Vector3 rotation;
+        public Vector3 rotation;        
     }
 
     public struct ReportFormat3
@@ -33,14 +29,11 @@ namespace SpaceNavigatorDriver
         [InputControl(name = "translation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=10")] 
         [InputControl(name = "translation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
         [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
-        public ReportFormat1 report1;
-
-        // 2nd report
         [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
-        [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=-80")] 
-        [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
-        [InputControl(name = "rotation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
-        public ReportFormat2 report2;
+        [InputControl(name = "rotation/x", offset = 6, format = "SHRT", parameters = "scale=true, scaleFactor=-80")] 
+        [InputControl(name = "rotation/y", offset = 8, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
+        [InputControl(name = "rotation/z", offset = 10, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
+        public ReportFormat1 report1;
 
         // 3rd report
         [InputControl(name = "button1", bit = 0, format = "BIT", layout = "Button", displayName = "Button 1")] 
@@ -62,7 +55,7 @@ namespace SpaceNavigatorDriver
         static SpaceNavigatorHID()
         {
 #if !ENABLE_INPUT_SYSTEM
-            Debug.LogError("SpaceNavigator Driver cannot function because the <b>New Input System Package</b> is not active !\n" +
+            Debug.LogError("SpaceNavigatorWireless cannot function because the <b>New Input System Package</b> is not active !\n" +
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
 
@@ -70,8 +63,9 @@ namespace SpaceNavigatorDriver
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion")
-                    .WithProduct(".*"));
-            DebugLog("SpaceNavigator Driver : RegisterLayout");
+                    .WithCapability("productId", 0xC652));
+                    // .WithProduct(".*"));
+            DebugLog("SpaceNavigatorWireless : RegisterLayout");
         }
 
         // In the player, trigger the calling of our static constructor
@@ -92,7 +86,7 @@ namespace SpaceNavigatorDriver
             Rotation = GetChildControl<Vector3Control>("rotation");
             Translation = GetChildControl<Vector3Control>("translation");
 
-            DebugLog("SpaceNavigator Driver : FinishSetup");
+            DebugLog("SpaceNavigatorWireless : FinishSetup");
         }
 
         // We can also expose a '.current' getter equivalent to 'Gamepad.current'.
@@ -103,7 +97,7 @@ namespace SpaceNavigatorDriver
         {
             base.MakeCurrent();
             current = this;
-            DebugLog("SpaceNavigator Driver : MakeCurrent");
+            DebugLog("SpaceNavigatorWireless : MakeCurrent");
         }
 
         // When one of our custom devices is removed, we want to make sure that if
@@ -113,7 +107,7 @@ namespace SpaceNavigatorDriver
             base.OnRemoved();
             if (current == this)
                 current = null;
-            DebugLog("SpaceNavigator Driver : OnRemoved");
+            DebugLog("SpaceNavigatorWireless : OnRemoved");
         }
         public void OnNextUpdate()
         {
@@ -121,7 +115,7 @@ namespace SpaceNavigatorDriver
 
         public unsafe void OnStateEvent(InputEventPtr eventPtr)
         {
-            DebugLog("SpaceNavigator Driver : Enter OnStateEvent");
+            DebugLog("SpaceNavigatorWireless : Enter OnStateEvent");
 
             // Refuse delta events.
             if (eventPtr.IsA<DeltaStateEvent>())
@@ -131,7 +125,7 @@ namespace SpaceNavigatorDriver
             if (stateEventPtr->stateFormat != new FourCC('H', 'I', 'D'))
                 return;
 
-            DebugLog("SpaceNavigator Driver : stateEventPtr->stateFormat ok");
+            DebugLog("SpaceNavigatorWireless : stateEventPtr->stateFormat ok");
 
             var reportPtr = (byte*) stateEventPtr->state;
             var reportId = *reportPtr;
@@ -148,24 +142,19 @@ namespace SpaceNavigatorDriver
             if (reportId == 1)
             {
                 UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(ReportFormat1));
-                DebugLog("SpaceNavigator Driver : Copied report1");
-            }
-            else if (reportId == 2)
-            {
-                UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(ReportFormat2));
-                DebugLog("SpaceNavigator Driver : Copied report2");
+                DebugLog("SpaceNavigatorWireless : Copied report1");
             }
             else if (reportId == 3)
             {
                 UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(ReportFormat3));
-                DebugLog("SpaceNavigator Driver : Copied report3");
+                DebugLog("SpaceNavigatorWireless : Copied report3");
             }
 
             // Apply the state change. Don't simply MemCpy over currentStatePtr as that will lead to various
             // malfunctions. The system needs to do the memcpy itself.
             InputState.Change(this, newState, eventPtr: eventPtr);
             
-            DebugLog("SpaceNavigator Driver : Exit OnStateEvent");
+            DebugLog("SpaceNavigatorWireless : Exit OnStateEvent");
         }
 
         public bool GetStateOffsetForEvent(InputControl control, InputEventPtr eventPtr, ref uint offset)

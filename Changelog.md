@@ -1,5 +1,9 @@
 # Changelog
 
+2.0.0-debug.1
+- Changed driver to only work with SpaceNavigator Wireless for remote testing  
+  Released on /debug branch
+
 2.0.0-beta.4
 - Added debug logs  
   Enable logging by adding SPACENAVIGATOR_DEBUG to Project Settings/Player/Scripting Define Symbols
