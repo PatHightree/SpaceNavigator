@@ -59,6 +59,80 @@ namespace SpaceNavigatorDriver
         public Vector3Control Rotation { get; private set; }
         public Vector3Control Translation { get; private set; }
 
+        public static string FindLayoutForDeviceHandler(
+            ref InputDeviceDescription _description,
+            string _matchedLayout,
+            InputDeviceExecuteCommandDelegate _executeDeviceCommand)
+        {
+            // Based on https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputSystem.html#UnityEngine_InputSystem_InputSystem_onFindLayoutForDevice
+
+
+            
+            if (_description.manufacturer != "3Dconnexion")
+            {
+                return null;
+            }
+            
+            Debug.Log($"{_description.manufacturer} \t {_description.product} (matched layout : {_matchedLayout})");
+
+            // InputSystem.RegisterLayout<SpaceNavigatorHID>(
+            //     matches: InputDeviceMatcher.FromDeviceDescription(_description));
+            
+            // InputSystem.RegisterLayout<SpaceNavigatorHID>(
+            //     matches: new InputDeviceMatcher()
+            //         .WithInterface("HID")
+            //         .WithManufacturer("3Dconnexion")
+            //         .WithProduct(".*"));
+            
+            // return "SpaceNavigatorHID";
+            
+            // So now we know that we want to build a layout on the fly
+            // for this device. What we do is to register what's called a
+            // layout builder. These can use C# code to build an InputControlLayout
+            // on the fly.
+
+            var layoutName = "SpaceNavigatorHID";
+
+            // We also need an InputDeviceMatcher that in the future will automatically
+            // select our newly registered layout whenever a new device of the same type
+            // is connected. We can get one simply like so:
+            var matcher = InputDeviceMatcher.FromDeviceDescription(_description);
+
+            // With these pieces in place, we can register our builder which
+            // mainly consists of a delegate that will get invoked when an instance
+            // of InputControlLayout is needed for the layout.
+            InputSystem.RegisterLayoutBuilder(() =>
+            {
+                // Here is where we do the actual building. In practice,
+                // this would probably look at the 'capabilities' property
+                // of the InputDeviceDescription we got and create a tailor-made
+                // layout. But what you put in the layout here really depends on
+                // the specific use case you have.
+                //
+                // We just add some preset things here which should still sufficiently
+                // serve as a demonstration.
+                //
+                // Note that we can base our layout here on whatever other layout
+                // in the system. We could extend Gamepad, for example. If we don't
+                // choose a base layout, the system automatically implies InputDevice.
+
+                var builder = new InputControlLayout.Builder()
+                    .WithDisplayName("SpaceNavigatorHID");
+
+                // Add controls.
+                builder.AddControl("stick")
+                    .WithLayout("Stick");
+
+                return builder.Build();
+            },
+            layoutName,
+            matches: matcher);
+
+            // So, we want the system to use our layout for the device that has just
+            // been connected. We return it from this callback to do that.
+            return layoutName;
+        }
+        
         static SpaceNavigatorHID()
         {
 #if !ENABLE_INPUT_SYSTEM
@@ -66,12 +140,16 @@ namespace SpaceNavigatorDriver
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
 
-            InputSystem.RegisterLayout<SpaceNavigatorHID>(
-                matches: new InputDeviceMatcher()
-                    .WithInterface("HID")
-                    .WithManufacturer("3Dconnexion")
-                    .WithProduct(".*"));
-            DebugLog("SpaceNavigator Driver : RegisterLayout");
+            InputSystem.onFindLayoutForDevice += FindLayoutForDeviceHandler;
+
+            
+            
+            // InputSystem.RegisterLayout<SpaceNavigatorHID>(
+            //     matches: new InputDeviceMatcher()
+            //         .WithInterface("HID")
+            //         .WithManufacturer("3Dconnexion")
+            //         .WithProduct(".*"));
+            // DebugLog("SpaceNavigator Driver : RegisterLayout");
         }
 
         // In the player, trigger the calling of our static constructor
