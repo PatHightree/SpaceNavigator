@@ -28,6 +28,11 @@
     "displayName": "Runtime samples",
     "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
     "path": "Samples~/Runtime samples"
+  },
+  {
+    "displayName": "Input Device Helper",
+    "description": "Tool which writes all HID device descriptors to disk.\nPlease supply this data when reporting an issue with an unsupported 3dconnexion device.",
+    "path": "Samples~/Input Device Helper"
   }],
   "type": "tool"
 }

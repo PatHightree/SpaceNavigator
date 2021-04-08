@@ -1,5 +1,8 @@
 # Changelog
 
+2.0.0-beta.5
+- Added Input Device Helper, can be used to supply HID descriptor data when reporting issues for unsupported 3dconnexion devices
+
 2.0.0-beta.4
 - Added debug logs  
   Enable logging by adding SPACENAVIGATOR_DEBUG to Project Settings/Player/Scripting Define Symbols
