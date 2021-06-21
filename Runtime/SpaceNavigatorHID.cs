@@ -9,24 +9,24 @@ using UnityEngine.InputSystem.Utilities;
 
 namespace SpaceNavigatorDriver
 {
-    public struct ReportFormat1
-    {
-        public Vector3 translation;
-    }
-
-    public struct ReportFormat2
-    {
-        public Vector3 rotation;
-    }
-
-    public struct ReportFormat3
-    {
-        public byte buttons;
-    }
-
     struct SpaceNavigatorHIDState : IInputStateTypeInfo
     {
         public FourCC format => new FourCC('H', 'I', 'D');
+
+        public struct ReportFormat1
+        {
+            public Vector3 translation;
+        }
+
+        public struct ReportFormat2
+        {
+            public Vector3 rotation;
+        }
+
+        public struct ReportFormat3
+        {
+            public byte buttons;
+        }
 
         // 1st report
         [InputControl(name = "translation", format = "VC3S", layout = "Vector3", displayName = "Translation")] 
@@ -54,21 +54,10 @@ namespace SpaceNavigatorDriver
     [InputControlLayout(stateType = typeof(SpaceNavigatorHIDState))]
     public class SpaceNavigatorHID : InputDevice, IInputStateCallbackReceiver
     {
-        public ButtonControl Button1 { get; private set; }
-        public ButtonControl Button2 { get; private set; }
-        public Vector3Control Rotation { get; private set; }
-        public Vector3Control Translation { get; private set; }
-
-        public static string FindLayoutForDeviceHandler(
-            ref InputDeviceDescription description,
-            string matchedLayout,
-            InputDeviceExecuteCommandDelegate executeDeviceCommand)
-        {
-            if (description.manufacturer != "3Dconnexion")
-                return null;
- 
-            return "SpaceNavigatorHID";
-        }
+        public ButtonControl Button1 { get; protected set; }
+        public ButtonControl Button2 { get; protected set; }
+        public Vector3Control Rotation { get; protected set; }
+        public Vector3Control Translation { get; protected set; }
         
         static SpaceNavigatorHID()
         {
@@ -76,18 +65,13 @@ namespace SpaceNavigatorDriver
             Debug.LogError("SpaceNavigator Driver cannot function because the <b>New Input System Package</b> is not active !\n" +
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
-
-            InputSystem.onFindLayoutForDevice += FindLayoutForDeviceHandler;
-
-            
-            
+            // If no layout with a matching product ID is found, this will be the default. 
             InputSystem.RegisterLayout<SpaceNavigatorHID>(
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
-                    .WithManufacturer("3Dconnexion")
-                    // .WithProduct(".*")
+                    .WithManufacturer("3Dconnexion.*")
             );
-            DebugLog("SpaceNavigator Driver : RegisterLayout");
+            DebugLog("SpaceNavigatorHID : RegisterLayout");
         }
 
         // In the player, trigger the calling of our static constructor
@@ -103,12 +87,13 @@ namespace SpaceNavigatorDriver
         {
             base.FinishSetup();
 
+            displayName = GetType().Name;
             Button1 = GetChildControl<ButtonControl>("button1");
             Button2 = GetChildControl<ButtonControl>("button2");
             Rotation = GetChildControl<Vector3Control>("rotation");
             Translation = GetChildControl<Vector3Control>("translation");
 
-            DebugLog("SpaceNavigator Driver : FinishSetup");
+            DebugLog("SpaceNavigatorHID : FinishSetup");
         }
 
         // We can also expose a '.current' getter equivalent to 'Gamepad.current'.
@@ -119,7 +104,7 @@ namespace SpaceNavigatorDriver
         {
             base.MakeCurrent();
             current = this;
-            DebugLog("SpaceNavigator Driver : MakeCurrent");
+            DebugLog("SpaceNavigatorHID : MakeCurrent");
         }
 
         // When one of our custom devices is removed, we want to make sure that if
@@ -129,16 +114,14 @@ namespace SpaceNavigatorDriver
             base.OnRemoved();
             if (current == this)
                 current = null;
-            DebugLog("SpaceNavigator Driver : OnRemoved");
+            DebugLog("SpaceNavigatorHID : OnRemoved");
         }
         public void OnNextUpdate()
         {
         }
 
-        public unsafe void OnStateEvent(InputEventPtr eventPtr)
+        public virtual unsafe void OnStateEvent(InputEventPtr eventPtr)
         {
-            DebugLog("SpaceNavigator Driver : Enter OnStateEvent");
-
             // Refuse delta events.
             if (eventPtr.IsA<DeltaStateEvent>())
                 return;
@@ -146,8 +129,6 @@ namespace SpaceNavigatorDriver
             var stateEventPtr = StateEvent.From(eventPtr);
             if (stateEventPtr->stateFormat != new FourCC('H', 'I', 'D'))
                 return;
-
-            DebugLog("SpaceNavigator Driver : stateEventPtr->stateFormat ok");
 
             var reportPtr = (byte*) stateEventPtr->state;
             var reportId = *reportPtr;
@@ -163,25 +144,23 @@ namespace SpaceNavigatorDriver
 
             if (reportId == 1)
             {
-                UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(ReportFormat1));
-                DebugLog("SpaceNavigator Driver : Copied report1");
+                UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat1));
+                DebugLog("SpaceNavigatorHID : Copied report1");
             }
             else if (reportId == 2)
             {
-                UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(ReportFormat2));
-                DebugLog("SpaceNavigator Driver : Copied report2");
+                UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat2));
+                DebugLog("SpaceNavigatorHID : Copied report2");
             }
             else if (reportId == 3)
             {
-                UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(ReportFormat3));
-                DebugLog("SpaceNavigator Driver : Copied report3");
+                UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat3));
+                DebugLog("SpaceNavigatorHID : Copied report3");
             }
 
             // Apply the state change. Don't simply MemCpy over currentStatePtr as that will lead to various
             // malfunctions. The system needs to do the memcpy itself.
             InputState.Change(this, newState, eventPtr: eventPtr);
-            
-            DebugLog("SpaceNavigator Driver : Exit OnStateEvent");
         }
 
         public bool GetStateOffsetForEvent(InputControl control, InputEventPtr eventPtr, ref uint offset)
