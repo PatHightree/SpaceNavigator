@@ -25,6 +25,7 @@ namespace SpaceNavigatorDriver
         private static bool _wasHorizonLocked;
         private const float _saveInterval = 30;
         private static float _lastSaveTime;
+        private static Type GameView;
 
         static ViewportController()
         {
@@ -67,6 +68,14 @@ namespace SpaceNavigatorDriver
 
             // If we don't want the driver to navigate the editor at runtime, exit now.
             if (Application.isPlaying && !Settings.RuntimeEditorNav) return;
+
+            if (GameView == null)
+            {
+                var assembly = typeof(UnityEditor.EditorWindow).Assembly;
+                GameView = assembly.GetType("UnityEditor.GameView");
+            }
+
+            if (Application.isPlaying && Settings.RuntimeEditorNav && !Settings.RuntimeEditorNavWithFocussedGameView && GameView.IsAssignableFrom(EditorWindow.focusedWindow?.GetType())) return;
 
             SceneView sceneView = SceneView.lastActiveSceneView;
             if (!sceneView) return;
