@@ -69,7 +69,7 @@ namespace SpaceNavigatorDriver
             InputSystem.RegisterLayout<SpaceNavigatorHID>(
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
-                    .WithManufacturer("3Dconnexion")
+                    .WithManufacturer("3Dconnexion.*")
                     .WithProduct(".*"));
             DebugLog("SpaceNavigator Driver : RegisterLayout");
         }
