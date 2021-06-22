@@ -70,26 +70,31 @@ At this time the Package Manager window does not show all available versions in 
 So until this changes, the upgrade process consists of removing the old version and installing a new one as described in the [Download](#download) section.
 
 ## Samples
+To install these samples, open the SpaceNavigator package in the Package Manager window and click the Import button in the Samples section.
+### Runtime Samples
 The package also contains a couple of samples of runtime applications :
 - Fly around.unity: Fly around with a sphere while knocking over some cubes.
 - Folow curve.unity: Make your torus follow the curve, but don't touch it!  
-
-To install these samples, open the SpaceNavigator package in the Package Manager window and click the Import button in the Samples section.
+### Input Helper
+The Input Helper is a utility to collect all info on your 3DConnexion device.  
+If your 3Dconnexion device has a data layout which is not yet supported by the driver,
+please file an issue on [GitHub](https://github.com/PatHightree/SpaceNavigator/issues) and supply the data this tool collects. 
+After installation you can find the tool in the pull-down menu under _Window/SpaceNavigator_.
 
 ## Known bugs and limitations
 - The New Input System package must be active for this driver to work
 - Grab Mode only works in the camera coordinate system
 
 ## Credits
-- Big thanks to William Iturzaeta from Canon Medical Systems USA,  
-  for hiring me to make this project compatible with Unity 2020  
-  The proceeds of this job will be donated to cancer research
-- Thanks to Stephen Wolter for further refinement to the mac drift fix 
-- Thanks to Enrico Tuttobene for contributing the mac drift fix
-- Thanks to Kieron Lanning for implementing navigation at runtime
-- Big thanks to Chase Cobb from Google for motivating me to implement the mac version
-- Thanks to Manuela Maier and Dave Buchhoffer (@vsaitoo) for testing and development feedback
-- Thanks to Ewoud Wijma for loaning me the Hackingtosh for building the Mac port
+- Felix Herbst for the input helper and adding scene focus to runtime navigation
+- William Iturzaeta from Canon Medical Systems USA, for hiring me to make this project compatible with Unity 2020  
+  The proceeds of this job have been donated to cancer research
+- Stephen Wolter for further refinement to the mac drift fix 
+- Enrico Tuttobene for contributing the mac drift fix
+- Kieron Lanning for implementing navigation at runtime
+- Chase Cobb from Google for motivating me to implement the mac version
+- Manuela Maier and Dave Buchhoffer (@vsaitoo) for testing and development feedback
+- Ewoud Wijma for loaning me the Hackingtosh for building the Mac port
 - Quaternion math by Minahito
   http://sunday-lab.blogspot.nl/2008/04/get-pitch-yaw-roll-from-quaternion.html
 
