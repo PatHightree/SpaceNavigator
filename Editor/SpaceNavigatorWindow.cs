@@ -10,7 +10,7 @@ namespace SpaceNavigatorDriver {
 		/// <summary>
 		/// Initializes the window.
 		/// </summary>
-		[MenuItem("Window/SpaceNavigator &s")]
+		[MenuItem("Window/SpaceNavigator/SpaceNavigator &s", false, 1)]
 		public static void Init() {
 			SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 

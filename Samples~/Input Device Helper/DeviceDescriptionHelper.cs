@@ -17,7 +17,7 @@ namespace UnityEngine.InputSystem.HID
             System.IO.File.WriteAllText(path, json);
         }
 
-        [MenuItem("Devices/Save all HID descriptors to files")]
+        [MenuItem("Window/SpaceNavigator/Save all HID descriptors to files", false, 2)]
         static void ListAndSaveAllHIDDevices()
         {
             foreach (var device in InputSystem.devices)
