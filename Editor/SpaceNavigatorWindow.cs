@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace SpaceNavigatorDriver {
 
@@ -13,8 +14,8 @@ namespace SpaceNavigatorDriver {
 		[MenuItem("Window/SpaceNavigator/SpaceNavigator &s", false, 1)]
 		public static void Init() {
 			SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
-
 			if (window) {
+				window.titleContent = new GUIContent("SpaceNavigator");
 				window.Show();
 			}
 		}
