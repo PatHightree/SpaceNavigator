@@ -216,6 +216,12 @@ namespace SpaceNavigatorDriver
 
         static void Telekinesis(SceneView sceneView)
         {
+            if (_wasIdle)
+                Undo.IncrementCurrentGroup();
+            Transform[] selection = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable);
+            Undo.SetCurrentGroupName("Telekinesis");
+            Undo.RecordObjects(selection, "Telekinesis");
+            
             // Apply inversion of axes for telekinesis mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
             Vector3 rot = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation);
@@ -234,7 +240,7 @@ namespace SpaceNavigatorDriver
             if (_wasIdle)
                 StoreSelectionTransforms();
 
-            foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable))
+            foreach (Transform transform in selection)
             {
                 if (!_unsnappedRotations.ContainsKey(transform)) continue;
 
@@ -280,6 +286,12 @@ namespace SpaceNavigatorDriver
 
         static void GrabMove(SceneView sceneView)
         {
+            if (_wasIdle)
+                Undo.IncrementCurrentGroup();
+            Transform[] selection = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable);
+            Undo.SetCurrentGroupName("GrabMove");
+            Undo.RecordObjects(selection, "GrabMove");
+            
             // Apply inversion of axes for grab move mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
@@ -296,7 +308,7 @@ namespace SpaceNavigatorDriver
             if (_wasIdle)
                 StoreSelectionTransforms();
 
-            foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.Editable))
+            foreach (Transform transform in selection)
             {
                 if (!_unsnappedRotations.ContainsKey(transform)) continue;
 
