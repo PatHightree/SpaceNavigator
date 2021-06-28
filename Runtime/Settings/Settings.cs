@@ -62,6 +62,7 @@ namespace SpaceNavigatorDriver {
 
 		// Runtime editor navigation
 		public static bool RuntimeEditorNav = true;
+		public static bool RuntimeEditorNavWithFocussedGameView = true;
 
 		// Inversion
 		public static Vector3 FlyInvertTranslation, FlyInvertRotation;
@@ -227,8 +228,13 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Sensitivity + gearbox -
 
+			GUILayout.BeginHorizontal();
 			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
-
+			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
+			RuntimeEditorNavWithFocussedGameView = GUILayout.Toggle(RuntimeEditorNavWithFocussedGameView, "On GameView focus");
+			EditorGUI.EndDisabledGroup();
+			GUILayout.EndHorizontal();
+			
 			#region - Axes inversion per mode -
 			GUILayout.Space(10);
 			GUILayout.Label("Invert axes in " + Settings.Mode.ToString() + " mode");
@@ -386,6 +392,7 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
+			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavWithFocussedGameView ? 1 : 0);
 			// Axis Inversions
 			WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
@@ -426,6 +433,7 @@ namespace SpaceNavigatorDriver {
 			RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
+			RuntimeEditorNavWithFocussedGameView = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;
 			// Axis Inversions
 			ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
