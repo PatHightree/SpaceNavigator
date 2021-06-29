@@ -19,7 +19,7 @@ The source code is available on [Github](https://github.com/PatHightree/SpaceNav
 
 ## What's new in 2.0.0 ?
 ### New foundation, new requirements
-The driver's foundation has been rebuilt and it is now compatible with Unity 2020 and up.   
+The driver's foundation has been rebuilt and it is now compatible with Unity 2019.1 and up.   
 It communicates directly with the HID device via Unity's new Input System.  
 This means that it **no longer requires the 3DConnexion driver** to be running or even installed.  
 It also means that **your project is required to have the new Input System enabled**.  
