@@ -13,21 +13,29 @@ In **Telekinesis** mode, you can move the stuff you selected with the SpaceNavig
 In **GrabMove** mode the stuff will be linked to your camera so you can take it with you and position it where you want.  
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
+If you encounter issues, please report them via the project's [Github Issues](https://github.com/PatHightree/SpaceNavigator/issues) page.  
 If you have feedback, please use this [thread](http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource) on the Unity forums.  
 The source code is available on [Github](https://github.com/PatHightree/SpaceNavigator).
 
-## New foundation, new requirements
-As of version 2.0.0, the driver communicates directly with the HID device via Unity's new Input System.  
+## What's new in 2.0.0 ?
+### New foundation, new requirements
+The driver's foundation has been rebuilt and it is now compatible with Unity 2020 and up.   
+It communicates directly with the HID device via Unity's new Input System.  
 This means that it **no longer requires the 3DConnexion driver** to be running or even installed.  
-It also means that **your project is required to use the new Input System**.   
-(this [page](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) can help with upgrading to the new Input System)
+It also means that **your project is required to have the new Input System enabled**.  
+You can have both the old and new Input System active, see this [tip](#tip_project_settings).  
+(this [page](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html) can help with upgrading to the new Input System)
+
+### SpaceNavigator driver as a package
+The driver is structured as a UPM package and can be added to your project via the Project Manager.  
+See the [download](#download) section for details.
 
 ## <a name="download"></a>Download
 - The driver can now be downloaded via the Package Manager window
   - From git url :
     - Click the + button in the top left of the Package Manager window
     - Choose *Add package from GIT url...*
-    - Enter https://github.com/PatHightree/SpaceNavigator.git#develop  
+    - Enter https://github.com/PatHightree/SpaceNavigator.git  
       Note, for this you need to have git installed on your system !
   - From disk :
     - Download the driver from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases)
@@ -51,11 +59,11 @@ If you want to install a specific version, download it from the github [releases
     - A popup will ask you to switch to the new Input System, choose **Yes**
     - The project will close and reopen itself
     - You will have to modify any code which used the old Input System  
-      [Here](https://urldefense.com/v3/__https:/docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/Migration.html__;!!GU6NIjSruHWo!7tagSWeKRRxjHN1RgbB_F8cYxHoYJeTw88XR8yHzKleapIVQk9B6VdPvBKkkPSpI6Xc-VPY4$) is an overview of common old Input usages and their new equivalents 
+      [Here](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html) is an overview of common old Input usages and their new equivalents 
 - Fly away
 
 ## Upgrading from 1.x
-When upgrading from a pre 2.0.0 version of the plugin, please follow these steps :
+When upgrading from a pre-2.0.0 version of the plugin, please follow these steps :
 - Close the SpaceNavigator editor window
 - Delete the SpaceNavigator folder from your project
 - Delete Plugins\3DConnexionWrapperU4.bundle from your project
@@ -78,8 +86,8 @@ The package also contains a couple of samples of runtime applications :
 ### Input Helper
 The Input Helper is a utility to collect all info on your 3DConnexion device.  
 If your 3Dconnexion device has a data layout which is not yet supported by the driver,
-please file an issue on [GitHub](https://github.com/PatHightree/SpaceNavigator/issues) and supply the data this tool collects. 
-After installation you can find the tool in the pull-down menu under _Window/SpaceNavigator_.
+please file an issue on the [GitHub Issues](https://github.com/PatHightree/SpaceNavigator/issues) page and supply the data this tool collects.  
+After installation you can find the tool in the pull-down menu under _Window/SpaceNavigator/Save all HID descriptors to files_.
 
 ## Known bugs and limitations
 - The New Input System package must be active for this driver to work
