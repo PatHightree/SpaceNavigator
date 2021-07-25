@@ -20,7 +20,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Desktop (please complete the following information):**
+**Details (please complete the following information):**
+- Device type [e.g. SpaceNavigator, Spacemouse]
+- Connection [wired or wireless]
  - OS: [e.g. Windows, MacOS]
  - SpaceNavigator Driver version [e.g. 2.0.0-beta.1]
 
