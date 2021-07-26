@@ -21,6 +21,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Details (please complete the following information):**
+- Issue occurred while navigating [in the editor viewports, in play mode]
 - Device type [e.g. SpaceNavigator, Spacemouse]
 - Connection [wired or wireless]
  - OS: [e.g. Windows, MacOS]
