@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using UnityEditor;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -71,16 +72,23 @@ namespace SpaceNavigatorDriver
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion.*")
             );
+            Application.quitting += Quit;
+            EditorApplication.quitting += Quit;
             DebugLog("SpaceNavigatorHID : RegisterLayout");
         }
 
         // In the player, trigger the calling of our static constructor
         // by having an empty method annotated with RuntimeInitializeOnLoadMethod.
         [RuntimeInitializeOnLoadMethod]
-        static void Init()
+        private static void Init()
         {
         }
 
+        private static void Quit()
+        {
+            current.SetLEDStatus(LedStatus.Off);
+        }
+        
         // FinishSetup is where our device setup is finalized. Here we can look up
         // the controls that have been created.
         protected override void FinishSetup()
@@ -104,6 +112,7 @@ namespace SpaceNavigatorDriver
         {
             base.MakeCurrent();
             current = this;
+            SetLEDStatus(LedStatus.On);
             DebugLog("SpaceNavigatorHID : MakeCurrent");
         }
 
@@ -114,8 +123,10 @@ namespace SpaceNavigatorDriver
             base.OnRemoved();
             if (current == this)
                 current = null;
+            SetLEDStatus(LedStatus.Off);
             DebugLog("SpaceNavigatorHID : OnRemoved");
         }
+        
         public void OnNextUpdate()
         {
         }
@@ -170,6 +181,8 @@ namespace SpaceNavigatorDriver
             return false;
         }
 
+        #region Status LED
+
         public void SetLEDStatus(LedStatus status)
         {
             var cmd = LEDCommand.Create(status);
@@ -204,11 +217,17 @@ namespace SpaceNavigatorDriver
             }
         }
 
+        #endregion
+
+        #region Utilities
+
         public static void DebugLog(string _message)
         {
 #if SPACENAVIGATOR_DEBUG
             Debug.Log(_message);
 #endif
         }
+
+        #endregion
     }
 }
