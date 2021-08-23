@@ -170,6 +170,40 @@ namespace SpaceNavigatorDriver
             return false;
         }
 
+        public void SetLEDStatus(LedStatus status)
+        {
+            var cmd = LEDCommand.Create(status);
+            var result = ExecuteCommand(ref cmd);
+            DebugLog($"SpaceNavigatorHID : Executed LEDCommand. status = {status}, result = {result}");
+        }
+
+        public enum LedStatus { Off = 0, On = 1 }
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct LEDCommand : IInputDeviceCommandInfo
+        {
+            public FourCC typeStatic => new FourCC('H', 'I', 'D', 'O');
+
+            [FieldOffset(0)]
+            public InputDeviceCommand baseCommand;
+            [FieldOffset(InputDeviceCommand.BaseCommandSize)]
+            public byte reportId;
+            [FieldOffset(InputDeviceCommand.BaseCommandSize + 1)]
+            public byte status;
+
+            public static LEDCommand On => Create(LedStatus.On);
+            public static LEDCommand Off => Create(LedStatus.Off);
+
+            public static LEDCommand Create(LedStatus status)
+            {
+                var result = new LEDCommand();
+                result.baseCommand = new InputDeviceCommand(result.typeStatic, InputDeviceCommand.BaseCommandSize + 2);
+                result.reportId = 0x04;
+                result.status = (byte)status;
+                return result;
+            }
+        }
+
         public static void DebugLog(string _message)
         {
 #if SPACENAVIGATOR_DEBUG
