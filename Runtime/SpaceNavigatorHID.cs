@@ -31,6 +31,7 @@ namespace SpaceNavigatorDriver
         [FieldOffset(5)]
         public short translationZ;
 
+        // 2nd report (or 2nd part of 1st report)
         [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")]
         [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1, invert=true")]
         [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1")]
