@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using UnityEditor;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +6,9 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SpaceNavigatorDriver
 {
@@ -72,8 +74,11 @@ namespace SpaceNavigatorDriver
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion.*")
             );
-            Application.quitting += Quit;
+#if UNITY_EDITOR
             EditorApplication.quitting += Quit;
+#else
+            Application.quitting += Quit;
+#endif
             DebugLog("SpaceNavigatorHID : RegisterLayout");
         }
 
@@ -181,7 +186,7 @@ namespace SpaceNavigatorDriver
             return false;
         }
 
-        #region Status LED
+#region Status LED
 
         public void SetLEDStatus(LedStatus status)
         {
@@ -217,9 +222,9 @@ namespace SpaceNavigatorDriver
             }
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         public static void DebugLog(string _message)
         {
@@ -228,6 +233,6 @@ namespace SpaceNavigatorDriver
 #endif
         }
 
-        #endregion
+#endregion
     }
 }
