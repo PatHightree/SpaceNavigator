@@ -70,6 +70,12 @@ namespace SpaceNavigatorDriver {
 		public static Vector3 TelekinesisInvertTranslation, TelekinesisInvertRotation;
 		public static Vector3 GrabMoveInvertTranslation, GrabMoveInvertRotation;
 
+		// Calibration
+		public const float TransSensEpsilonDefault = 11f;
+		public static float TransSensEpsilon = TransSensEpsilonDefault;
+		public const float RotSensEpsilonDefault = 11f;
+		public static float RotSensEpsilon = RotSensEpsilonDefault;
+
 		private static Vector2 _scrollPos;
 
 		static Settings() {
@@ -316,6 +322,29 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Axes inversion per mode -
 
+			#region - Calibration -
+			GUILayout.Space(10);
+			GUILayout.BeginVertical();
+			GUILayout.Label("Calibration");
+			GUILayout.Space(4);
+						
+			#region - Translation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Translation Epsilon", GUILayout.Width(120));
+			TransSensEpsilon = EditorGUILayout.FloatField(TransSensEpsilon, GUILayout.Width(30));
+			GUILayout.EndHorizontal();			
+			#endregion - Translation Epsilon -
+			
+			#region - Rotation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rotation Epsilon", GUILayout.Width(120));
+			RotSensEpsilon = EditorGUILayout.FloatField(RotSensEpsilon, GUILayout.Width(30));
+			GUILayout.EndHorizontal();
+			#endregion - Rotation Epsilon -
+
+			GUILayout.EndVertical();			
+			#endregion - Calibration -
+
 			#region - Dead Zone -
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 		GUILayout.BeginVertical();
@@ -398,6 +427,9 @@ namespace SpaceNavigatorDriver {
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
 			WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
 			WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			PlayerPrefs.SetFloat("Translation sensitivity epsilon", TransSensEpsilon);
+			PlayerPrefs.SetFloat("Rotation sensitivity epsilon", RotSensEpsilon);
 		}
 
 		/// <summary>
@@ -439,6 +471,9 @@ namespace SpaceNavigatorDriver {
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
 			ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
 			ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			TransSensEpsilon = PlayerPrefs.GetFloat("Translation sensitivity epsilon", TransSensEpsilonDefault);
+			RotSensEpsilon = PlayerPrefs.GetFloat("Rotation sensitivity epsilon", RotSensEpsilonDefault);
 		}
 
 		/// <summary>

@@ -87,8 +87,8 @@ namespace SpaceNavigatorDriver
             _wasHorizonLocked = Settings.LockHorizon;
 
             // Return if device is idle.
-            if (SpaceNavigatorHID.current.Translation.ReadValue() == Vector3.zero &&
-                SpaceNavigatorHID.current.Rotation.ReadValue() == Vector3.zero)
+            if (ApproximatelyEqual(SpaceNavigatorHID.current.Translation.ReadValue(), Vector3.zero, Settings.TransSensEpsilon) &&
+                ApproximatelyEqual(SpaceNavigatorHID.current.Rotation.ReadValue(), Vector3.zero, Settings.RotSensEpsilon))
             {
                 _wasIdle = true;
                 return;
@@ -433,6 +433,19 @@ namespace SpaceNavigatorDriver
         }
 
         #endregion - Snapping -
+        
+        #region - Calibration -
+        
+        private static bool ApproximatelyEqual(Vector3 lhs, Vector3 rhs, float epsilon)
+        {
+            float num = lhs.x - rhs.x;
+            float num2 = lhs.y - rhs.y;
+            float num3 = lhs.z - rhs.z;
+            float num4 = num * num + num2 * num2 + num3 * num3;
+            return num4 < (9.99999944f * Mathf.Pow(10, -epsilon));
+        }
+
+        #endregion - Calibration -
     }
 }
 #endif
