@@ -43,7 +43,7 @@ namespace SpaceNavigatorDriver
             }
 #endif
 
-            DoInit();
+            RegisterLayout();
         }
 
 #if UNITY_EDITOR
@@ -54,11 +54,11 @@ namespace SpaceNavigatorDriver
 
             EditorApplication.update -= LateInit;
 
-            DoInit();
+            RegisterLayout();
         }
 #endif
 
-        private static void DoInit()
+        private static void RegisterLayout()
         {
             RemoveExistingLayout();
 
