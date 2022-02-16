@@ -14,6 +14,7 @@ namespace SpaceNavigatorDriver
     internal class SpaceMouseHIDLayoutBuilder
     {
         // Define how elements will be grouped together.
+        // Also swap y and z positions and invert some axes.
         private static readonly GenericDesktopRangeGroupDefinition[] _genericDesktopRangeGroups = new[]
         {
             new GenericDesktopRangeGroupDefinition
@@ -24,8 +25,10 @@ namespace SpaceNavigatorDriver
                 DisplayName = "Translation",
                 Format = new FourCC('V', 'C', '3', 'S'),
                 Layout = "Vector3",
-                ElementNames = new string[] { "x", "y", "z" },
-                ElementDisplayNames = new string[]{ "X", "Y", "Z" }
+                ElementNames = new string[] { "x", "z", "y" },
+                ElementDisplayNames = new string[]{ "X", "Z", "Y" },
+                ElementParameters = new string[]{ "", "invert", "invert" }
+
             },
             new GenericDesktopRangeGroupDefinition
             {
@@ -35,8 +38,9 @@ namespace SpaceNavigatorDriver
                 DisplayName = "Rotation",
                 Format = new FourCC('V', 'C', '3', 'S'),
                 Layout = "Vector3",
-                ElementNames = new string[] { "x", "y", "z" },
-                ElementDisplayNames = new string[]{ "X", "Y", "Z" }
+                ElementNames = new string[] { "x", "z", "y" },
+                ElementDisplayNames = new string[]{ "X", "Z", "Y" },
+                ElementParameters = new string[]{ "invert", "", "" }
             }
         };
 
@@ -109,8 +113,8 @@ namespace SpaceNavigatorDriver
                             .WithProcessors(element.DetermineProcessors());
 
                     var parameters = element.DetermineParameters();
-                    if (!string.IsNullOrEmpty(parameters))
-                        control.WithParameters(parameters);
+                    if (!string.IsNullOrEmpty(parameters) || (hasGroup && !string.IsNullOrEmpty(groupInfo.ElementParameters)))
+                        control.WithParameters(StringHelpers.Join(",", parameters, groupInfo.ElementParameters));
 
                     var usages = element.DetermineUsages();
                     if (usages != null)
@@ -152,6 +156,7 @@ namespace SpaceNavigatorDriver
             public string Layout;
             public string[] ElementNames;
             public string[] ElementDisplayNames;
+            public string[] ElementParameters;
 
             public bool TryGetGroupInfo(HIDElementDescriptor e, ref GroupInfo groupInfo)
             {
@@ -161,11 +166,13 @@ namespace SpaceNavigatorDriver
                 if (e.usage < (int)UsageMin || e.usage > (int)UsageMax)
                     return false;
 
+                int elementIndex = e.usage - (int)UsageMin;
                 groupInfo = new GroupInfo
                 {
                     Group = this,
-                    ElementName = Name + "/" + ElementNames[e.usage - (int)UsageMin],
-                    ElementDisplayName = ElementDisplayNames[e.usage - (int)UsageMin]
+                    ElementName = Name + "/" + ElementNames[elementIndex],
+                    ElementDisplayName = ElementDisplayNames[elementIndex],
+                    ElementParameters = ElementParameters == null ? null : ElementParameters[elementIndex]
                 };
 
                 return true;
@@ -180,6 +187,7 @@ namespace SpaceNavigatorDriver
             public GenericDesktopRangeGroupDefinition Group;
             public string ElementName;
             public string ElementDisplayName;
+            public string ElementParameters;
         }
     }
 }
