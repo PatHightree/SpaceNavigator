@@ -164,12 +164,12 @@ namespace SpaceNavigatorDriver
                     g => 1 + Mathf.CeilToInt(g.Sum(e => e.reportSizeInBits) / 8f)); // All elements' sizes aligned to bytes + 1 byte for reportId
 
             // Check if reports are in a valid format to be mapped to our merged state struct
-            //if (reportSizeMap.Keys.Any(id => id < 1 || id > SpaceNavigatorHID.ReportCountMax) ||
-            //    reportSizeMap.Values.Any(s => s > SpaceNavigatorHID.ReportSizeMax))
-            //{
-            //    Debug.LogWarning($"{nameof(SpaceMouseHIDSetup)}: This device reports its state in an incompatible format, please report an issue with following info:\n{hidDescriptor.ToJson()}");
-            //    return false;
-            //}
+            if (reportSizeMap.Keys.Any(id => id < 1 || id > SpaceNavigatorHID.ReportCountMax) ||
+                reportSizeMap.Values.Any(s => s > SpaceNavigatorHID.ReportSizeMax))
+            {
+                Debug.LogWarning($"{nameof(SpaceMouseHIDSetup)}: This device reports its state in an incompatible format, please report an issue with following info:\n{hidDescriptor.ToJson()}");
+                return false;
+            }
 
 #if SPACENAVIGATOR_DEBUG
             foreach (var rc in reportSizeMap)
