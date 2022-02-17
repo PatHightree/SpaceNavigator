@@ -99,6 +99,13 @@ namespace SpaceNavigatorDriver
         }
 
 #if SPACENAVIGATOR_DEBUG
+        protected override unsafe long ExecuteCommand(InputDeviceCommand* commandPtr)
+        {
+            var type = commandPtr->type;
+            DebugLog($"ExecuteCommand: {type}");
+            return base.ExecuteCommand(commandPtr);
+        }
+
         private unsafe string Hex(void* newState, int length, int stride = -1)
         {
             byte[] b = new byte[length];
