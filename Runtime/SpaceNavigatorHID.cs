@@ -71,18 +71,22 @@ namespace SpaceNavigatorDriver
             if (reportId < 1 || reportId > ReportCountMax)
                 return;
 
-            // Copy current state.
-            // Use valueSizeInBytes because the state block size is defined by the max element offset + its size.
-            // That means the state is _not_ the size we set in LayoutBuilder!
-            var newState = new MergedReports();
-            UnsafeUtility.MemCpy(&newState, (byte*)currentStatePtr + stateBlock.byteOffset, valueSizeInBytes);
+            // Get pointer to current state.
+            var newState = (byte*)currentStatePtr + stateBlock.byteOffset;
 
-            // Merge incoming report into the current state
-            // Use reportId to map to a specific block inside the state struct
-            UnsafeUtility.MemCpy(((byte*)&newState) + ReportSizeMax * (reportId - 1), reportPtr, stateEventPtr->stateSizeInBytes);
+            // Merge incoming report into the current state.
+            // Use reportId to map to a specific block inside the state struct.
+            var offset = (uint)(ReportSizeMax * (reportId - 1));
+            var length = stateEventPtr->stateSizeInBytes;
+            var maxLength = (stateBlock.sizeInBits + 7) >> 3;
+            // Make sure not to not exceed state block boundaries. Its size is not equal to the state's struct size!
+            // Guess: Size might be calculated by last element offset + last element size, byte-aligned.
+            if (offset + length > maxLength)
+                length = maxLength - offset;
+            UnsafeUtility.MemCpy(newState + offset, reportPtr, length);
             //DebugLog($"Copied report {reportId} {stateEventPtr->stateSizeInBytes}:\n" + Hex(&newState, StateSizeMax, ReportSizeMax));
 
-            InputState.Change(this, newState, eventPtr: eventPtr);
+            InputState.Change(this, *(MergedReports*)newState);
         }
 
         public bool GetStateOffsetForEvent(InputControl control, InputEventPtr eventPtr, ref uint offset)
