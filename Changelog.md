@@ -1,5 +1,12 @@
 # Changelog
 
+2.0.0-pre.8
+- Merged PR by Stefan Beer which fixes drifting (issue #29, #51)
+
+2.0.0-beta.7
+- Merged PR by krisrok which enables toggling the SpaceNavigator's LED
+- Merged PR by Jiapeng Chi which fixes rotation offsets between editor and play mode
+
 2.0.0-beta.6
 - Added separate layout for SpaceNavigator Wireless
 - Merged PR by Felix Herbst to match trailing spaces in manufacturer name, fixes Space Pilot Pro and possibly others
