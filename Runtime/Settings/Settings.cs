@@ -322,28 +322,31 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Axes inversion per mode -
 
-			#region - Calibration -
+			#region - Deadzone -
 			GUILayout.Space(10);
 			GUILayout.BeginVertical();
-			GUILayout.Label("Calibration");
+			GUILayout.Label("Deadzone");
 			GUILayout.Space(4);
 						
 			#region - Translation Epsilon -
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Translation Epsilon", GUILayout.Width(120));
-			TransSensEpsilon = EditorGUILayout.FloatField(TransSensEpsilon, GUILayout.Width(30));
+			GUILayout.Label("Translation", GUILayout.Width(120));
+			int epsilonMax = 12;
+			int deadzone = epsilonMax - Mathf.RoundToInt(TransSensEpsilon);
+			TransSensEpsilon = epsilonMax - EditorGUILayout.IntSlider(deadzone, 0, epsilonMax);
 			GUILayout.EndHorizontal();			
 			#endregion - Translation Epsilon -
 			
 			#region - Rotation Epsilon -
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Rotation Epsilon", GUILayout.Width(120));
-			RotSensEpsilon = EditorGUILayout.FloatField(RotSensEpsilon, GUILayout.Width(30));
+			GUILayout.Label("Rotation", GUILayout.Width(120));
+			deadzone = epsilonMax - Mathf.RoundToInt(RotSensEpsilon);
+			RotSensEpsilon =epsilonMax -  EditorGUILayout.IntSlider(deadzone, 0, epsilonMax); 
 			GUILayout.EndHorizontal();
 			#endregion - Rotation Epsilon -
 
 			GUILayout.EndVertical();			
-			#endregion - Calibration -
+			#endregion - Deadzone -
 
 			#region - Dead Zone -
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

@@ -432,7 +432,7 @@ namespace SpaceNavigatorDriver
 
         #endregion - Snapping -
         
-        #region - Calibration -
+        #region - Deadzone -
         
         private static bool ApproximatelyEqual(Vector3 lhs, Vector3 rhs, float epsilon)
         {
@@ -443,7 +443,7 @@ namespace SpaceNavigatorDriver
             return num4 < (9.99999944f * Mathf.Pow(10, -epsilon));
         }
 
-        #endregion - Calibration -
+        #endregion - Deadzone -
     }
 }
 #endif
