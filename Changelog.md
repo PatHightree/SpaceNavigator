@@ -1,5 +1,8 @@
 # Changelog
 
+2.0.0-pre.9
+- Merged fix by cpetry to prevent exception when quitting without SpaceNavigator connected.
+
 2.0.0-pre.8
 - Merged PR by Stefan Beer which fixes drifting (issue #29, #51)
 
