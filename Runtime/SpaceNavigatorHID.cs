@@ -91,7 +91,8 @@ namespace SpaceNavigatorDriver
 
         private static void Quit()
         {
-            current.SetLEDStatus(LedStatus.Off);
+            if (current != null)
+                current.SetLEDStatus(LedStatus.Off);
         }
         
         // FinishSetup is where our device setup is finalized. Here we can look up
