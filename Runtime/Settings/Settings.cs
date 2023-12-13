@@ -64,6 +64,8 @@ namespace SpaceNavigatorDriver {
 		public static bool RuntimeEditorNav = true;
 		public static bool RuntimeEditorNavSuspendOnGameViewFocus;
 
+		public static bool FlySwapRotationAxesYAndZ;
+
 		// Inversion
 		public static Vector3 FlyInvertTranslation, FlyInvertRotation;
 		public static Vector3 OrbitInvertTranslation, OrbitInvertRotation;
@@ -238,6 +240,7 @@ namespace SpaceNavigatorDriver {
 			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
 			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
 			RuntimeEditorNavSuspendOnGameViewFocus = GUILayout.Toggle(RuntimeEditorNavSuspendOnGameViewFocus, "Suspend on GameView focus");
+			FlySwapRotationAxesYAndZ = GUILayout.Toggle(FlySwapRotationAxesYAndZ, "Swap Y and Z rotation axes in Fly mode");
 			EditorGUI.EndDisabledGroup();
 			GUILayout.EndHorizontal();
 			
@@ -425,6 +428,7 @@ namespace SpaceNavigatorDriver {
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavSuspendOnGameViewFocus ? 1 : 0);
+			PlayerPrefs.SetInt("FlySwapRotationAxesYAndZ", FlySwapRotationAxesYAndZ ? 1 : 0);
 			// Axis Inversions
 			WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
@@ -469,6 +473,7 @@ namespace SpaceNavigatorDriver {
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 			RuntimeEditorNavSuspendOnGameViewFocus = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;
+			FlySwapRotationAxesYAndZ = PlayerPrefs.GetInt("FlySwapRotationAxesYAndZ", 1) == 1;
 			// Axis Inversions
 			ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
