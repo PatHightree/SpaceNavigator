@@ -134,9 +134,17 @@ namespace SpaceNavigatorDriver
         {
             SyncRigWithScene();
 
+			var rotation = SpaceNavigatorHID.current.Rotation.ReadValue();
+
+			// Check to see if we need to swap rotation Y and Z for fly mode
+			if(Settings.FlySwapRotationAxesYAndZ)
+			{
+				rotation = new Vector3(rotation.x, rotation.z, rotation.y);
+			}
+
             // Apply inversion of axes for fly/grabmove mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
-            Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
+            rotation = Vector3.Scale(rotation, rotationInversion);
 
             // Apply sensitivity
             translation *= Settings.TransSens[Settings.CurrentGear];
