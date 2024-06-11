@@ -86,9 +86,12 @@ namespace SpaceNavigatorDriver
                 StraightenHorizon();
             _wasHorizonLocked = Settings.LockHorizon;
 
+            Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
+            Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
+            
             // Return if device is idle.
-            if (ApproximatelyEqual(SpaceNavigatorHID.current.Translation.ReadValue(), Vector3.zero, Settings.TransSensEpsilon) &&
-                ApproximatelyEqual(SpaceNavigatorHID.current.Rotation.ReadValue(), Vector3.zero, Settings.RotSensEpsilon))
+            if (ApproximatelyEqual(SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value, Vector3.zero, Settings.TransSensEpsilon) &&
+                ApproximatelyEqual(SpaceNavigatorHID.current.Rotation.ReadValue() - Settings.RotationDrift.Value, Vector3.zero, Settings.RotSensEpsilon))
             {
                 _wasIdle = true;
                 return;
