@@ -27,11 +27,15 @@ namespace SpaceNavigatorDriver
         private static float _lastSaveTime;
         private static Type GameView;
 
-        static ViewportController()
+		private static double _lastRefreshTime;
+		private static double _diyDeltaTime;
+        private static float _deltaTimeFactor = 400f;
+
+        static ViewportController() 
         {
-            // Set up callbacks.
-            EditorApplication.update += Update;
-            EditorApplication.playModeStateChanged += e => PlaymodeStateChanged();
+			// Set up callbacks.
+			EditorApplication.update += Update;
+			EditorApplication.playmodeStateChanged += PlaymodeStateChanged;
 
             // Initialize.
             Settings.Read();
@@ -89,6 +93,10 @@ namespace SpaceNavigatorDriver
             Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
             Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
             
+            _diyDeltaTime = EditorApplication.timeSinceStartup - _lastRefreshTime;
+            _lastRefreshTime = EditorApplication.timeSinceStartup;
+            // Debug.Log($"Unity delta time: {Time.deltaTime} diy deltTime: {_diyDeltaTime}");
+            
             // Return if device is idle.
             if (ApproximatelyEqual(SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value, Vector3.zero, Settings.TransSensEpsilon) &&
                 ApproximatelyEqual(SpaceNavigatorHID.current.Rotation.ReadValue() - Settings.RotationDrift.Value, Vector3.zero, Settings.RotSensEpsilon))
@@ -122,7 +130,7 @@ namespace SpaceNavigatorDriver
             //	D.log("Button 0 pressed");
             //if (Keyboard.IsKeyDown(2))
             //	D.log("Button 1 pressed");
-
+            
             _wasIdle = false;
         }
 
@@ -141,6 +149,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
 
+            // Make navigation framerate independent
+            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            
             // Apply sensitivity
             translation *= Settings.TransSens[Settings.CurrentGear];
             rotation *= Settings.RotSens;
@@ -156,7 +168,7 @@ namespace SpaceNavigatorDriver
             {
                 if (Settings.LockHorizon)
                 {
-                    // Perform azimuth in world coordinates.
+                    // Perform yaw in world coordinates.
                     _camera.Rotate(Vector3.up, rotation.y, Space.World);
                     // Perform pitch in local coordinates.
                     _camera.Rotate(Vector3.right, rotation.x, Space.Self);
@@ -189,6 +201,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.OrbitInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.OrbitInvertRotation);
 
+            // Make navigation framerate independent
+            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            
             // Apply sensitivity
             translation *= Settings.TransSens[Settings.CurrentGear];
             rotation *= Settings.RotSens;
@@ -228,6 +244,10 @@ namespace SpaceNavigatorDriver
             // Apply inversion of axes for telekinesis mode.
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
             Vector3 rot = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation);
+            
+            // Make navigation framerate independent
+            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            rot *= (float)_diyDeltaTime * _deltaTimeFactor;
             
             // Apply sensitivity
             translation *= Settings.TransSens[Settings.CurrentGear];
@@ -299,6 +319,10 @@ namespace SpaceNavigatorDriver
             Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
             Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
 
+            // Make navigation framerate independent
+            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            
             // Apply sensitivity
             translation *= Settings.TransSens[Settings.CurrentGear];
             rotation *= Settings.RotSens;
