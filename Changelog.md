@@ -1,5 +1,9 @@
 # Changelog
 
+2.0.0-pre.10
+- Merged improvement by AJ Campbell which implements framerate independent navigation.
+- Added a fix for drift + recalibration button.
+
 2.0.0-pre.9
 - Merged fix by cpetry to prevent exception when quitting without SpaceNavigator connected.
 
