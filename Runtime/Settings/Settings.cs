@@ -70,6 +70,14 @@ namespace SpaceNavigatorDriver {
 		public static Vector3 TelekinesisInvertTranslation, TelekinesisInvertRotation;
 		public static Vector3 GrabMoveInvertTranslation, GrabMoveInvertRotation;
 
+		// Calibration
+		public const float TransSensEpsilonDefault = 11f;
+		public static float TransSensEpsilon = TransSensEpsilonDefault;
+		public const float RotSensEpsilonDefault = 11f;
+		public static float RotSensEpsilon = RotSensEpsilonDefault;
+		public static Vector3? TranslationDrift;
+		public static Vector3? RotationDrift; 
+
 		private static Vector2 _scrollPos;
 
 		static Settings() {
@@ -316,38 +324,75 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Axes inversion per mode -
 
+			#region - Deadzone -
+			GUILayout.Space(10);
+			GUILayout.BeginVertical();
+			GUILayout.Label("Deadzone");
+			GUILayout.Space(4);
+						
+			#region - Translation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Translation", GUILayout.Width(120));
+			int epsilonMax = 12;
+			int deadzone = epsilonMax - Mathf.RoundToInt(TransSensEpsilon);
+			TransSensEpsilon = epsilonMax - EditorGUILayout.IntSlider(deadzone, 0, epsilonMax);
+			GUILayout.EndHorizontal();			
+			#endregion - Translation Epsilon -
+			
+			#region - Rotation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rotation", GUILayout.Width(120));
+			deadzone = epsilonMax - Mathf.RoundToInt(RotSensEpsilon);
+			RotSensEpsilon =epsilonMax -  EditorGUILayout.IntSlider(deadzone, 0, epsilonMax); 
+			GUILayout.EndHorizontal();
+			#endregion - Rotation Epsilon -
+
+			if (GUILayout.Button("Recalibrate drift"))
+			{
+				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
+				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+			}
+			
+			GUILayout.EndVertical();			
+			#endregion - Deadzone -
+
 			#region - Dead Zone -
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-		GUILayout.BeginVertical();
-		GUILayout.Label("Dead Zone");
-		GUILayout.Space(4);
-
+			GUILayout.BeginVertical();
+			GUILayout.Label("Dead Zone");
+			GUILayout.Space(4);
 
 			#region - Translation + rotation -
-		GUILayout.BeginVertical();
+			GUILayout.BeginVertical();
 			#region - Translation -
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Translation", GUILayout.Width(67));
-		TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
-		TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
-		TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
-		TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
-		GUILayout.EndHorizontal();
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Translation", GUILayout.Width(67));
+			TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
+			TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
+			TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
+			TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
+			GUILayout.EndHorizontal();
 			#endregion - Translation -
 
 			#region - Rotation -
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Rotation", GUILayout.Width(67));
-		RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
-		RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
-		RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
-		RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
-		GUILayout.EndHorizontal();
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rotation", GUILayout.Width(67));
+			RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
+			RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
+			RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
+			RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
+			GUILayout.EndHorizontal();
 			#endregion - Rotation -
-		GUILayout.EndVertical();
-			#endregion - Translation + rotation -
 
-		GUILayout.EndVertical();
+			if (GUILayout.Button("Recalibrate drift"))
+			{
+				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
+				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+			}
+
+			GUILayout.EndVertical();
+			#endregion - Translation + rotation -
+			GUILayout.EndVertical();
 #endif
 			#endregion - Deadzone -
 
@@ -398,6 +443,9 @@ namespace SpaceNavigatorDriver {
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
 			WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
 			WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			PlayerPrefs.SetFloat("Translation sensitivity epsilon", TransSensEpsilon);
+			PlayerPrefs.SetFloat("Rotation sensitivity epsilon", RotSensEpsilon);
 		}
 
 		/// <summary>
@@ -439,6 +487,9 @@ namespace SpaceNavigatorDriver {
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
 			ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
 			ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			TransSensEpsilon = PlayerPrefs.GetFloat("Translation sensitivity epsilon", TransSensEpsilonDefault);
+			RotSensEpsilon = PlayerPrefs.GetFloat("Rotation sensitivity epsilon", RotSensEpsilonDefault);
 		}
 
 		/// <summary>
