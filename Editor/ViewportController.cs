@@ -59,7 +59,7 @@ namespace SpaceNavigatorDriver
 
         #endregion - Callbacks -
 
-        static void Update()
+        private static void Update()
         {
             if (SpaceNavigatorHID.current == null) return;
 
@@ -136,31 +136,16 @@ namespace SpaceNavigatorDriver
 
         #region - Navigation -
 
-        static void Fly(SceneView sceneView)
+        private static void Fly(SceneView sceneView)
         {
             Fly(sceneView, Settings.FlyInvertTranslation, Settings.FlyInvertRotation);
         }
 
-        static void Fly(SceneView sceneView, Vector3 translationInversion, Vector3 rotationInversion)
+        private static void Fly(SceneView sceneView, Vector3 translationInversion, Vector3 rotationInversion)
         {
             SyncRigWithScene();
+            ReadDeviceData(translationInversion, rotationInversion, out var translation, out var rotation);
 
-            // Apply inversion of axes for fly/grabmove mode.
-            Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
-            Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
-
-            // Make navigation framerate independent
-            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            
-            // Apply sensitivity
-            translation *= Settings.TransSens[Settings.CurrentGear];
-            rotation *= Settings.RotSens;
-            
-            // Apply locks
-            translation.Scale(Settings.GetLocks(DoF.Translation));
-            rotation.Scale(Settings.GetLocks(DoF.Rotation));
-            
             _camera.Translate(translation, Space.Self);
             if (sceneView.orthographic)
                 sceneView.size -= translation.z;
@@ -186,7 +171,7 @@ namespace SpaceNavigatorDriver
             sceneView.Repaint();
         }
 
-        static void Orbit(SceneView sceneView)
+        private static void Orbit(SceneView sceneView)
         {
             // If no object is selected don't orbit, fly instead.
             if (Selection.gameObjects.Length == 0)
@@ -196,22 +181,7 @@ namespace SpaceNavigatorDriver
             }
 
             SyncRigWithScene();
-
-            // Apply inversion of axes for orbit mode.
-            Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.OrbitInvertTranslation);
-            Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.OrbitInvertRotation);
-
-            // Make navigation framerate independent
-            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            
-            // Apply sensitivity
-            translation *= Settings.TransSens[Settings.CurrentGear];
-            rotation *= Settings.RotSens;
-            
-            // Apply locks
-            translation.Scale(Settings.GetLocks(DoF.Translation));
-            rotation.Scale(Settings.GetLocks(DoF.Rotation));
+            ReadDeviceData(Settings.OrbitInvertTranslation, Settings.OrbitInvertRotation, out var translation, out var rotation);
             
             _camera.Translate(translation, Space.Self);
 
@@ -233,7 +203,7 @@ namespace SpaceNavigatorDriver
             sceneView.Repaint();
         }
 
-        static void Telekinesis(SceneView sceneView)
+        private static void Telekinesis(SceneView sceneView)
         {
             if (_wasIdle)
                 Undo.IncrementCurrentGroup();
@@ -241,23 +211,8 @@ namespace SpaceNavigatorDriver
             Undo.SetCurrentGroupName("Telekinesis");
             Undo.RecordObjects(selection, "Telekinesis");
             
-            // Apply inversion of axes for telekinesis mode.
-            Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.TelekinesisInvertTranslation);
-            Vector3 rot = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.TelekinesisInvertRotation);
-            
-            // Make navigation framerate independent
-            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            rot *= (float)_diyDeltaTime * _deltaTimeFactor;
-            
-            // Apply sensitivity
-            translation *= Settings.TransSens[Settings.CurrentGear];
-            rot *= Settings.RotSens;
-            
-            // Apply locks
-            translation.Scale(Settings.GetLocks(DoF.Translation));
-            rot.Scale(Settings.GetLocks(DoF.Rotation));
-
-            Quaternion rotation = Quaternion.Euler(rot);
+            ReadDeviceData(Settings.TelekinesisInvertTranslation, Settings.TelekinesisInvertRotation, out var translation, out var rotation);
+            Quaternion euler = Quaternion.Euler(rotation);
             
             // Store the selection's transforms because the user could have edited them since we last used them via the inspector.
             if (_wasIdle)
@@ -290,7 +245,7 @@ namespace SpaceNavigatorDriver
                 {
                     // Move the object in world coordinates.
                     _unsnappedTranslations[transform] += translation;
-                    _unsnappedRotations[transform] = rotation * _unsnappedRotations[transform];
+                    _unsnappedRotations[transform] = euler * _unsnappedRotations[transform];
                 }
                 else
                 {
@@ -298,7 +253,7 @@ namespace SpaceNavigatorDriver
                     Vector3 worldTranslation = reference.TransformPoint(translation) -
                                                reference.position;
                     _unsnappedTranslations[transform] += worldTranslation;
-                    _unsnappedRotations[transform] = (reference.rotation * rotation * Quaternion.Inverse(reference.rotation)) * _unsnappedRotations[transform];
+                    _unsnappedRotations[transform] = (reference.rotation * euler * Quaternion.Inverse(reference.rotation)) * _unsnappedRotations[transform];
                 }
 
                 // Perform rotation with or without snapping.
@@ -307,7 +262,7 @@ namespace SpaceNavigatorDriver
             }
         }
 
-        static void GrabMove(SceneView sceneView)
+        private static void GrabMove(SceneView sceneView)
         {
             if (_wasIdle)
                 Undo.IncrementCurrentGroup();
@@ -315,22 +270,8 @@ namespace SpaceNavigatorDriver
             Undo.SetCurrentGroupName("GrabMove");
             Undo.RecordObjects(selection, "GrabMove");
             
-            // Apply inversion of axes for grab move mode.
-            Vector3 translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), Settings.GrabMoveInvertTranslation);
-            Vector3 rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), Settings.GrabMoveInvertRotation);
+            ReadDeviceData(Settings.GrabMoveInvertTranslation, Settings.GrabMoveInvertRotation, out var translation, out var rotation);
 
-            // Make navigation framerate independent
-            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
-            
-            // Apply sensitivity
-            translation *= Settings.TransSens[Settings.CurrentGear];
-            rotation *= Settings.RotSens;
-            
-            // Apply locks
-            translation.Scale(Settings.GetLocks(DoF.Translation));
-            rotation.Scale(Settings.GetLocks(DoF.Rotation));
-            
             // Store the selection's transforms because the user could have edited them since we last used them via the inspector.
             if (_wasIdle)
                 StoreSelectionTransforms();
@@ -364,6 +305,25 @@ namespace SpaceNavigatorDriver
 
             // Move the scene camera.
             Fly(sceneView, Settings.GrabMoveInvertTranslation, Settings.GrabMoveInvertRotation);
+        }
+
+        private static void ReadDeviceData(Vector3 translationInversion, Vector3 rotationInversion, out Vector3 translation, out Vector3 rotation)
+        {
+            // Apply inversion of axes for fly/grabmove mode.
+            translation = Vector3.Scale(SpaceNavigatorHID.current.Translation.ReadValue(), translationInversion);
+            rotation = Vector3.Scale(SpaceNavigatorHID.current.Rotation.ReadValue(), rotationInversion);
+
+            // Make navigation framerate independent
+            translation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
+            
+            // Apply sensitivity
+            translation *= Settings.TransSens[Settings.CurrentGear];
+            rotation *= Settings.RotSens;
+            
+            // Apply locks
+            translation.Scale(Settings.GetLocks(DoF.Translation));
+            rotation.Scale(Settings.GetLocks(DoF.Rotation));
         }
 
         public static void StraightenHorizon()
