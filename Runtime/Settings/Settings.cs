@@ -17,7 +17,7 @@ namespace SpaceNavigatorDriver {
 		public static OperationMode Mode;
 		public static CoordinateSystem CoordSys;
 		public static bool PresentationMode;
-		public static float PresentationDamping = 0.5f;
+		public static float PresentationDamping = 0.015f;
 
 		// Snapping
 		public static bool SnapRotation;
@@ -483,7 +483,7 @@ namespace SpaceNavigatorDriver {
 			CoordSys = (CoordinateSystem)PlayerPrefs.GetInt("Coordinate System", (int)CoordinateSystem.Camera);
 			// Presentation Mode
 			PresentationMode = PlayerPrefs.GetInt("Presentation Mode", 0) == 1;
-			PresentationDamping = PlayerPrefs.GetFloat("Presentation Damping", 0.5f);
+			PresentationDamping = PlayerPrefs.GetFloat("Presentation Damping", 0.015f);
 			// Snap
 			SnapTranslation = PlayerPrefs.GetInt("Snap Translation", 0) == 1;
 			SnapDistance = PlayerPrefs.GetFloat("Snap Distance", 0.1f);
