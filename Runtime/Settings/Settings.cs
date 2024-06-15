@@ -48,6 +48,8 @@ namespace SpaceNavigatorDriver {
 		public static float RotSensMin = RotSensMinDefault;
 		public static float RotSensMax = RotSensMaxDefault;
 
+		public static event EventHandler ModeChanged;
+		
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 	public const float RotDeadDefault = 30, RotDeadMinDefault = 0, RotDeadMaxDefault = 100f;
 	public static float RotDead = RotDeadDefault;
@@ -96,6 +98,7 @@ namespace SpaceNavigatorDriver {
 
 			#region - Operation Mode -
 			GUILayout.Label("Operation Mode");
+			EditorGUI.BeginChangeCheck();
 			GUIContent[] modes = new[] {
 				new GUIContent("Fly", "Where do you want to fly today?"),
 				new GUIContent("Orbit", "Round, round, round we go"),
@@ -103,6 +106,7 @@ namespace SpaceNavigatorDriver {
 				new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
 			};
 			Mode = (OperationMode)GUILayout.SelectionGrid((int)Mode, modes, 4);
+			if (EditorGUI.EndChangeCheck()) ModeChanged?.Invoke(null, EventArgs.Empty);
 			#endregion - Operation mode -
 
 			#region - Coordinate System -

@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEditor.Overlays;
-using UnityEditor.Toolbars;
 using UnityEngine;
 
 namespace SpaceNavigatorDriver
@@ -14,7 +13,6 @@ namespace SpaceNavigatorDriver
         SpaceNavigatorToolbar() : base(
             Test.ID,
             NavigationMode.ID,
-            DropdownToggleExample.ID,
             PresentationMode.ID)
         {
         }
