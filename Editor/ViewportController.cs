@@ -142,11 +142,6 @@ namespace SpaceNavigatorDriver
 
         #region - Navigation -
 
-        // private static void Fly(SceneView sceneView)
-        // {
-        //     Fly(sceneView, Settings.FlyInvertTranslation, Settings.FlyInvertRotation);
-        // }
-
         private static void Fly(SceneView sceneView, Vector3 translation, Vector3 rotation)
         {
             SyncRigWithScene();
