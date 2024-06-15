@@ -106,7 +106,7 @@ namespace SpaceNavigatorDriver {
 				new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
 			};
 			Mode = (OperationMode)GUILayout.SelectionGrid((int)Mode, modes, 4);
-			if (EditorGUI.EndChangeCheck()) ModeChanged?.Invoke(null, EventArgs.Empty);
+			if (EditorGUI.EndChangeCheck()) NavigationModeChanged();
 			#endregion - Operation mode -
 
 			#region - Coordinate System -
@@ -426,6 +426,11 @@ namespace SpaceNavigatorDriver {
 			if (EditorGUI.EndChangeCheck())
 				Write();
 #endif
+		}
+
+		public static void NavigationModeChanged()
+		{
+			ModeChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		/// <summary>

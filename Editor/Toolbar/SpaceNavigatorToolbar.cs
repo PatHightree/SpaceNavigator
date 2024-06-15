@@ -11,10 +11,13 @@ namespace SpaceNavigatorDriver
         private const string IconPath = "Packages/com.pathightree.spacenavigator-driver/Editor/Toolbar/Icons/";
 
         SpaceNavigatorToolbar() : base(
-            Test.ID,
-            NavigationMode.ID,
-            PresentationMode.ID)
-        {
-        }
+            NavigationMode.ID
+            ,SpeedGear.ID
+            ,PresentationMode.ID
+            // ,CoordinateSystem.ID
+            ,SnapGrid.ID
+            ,SnapAngle.ID
+            // ,ShowSettings.ID
+            ) { }
     }
 }

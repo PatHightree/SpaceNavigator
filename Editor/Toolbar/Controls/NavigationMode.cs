@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEngine;
@@ -10,52 +8,60 @@ namespace SpaceNavigatorDriver
     public partial class SpaceNavigatorToolbar
     {
         [EditorToolbarElement(ID, typeof(SceneView))]
-        private class NavigationMode : VisualElement
+        class NavigationMode : EditorToolbarDropdown
         {
             public const string ID = "SpaceNavigator/NavigationMode";
-            VisualElement m_navModeButtonsParent;
-            private List<NavigationModeToggle> m_navModeToggles;
+
+            private Texture2D m_navModeFly;
+            private Texture2D m_navModeOrbit;
+            private Texture2D m_navModeTelekinesis;
+            private Texture2D m_navModeGrabMove;
+            private VisualElement m_coordinateSystemDropdown;
 
             public NavigationMode()
             {
-                m_navModeToggles = new List<NavigationModeToggle>();
-                m_navModeToggles.Add(new NavigationModeToggle(OperationMode.Fly, "NavigationMode Fly.png", "Fly", m_navModeToggles));
-                m_navModeToggles.Add(new NavigationModeToggle(OperationMode.Orbit, "NavigationMode Orbit.png", "Orbit", m_navModeToggles));
-                m_navModeToggles.Add(new NavigationModeToggle(OperationMode.Telekinesis, "NavigationMode Telekinesis.png", "Telekinesis", m_navModeToggles));
-                m_navModeToggles.Add(new NavigationModeToggle(OperationMode.GrabMove, "NavigationMode GrabMove.png", "Grab Move", m_navModeToggles));
-                
-                m_navModeButtonsParent = new VisualElement() { name = "Builtin View and Transform Tools" };
-                m_navModeButtonsParent.AddToClassList("toolbar-contents");
-                m_navModeButtonsParent.Clear();
-                m_navModeToggles.ForEach(nmt => m_navModeButtonsParent.Add(nmt));
-                EditorToolbarUtility.SetupChildrenAsButtonStrip(m_navModeButtonsParent);
-                Add(m_navModeButtonsParent);
-                
-                // Refresh button states when nav mode is changed in settings window
-                Settings.ModeChanged += (sender, args) => m_navModeToggles.ForEach(t => t.SetValueWithoutNotify(t.Mode == Settings.Mode));
+                m_navModeFly = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Fly.psd");
+                m_navModeOrbit = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Orbit.psd");
+                m_navModeTelekinesis = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Telekinesis.psd");
+                m_navModeGrabMove = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode GrabMove.psd");
+                switch (Settings.Mode)
+                {
+                    case OperationMode.Fly: icon = m_navModeFly; break;
+                    case OperationMode.Orbit: icon = m_navModeOrbit; break;
+                    case OperationMode.Telekinesis: icon = m_navModeTelekinesis; break;
+                    case OperationMode.GrabMove: icon = m_navModeGrabMove; break;
+                }
+                clicked += ShowDropdown;
             }
 
-            class NavigationModeToggle : EditorToolbarToggle
+            void ShowDropdown()
             {
-                public OperationMode Mode;
-                private List<NavigationModeToggle> m_toggles;
-
-                public NavigationModeToggle(OperationMode _mode, string _iconName, string _tooltip, List<NavigationModeToggle> _toggles)
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Fly"), Settings.Mode == OperationMode.Fly, () =>
                 {
-                    icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + _iconName);
-                    tooltip = _tooltip;
-                    Mode = _mode;
-                    m_toggles = _toggles;
-                    this.RegisterValueChangedCallback(Test);
-                    SetValueWithoutNotify(Mode == Settings.Mode);
-                }
-                private void Test(ChangeEvent<bool> evt)
+                    icon = m_navModeFly;
+                    Settings.Mode = OperationMode.Fly;
+                    Settings.NavigationModeChanged();
+                });
+                menu.AddItem(new GUIContent("Orbit"), Settings.Mode == OperationMode.Orbit, () =>
                 {
-                    // Settings.Mode = Mode;
-                    m_toggles.ForEach(t => t.SetValueWithoutNotify(t.Mode == Mode));
-                    // Debug.Log(m_window.overlayCanvas == null);
-                    // if (m_window.position) m_window.Repaint();
-                }
+                    icon = m_navModeOrbit;
+                    Settings.Mode = OperationMode.Orbit;
+                    Settings.NavigationModeChanged();
+                });
+                menu.AddItem(new GUIContent("Telekinesis"), Settings.Mode == OperationMode.Telekinesis, () =>
+                {
+                    icon = m_navModeTelekinesis;
+                    Settings.Mode = OperationMode.Telekinesis;
+                    Settings.NavigationModeChanged();
+                });
+                menu.AddItem(new GUIContent("Grab Move"), Settings.Mode == OperationMode.GrabMove, () =>
+                {
+                    icon = m_navModeGrabMove;
+                    Settings.Mode = OperationMode.GrabMove;
+                    Settings.NavigationModeChanged();
+                });
+                menu.ShowAsContext();
             }
         }
     }
