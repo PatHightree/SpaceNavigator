@@ -39,7 +39,7 @@ namespace SpaceNavigatorDriver
         {
 			// Set up callbacks.
 			EditorApplication.update += Update;
-			EditorApplication.playmodeStateChanged += PlaymodeStateChanged;
+			EditorApplication.pauseStateChanged += PauseStateChanged;
 
             // Initialize.
             Settings.Read();
@@ -49,7 +49,7 @@ namespace SpaceNavigatorDriver
 
         #region - Callbacks -
 
-        private static void PlaymodeStateChanged()
+        private static void PauseStateChanged(PauseState obj)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
                 Settings.Write();
