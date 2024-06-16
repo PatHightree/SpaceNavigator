@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEngine;
@@ -41,24 +42,28 @@ namespace SpaceNavigatorDriver
                 {
                     icon = m_navModeFly;
                     Settings.Mode = OperationMode.Fly;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                     Settings.NavigationModeChanged();
                 });
                 menu.AddItem(new GUIContent("Orbit"), Settings.Mode == OperationMode.Orbit, () =>
                 {
                     icon = m_navModeOrbit;
                     Settings.Mode = OperationMode.Orbit;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                     Settings.NavigationModeChanged();
                 });
                 menu.AddItem(new GUIContent("Telekinesis"), Settings.Mode == OperationMode.Telekinesis, () =>
                 {
                     icon = m_navModeTelekinesis;
                     Settings.Mode = OperationMode.Telekinesis;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                     Settings.NavigationModeChanged();
                 });
                 menu.AddItem(new GUIContent("Grab Move"), Settings.Mode == OperationMode.GrabMove, () =>
                 {
                     icon = m_navModeGrabMove;
                     Settings.Mode = OperationMode.GrabMove;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                     Settings.NavigationModeChanged();
                 });
                 menu.ShowAsContext();
