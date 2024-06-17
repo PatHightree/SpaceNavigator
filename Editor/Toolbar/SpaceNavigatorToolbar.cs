@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.EditorTools;
 using UnityEditor.Overlays;
 using UnityEditor.Toolbars;
 using UnityEngine;
@@ -22,8 +23,8 @@ namespace SpaceNavigatorDriver
         {
             RefreshLayout += (sender, args) =>
             {
+                ToolManager.RefreshAvailableTools();
                 // How the heck do I refresh the layout of a toolbar ?!?!?
-                
                 // Close();
                 // bool showSnapButtons = Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove;
                 // m_snapGrid.visible = showSnapButtons;

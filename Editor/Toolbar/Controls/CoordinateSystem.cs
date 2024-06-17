@@ -23,15 +23,6 @@ namespace SpaceNavigatorDriver
                     default: throw new ArgumentOutOfRangeException();
                 }
                 clicked += ShowDropdown;
-
-                Settings.ModeChanged += (sender, args) => MayBeVisibe();
-                MayBeVisibe();
-            }
-
-            private void MayBeVisibe()
-            {
-                // visible = Settings.Mode == OperationMode.Telekinesis;
-                SetEnabled(Settings.Mode == OperationMode.Telekinesis);
             }
 
             void ShowDropdown()
