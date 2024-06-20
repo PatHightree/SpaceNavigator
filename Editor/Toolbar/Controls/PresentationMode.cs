@@ -13,7 +13,8 @@ namespace SpaceNavigatorDriver
             public const string ID = "SpaceNavigator/PresentationMode";
             public PresentationMode()
             {
-                icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "PresentationMode.png");
+                onIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "PresentationModeOn.psd");
+                offIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "PresentationModeOff.psd");
                 tooltip = "Presentation Mode";
                 this.RegisterValueChangedCallback(Test);
             }
