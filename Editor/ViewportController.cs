@@ -34,6 +34,7 @@ namespace SpaceNavigatorDriver
 		private static double _lastRefreshTime;
 		private static double _diyDeltaTime;
         private static float _deltaTimeFactor = 400f;
+        private static bool _hadFocus;
 
         static ViewportController() 
         {
@@ -74,9 +75,15 @@ namespace SpaceNavigatorDriver
                 _lastSaveTime = DateTime.Now.Second;
             }
 
+            // Toggle led when Unity editor gains/loses focus
+            bool hasFocus = UnityEditorInternal.InternalEditorUtility.isApplicationActive;
+            if (Settings.ToggleLedWhenFocusChanged && _hadFocus != hasFocus)
+            {
+                SpaceNavigatorHID.current.SetLEDStatus(hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off);
+                _hadFocus = hasFocus;
+            }
             // Don't navigate if the Unity Editor doesn't have focus.
-            if (!UnityEditorInternal.InternalEditorUtility.isApplicationActive) return;
-            
+            if (Settings.OnlyNavWhenUnityHasFocus && !hasFocus) return;
             // If we don't want the driver to navigate the editor at runtime, exit now.
             if (Application.isPlaying && !Settings.RuntimeEditorNav) return;
 
@@ -133,22 +140,11 @@ namespace SpaceNavigatorDriver
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            //// Detect keyboard clicks (not working).
-            //if (Keyboard.IsKeyDown(1))
-            //	D.log("Button 0 pressed");
-            //if (Keyboard.IsKeyDown(2))
-            //	D.log("Button 1 pressed");
             
             _wasIdle = false;
         }
 
         #region - Navigation -
-
-        // private static void Fly(SceneView sceneView)
-        // {
-        //     Fly(sceneView, Settings.FlyInvertTranslation, Settings.FlyInvertRotation);
-        // }
 
         private static void Fly(SceneView sceneView, Vector3 translation, Vector3 rotation)
         {

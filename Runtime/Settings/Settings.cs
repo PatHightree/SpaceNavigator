@@ -60,6 +60,10 @@ namespace SpaceNavigatorDriver {
 	public static float TransDeadMax = TransDeadMaxDefault;
 #endif
 
+		// Focus
+		public static bool OnlyNavWhenUnityHasFocus = true;
+		public static bool ToggleLedWhenFocusChanged;
+
 		// Runtime editor navigation
 		public static bool RuntimeEditorNav = true;
 		public static bool RuntimeEditorNavSuspendOnGameViewFocus;
@@ -249,17 +253,27 @@ namespace SpaceNavigatorDriver {
 
 			#endregion - Locking -
 
+			#region - Focus behavior -
+
+			GUILayout.Space(15);
+			GUILayout.Label("Focus Behavior");
+			GUILayout.Space(4);
+			OnlyNavWhenUnityHasFocus = GUILayout.Toggle(OnlyNavWhenUnityHasFocus, "Only navigate when Unity has focus");
+			EditorGUI.BeginDisabledGroup(!OnlyNavWhenUnityHasFocus);
+			ToggleLedWhenFocusChanged = GUILayout.Toggle(ToggleLedWhenFocusChanged, "Toggle LED when Unity gains/loses");
+			EditorGUI.EndDisabledGroup();
+
+			#endregion
+			
 			#region - Runtime editor navigation -
 
 			GUILayout.Space(15);
 			GUILayout.Label("Runtime Behavior");
 			GUILayout.Space(4);
-			GUILayout.BeginHorizontal();
 			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
 			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
 			RuntimeEditorNavSuspendOnGameViewFocus = GUILayout.Toggle(RuntimeEditorNavSuspendOnGameViewFocus, "Suspend on GameView focus");
 			EditorGUI.EndDisabledGroup();
-			GUILayout.EndHorizontal();
 
 			#endregion
 			
