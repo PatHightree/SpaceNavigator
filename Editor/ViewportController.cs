@@ -74,6 +74,9 @@ namespace SpaceNavigatorDriver
                 _lastSaveTime = DateTime.Now.Second;
             }
 
+            // Don't navigate if the Unity Editor doesn't have focus.
+            if (!UnityEditorInternal.InternalEditorUtility.isApplicationActive) return;
+            
             // If we don't want the driver to navigate the editor at runtime, exit now.
             if (Application.isPlaying && !Settings.RuntimeEditorNav) return;
 
