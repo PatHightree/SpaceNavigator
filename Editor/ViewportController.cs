@@ -76,7 +76,7 @@ namespace SpaceNavigatorDriver
             }
 
             // Toggle led when Unity editor gains/loses focus
-            bool hasFocus = UnityEditorInternal.InternalEditorUtility.isApplicationActive;
+            bool hasFocus = EditorApplication.isFocused;
             if (Settings.ToggleLedWhenFocusChanged && _hadFocus != hasFocus)
             {
                 SpaceNavigatorHID.current.SetLEDStatus(hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off);
