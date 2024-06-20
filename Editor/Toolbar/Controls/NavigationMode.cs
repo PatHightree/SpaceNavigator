@@ -21,6 +21,7 @@ namespace SpaceNavigatorDriver
 
             public NavigationMode()
             {
+                tooltip = "Navigation Mode";
                 m_navModeFly = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Fly.psd");
                 m_navModeOrbit = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Orbit.psd");
                 m_navModeTelekinesis = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "NavigationMode Telekinesis.psd");

@@ -17,6 +17,7 @@ namespace SpaceNavigatorDriver
 
             public SpeedGear()
             {
+                tooltip = "Sensitivity";
                 m_gearMinuscule = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "SpeedGear 1.psd");
                 m_gearHuman = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "SpeedGear 2.psd");
                 m_gearHuge = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "SpeedGear 3.psd");
