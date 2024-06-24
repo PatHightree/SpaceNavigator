@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEditor.Overlays;
@@ -12,10 +13,9 @@ namespace SpaceNavigatorDriver
     [Icon(IconPath + "SpaceNavigator.png")]
     public partial class SpaceNavigatorToolbar : ToolbarOverlay, ICreateHorizontalToolbar, ICreateVerticalToolbar
     {
-        private static SnapGrid m_snapGrid;
-        private static SnapAngle m_snapAngle;
         private const bool Debug = true;
         private const string IconPath = "Packages/com.pathightree.spacenavigator-driver/Editor/Toolbar/Icons/";
+        private static List<SpeedGearButton> m_speedGearButtons = new List<SpeedGearButton>();
 
         public static event EventHandler RefreshLayout;
         
@@ -38,15 +38,23 @@ namespace SpaceNavigatorDriver
         {
             OverlayToolbar toolbar = new OverlayToolbar();
             toolbar.Add(new NavigationMode());
-            toolbar.Add(new SpeedGear());
+            if (Settings.ShowSpeedGearsAsRadioButtons)
+            {
+                m_speedGearButtons.Clear();
+                m_speedGearButtons.Add(new SpeedGearButton(2, "SpeedGear 1.psd", "Minuscule Sensitivity", m_speedGearButtons));
+                m_speedGearButtons.Add(new SpeedGearButton(1, "SpeedGear 2.psd", "Human Sensitivity", m_speedGearButtons));
+                m_speedGearButtons.Add(new SpeedGearButton(0, "SpeedGear 3.psd", "Huge Sensitivity", m_speedGearButtons));
+                m_speedGearButtons.ForEach(b => toolbar.Add(b));
+            }
+            else
+                toolbar.Add(new SpeedGearDropdown());
+
             toolbar.Add(new PresentationMode());
             bool showSnapButtons = Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove;
             if (showSnapButtons)
             {
-                m_snapGrid = new SnapGrid();
-                toolbar.Add(m_snapGrid);
-                m_snapAngle = new SnapAngle();
-                toolbar.Add(m_snapAngle);
+                toolbar.Add(new SnapGrid());
+                toolbar.Add(new SnapAngle());
             }   
             if (Debug)
                 toolbar.Add(new ShowSettings());

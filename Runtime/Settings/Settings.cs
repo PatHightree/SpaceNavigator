@@ -35,6 +35,7 @@ namespace SpaceNavigatorDriver {
 		// Sensitivity
 		private static int Gears = 3;
 		public static int CurrentGear = 1;
+		public static bool ShowSpeedGearsAsRadioButtons = false;
 
 		public static List<float> TransSensDefault = new List<float> { 50, 1, 0.05f };
 		public static List<float> TransSensMinDefault = new List<float>() { 1, 0.1f, 0.01f };
@@ -118,6 +119,9 @@ namespace SpaceNavigatorDriver {
 			RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
 			RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(30));
 			GUILayout.EndHorizontal();
+			GUILayout.BeginHorizontal();
+			ShowSpeedGearsAsRadioButtons = GUILayout.Toggle(ShowSpeedGearsAsRadioButtons, "Show as radio buttons (needs toolbar redock to apply)");
+			GUILayout.EndHorizontal();
 			#endregion - Rotation -
 			GUILayout.EndVertical();
 			#endregion - Translation + rotation -
@@ -142,6 +146,7 @@ namespace SpaceNavigatorDriver {
 
 			#region - Presentation Mode -
 
+			GUILayout.Space(10);
 			GUILayout.Label("Presentation Mode");
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Damping", GUILayout.Width(120));
@@ -435,6 +440,7 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetFloat("Rotation sensitivity", RotSens);
 			PlayerPrefs.SetFloat("Rotation sensitivity minimum", RotSensMin);
 			PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
+			PlayerPrefs.SetInt("Show sensitivity as radio buttons", ShowSpeedGearsAsRadioButtons ? 1 : 0);
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavSuspendOnGameViewFocus ? 1 : 0);
@@ -480,6 +486,7 @@ namespace SpaceNavigatorDriver {
 			RotSens = PlayerPrefs.GetFloat("Rotation sensitivity", RotSensDefault);
 			RotSensMin = PlayerPrefs.GetFloat("Rotation sensitivity minimum", RotSensMinDefault);
 			RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);
+			ShowSpeedGearsAsRadioButtons = PlayerPrefs.GetInt("Show sensitivity as radio buttons", 0) == 1;
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 			RuntimeEditorNavSuspendOnGameViewFocus = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;

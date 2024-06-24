@@ -7,7 +7,7 @@ namespace SpaceNavigatorDriver
     public partial class SpaceNavigatorToolbar
     {
         [EditorToolbarElement(ID, typeof(SceneView))]
-        class SpeedGear : EditorToolbarDropdown
+        class SpeedGearDropdown : EditorToolbarDropdown
         {
             public const string ID = "SpaceNavigator/SpeedGear";
 
@@ -15,7 +15,7 @@ namespace SpaceNavigatorDriver
             private Texture2D m_gearHuman;
             private Texture2D m_gearHuge;
 
-            public SpeedGear()
+            public SpeedGearDropdown()
             {
                 tooltip = "Sensitivity";
                 m_gearMinuscule = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "SpeedGear 1.psd");

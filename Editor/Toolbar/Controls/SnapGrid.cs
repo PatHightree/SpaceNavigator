@@ -20,6 +20,7 @@ namespace SpaceNavigatorDriver
                 Settings.ModeChanged += (sender, args) => MayBeVisibe();
                 MayBeVisibe();
             }
+            
             private void Test(ChangeEvent<bool> evt)
             {                
                 Settings.SnapTranslation = evt.newValue;
