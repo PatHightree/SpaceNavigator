@@ -131,21 +131,25 @@ namespace SpaceNavigatorDriver
                     throw new ArgumentOutOfRangeException();
             }
 
-            //// Detect keyboard clicks (not working).
-            //if (Keyboard.IsKeyDown(1))
-            //	D.log("Button 0 pressed");
-            //if (Keyboard.IsKeyDown(2))
-            //	D.log("Button 1 pressed");
+            if (SpaceNavigatorHID.current.Button1.wasPressedThisFrame) HandleButton1();
+            if (SpaceNavigatorHID.current.Button2.wasPressedThisFrame) HandleButton2();
             
             _wasIdle = false;
         }
 
-        #region - Navigation -
+        private static void HandleButton1()
+        {
+            Debug.Log("Button 1");
+            Settings.CurrentGear = 3;
+        }
 
-        // private static void Fly(SceneView sceneView)
-        // {
-        //     Fly(sceneView, Settings.FlyInvertTranslation, Settings.FlyInvertRotation);
-        // }
+        private static void HandleButton2()
+        {
+            Debug.Log("Button 2");
+            Settings.CurrentGear = 2;
+        }
+
+        #region - Navigation -
 
         private static void Fly(SceneView sceneView, Vector3 translation, Vector3 rotation)
         {

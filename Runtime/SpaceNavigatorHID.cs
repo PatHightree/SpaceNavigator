@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.Utilities;
 #if UNITY_EDITOR
@@ -12,50 +13,10 @@ using UnityEditor;
 
 namespace SpaceNavigatorDriver
 {
-    struct SpaceNavigatorHIDState : IInputStateTypeInfo
-    {
-        public FourCC format => new FourCC('H', 'I', 'D');
-
-        public struct ReportFormat1
-        {
-            public Vector3 translation;
-        }
-
-        public struct ReportFormat2
-        {
-            public Vector3 rotation;
-        }
-
-        public struct ReportFormat3
-        {
-            public byte buttons;
-        }
-
-        // 1st report
-        [InputControl(name = "translation", format = "VC3S", layout = "Vector3", displayName = "Translation")] 
-        [InputControl(name = "translation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=10")] 
-        [InputControl(name = "translation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
-        [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
-        public ReportFormat1 report1;
-
-        // 2nd report
-        [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
-        [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=-80")] 
-        [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
-        [InputControl(name = "rotation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
-        public ReportFormat2 report2;
-
-        // 3rd report
-        [InputControl(name = "button1", bit = 0, format = "BIT", layout = "Button", displayName = "Button 1")] 
-        [InputControl(name = "button2", bit = 1, format = "BIT", layout = "Button", displayName = "Button 2")]
-        public ReportFormat3 report3;
-    }
-
 #if UNITY_EDITOR
     [InitializeOnLoad] // Make sure static constructor is called during startup.
 #endif
-    [InputControlLayout(stateType = typeof(SpaceNavigatorHIDState))]
-    public class SpaceNavigatorHID : InputDevice, IInputStateCallbackReceiver
+    public class SpaceNavigatorHID : InputDevice
     {
         public ButtonControl Button1 { get; protected set; }
         public ButtonControl Button2 { get; protected set; }
@@ -69,11 +30,9 @@ namespace SpaceNavigatorDriver
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
             // If no layout with a matching product ID is found, this will be the default. 
-            InputSystem.RegisterLayout<SpaceNavigatorHID>(
-                matches: new InputDeviceMatcher()
-                    .WithInterface("HID")
-                    .WithManufacturer("3Dconnexion.*")
-            );
+            InputSystem.RegisterLayout<SpaceNavigatorHID>();
+            InputSystem.RegisterPrecompiledLayout<FastHID>(FastHID.metadata);
+            InputSystem.AddDevice<SpaceNavigatorHID>();
 #if UNITY_EDITOR
             EditorApplication.quitting += Quit;
 #else
@@ -102,7 +61,7 @@ namespace SpaceNavigatorDriver
             base.FinishSetup();
 
             displayName = GetType().Name;
-            Button1 = GetChildControl<ButtonControl>("button1");
+            Button1 = GetChildControl<ButtonControl>("trigger");
             Button2 = GetChildControl<ButtonControl>("button2");
             Rotation = GetChildControl<Vector3Control>("rotation");
             Translation = GetChildControl<Vector3Control>("translation");
@@ -135,49 +94,6 @@ namespace SpaceNavigatorDriver
         
         public void OnNextUpdate()
         {
-        }
-
-        public virtual unsafe void OnStateEvent(InputEventPtr eventPtr)
-        {
-            // Refuse delta events.
-            if (eventPtr.IsA<DeltaStateEvent>())
-                return;
-
-            var stateEventPtr = StateEvent.From(eventPtr);
-            if (stateEventPtr->stateFormat != new FourCC('H', 'I', 'D'))
-                return;
-
-            var reportPtr = (byte*) stateEventPtr->state;
-            var reportId = *reportPtr;
-            var reportStatePtr = (reportPtr + 1); // or wherever the actual report starts.
-
-            // We have two options here. We can either use InputState.Change with a DeltaStateEvent that we set up
-            // from the event we have received (and simply update either report1 or report2 only) or we can merge
-            // our current state with the state we have just received. The latter is simpler so we do that here.
-
-            var newState = default(SpaceNavigatorHIDState);
-            // Can opt to only copy the state that we won't override. We don't bother here.
-            UnsafeUtility.MemCpy(&newState, (byte*) currentStatePtr + stateBlock.byteOffset, sizeof(SpaceNavigatorHIDState));
-
-            if (reportId == 1)
-            {
-                UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat1));
-                DebugLog("SpaceNavigatorHID : Copied report1");
-            }
-            else if (reportId == 2)
-            {
-                UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat2));
-                DebugLog("SpaceNavigatorHID : Copied report2");
-            }
-            else if (reportId == 3)
-            {
-                UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat3));
-                DebugLog("SpaceNavigatorHID : Copied report3");
-            }
-
-            // Apply the state change. Don't simply MemCpy over currentStatePtr as that will lead to various
-            // malfunctions. The system needs to do the memcpy itself.
-            InputState.Change(this, newState, eventPtr: eventPtr);
         }
 
         public bool GetStateOffsetForEvent(InputControl control, InputEventPtr eventPtr, ref uint offset)
