@@ -19,10 +19,10 @@ using UnityEngine.InputSystem.Utilities;
 
 namespace UnityEngine.InputSystem.HID
 {
-    public partial class FastHID : UnityEngine.InputSystem.HID.HID
+    public partial class FastHidSpaceNavigator : UnityEngine.InputSystem.HID.HID
     {
         public const string metadata = "AxisDeadzone;Stick;Vector2;Button;Axis;HID::3Dconnexion SpaceNavigator MultiAxisController;HID";
-        public FastHID()
+        public FastHidSpaceNavigator()
         {
             var builder = this.Setup(13, 6, 0)
                 .WithName("3Dconnexion SpaceNavigator MultiAxisController")

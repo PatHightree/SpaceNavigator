@@ -31,7 +31,8 @@ namespace SpaceNavigatorDriver
 #endif
             // If no layout with a matching product ID is found, this will be the default. 
             InputSystem.RegisterLayout<SpaceNavigatorHID>();
-            InputSystem.RegisterPrecompiledLayout<FastHID>(FastHID.metadata);
+            InputSystem.RegisterPrecompiledLayout<FastHidSpaceNavigator>(FastHidSpaceNavigator.metadata);
+            InputSystem.RegisterPrecompiledLayout<FastHidSpaceMousePro>(FastHidSpaceMousePro.metadata);
             InputSystem.AddDevice<SpaceNavigatorHID>();
 #if UNITY_EDITOR
             EditorApplication.quitting += Quit;
