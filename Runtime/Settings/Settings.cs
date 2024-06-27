@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -441,6 +441,9 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetFloat("Rotation sensitivity minimum", RotSensMin);
 			PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
 			PlayerPrefs.SetInt("Show sensitivity as radio buttons", ShowSpeedGearsAsRadioButtons ? 1 : 0);
+			// Focus
+			PlayerPrefs.SetInt("OnlyNavWhenUnityHasFocus", OnlyNavWhenUnityHasFocus ? 1 : 0);
+			PlayerPrefs.SetInt("ToggleLedWhenFocusChanged", ToggleLedWhenFocusChanged ? 1 : 0);
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavSuspendOnGameViewFocus ? 1 : 0);
@@ -487,6 +490,9 @@ namespace SpaceNavigatorDriver {
 			RotSensMin = PlayerPrefs.GetFloat("Rotation sensitivity minimum", RotSensMinDefault);
 			RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);
 			ShowSpeedGearsAsRadioButtons = PlayerPrefs.GetInt("Show sensitivity as radio buttons", 0) == 1;
+			// Focus
+			OnlyNavWhenUnityHasFocus = PlayerPrefs.GetInt("OnlyNavWhenUnityHasFocus", 1) == 1;
+			ToggleLedWhenFocusChanged = PlayerPrefs.GetInt("ToggleLedWhenFocusChanged", 0) == 1;
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 			RuntimeEditorNavSuspendOnGameViewFocus = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;
