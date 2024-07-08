@@ -40,7 +40,8 @@ namespace SpaceNavigatorDriver {
 		}
 
 		public void OnGUI() {
-			Settings.OnGUI();
+			if (Settings.OnGUI())
+				SpaceNavigatorToolbar.Instance.TriggerRefresh();
 		}
 
 		public void Dispose() {

@@ -17,7 +17,6 @@ namespace SpaceNavigatorDriver
                 icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "Snap Angle.psd");
                 tooltip = "Snap Angle";
                 this.RegisterValueChangedCallback(Test);
-                Settings.ModeChanged += (sender, args) => MayBeVisibe();
                 MayBeVisibe();
             }
             private void Test(ChangeEvent<bool> evt)

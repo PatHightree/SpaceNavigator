@@ -49,8 +49,6 @@ namespace SpaceNavigatorDriver {
 		public static float RotSensMin = RotSensMinDefault;
 		public static float RotSensMax = RotSensMaxDefault;
 
-		public static event EventHandler ModeChanged;
-		
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
 	public const float RotDeadDefault = 30, RotDeadMinDefault = 0, RotDeadMaxDefault = 100f;
 	public static float RotDead = RotDeadDefault;
@@ -85,7 +83,9 @@ namespace SpaceNavigatorDriver {
 		public static Vector3? TranslationDrift;
 		public static Vector3? RotationDrift;
 
-		public static void OnGUI() {
+		public static bool OnGUI()
+		{
+			bool triggerToolbarRefresh = false;
 #if UNITY_EDITOR
 			EditorGUI.BeginChangeCheck();
 
@@ -99,8 +99,8 @@ namespace SpaceNavigatorDriver {
 			GUILayout.BeginVertical();
 			GUILayout.Label("Sensitivity");
 
-			#region - Translation + rotation -
 			GUILayout.BeginVertical();
+			
 			#region - Translation -
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Translation", GUILayout.Width(67));
@@ -119,12 +119,17 @@ namespace SpaceNavigatorDriver {
 			RotSens = GUILayout.HorizontalSlider(RotSens, RotSensMin, RotSensMax);
 			RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(30));
 			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal();
-			ShowSpeedGearsAsRadioButtons = GUILayout.Toggle(ShowSpeedGearsAsRadioButtons, "Show as radio buttons (needs toolbar redock to apply)");
-			GUILayout.EndHorizontal();
 			#endregion - Rotation -
+
+			#region - Radio buttons -
+			GUILayout.BeginHorizontal();
+			EditorGUI.BeginChangeCheck();
+			ShowSpeedGearsAsRadioButtons = GUILayout.Toggle(ShowSpeedGearsAsRadioButtons, "Show as radio buttons");
+			triggerToolbarRefresh = EditorGUI.EndChangeCheck();
+			GUILayout.EndHorizontal();
+			#endregion - Radio buttons -
+			
 			GUILayout.EndVertical();
-			#endregion - Translation + rotation -
 
 			GUILayout.EndVertical();
 			#endregion - Sensitivity -
@@ -397,6 +402,7 @@ namespace SpaceNavigatorDriver {
 			if (EditorGUI.EndChangeCheck())
 				Write();
 #endif
+			return triggerToolbarRefresh;
 		}
 
 		private static Vector2 _scrollPos;

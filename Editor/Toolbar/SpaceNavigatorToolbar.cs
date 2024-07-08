@@ -13,6 +13,8 @@ namespace SpaceNavigatorDriver
     [Icon(IconPath + "SpaceNavigator.png")]
     public partial class SpaceNavigatorToolbar : ToolbarOverlay, ICreateHorizontalToolbar, ICreateVerticalToolbar
     {
+        public static SpaceNavigatorToolbar Instance;
+        
         private const bool Debug = true;
         private const string IconPath = "Packages/com.pathightree.spacenavigator-driver/Editor/Toolbar/Icons/";
         private static List<SpeedGearButton> m_speedGearButtons = new List<SpeedGearButton>();
@@ -21,16 +23,12 @@ namespace SpaceNavigatorDriver
         
         SpaceNavigatorToolbar()
         {
+            Instance = this;
             RefreshLayout += (sender, args) =>
             {
-                ToolManager.RefreshAvailableTools();
-                // How the heck do I refresh the layout of a toolbar ?!?!?
-                // Close();
-                // bool showSnapButtons = Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove;
-                // m_snapGrid.visible = showSnapButtons;
-                // m_snapAngle.visible = showSnapButtons;
-                // CreatePanelContent();
-                // OnCreated();
+                // Toggling the 'displayed' property causes the internal method 'RebuildContent' to be called
+                displayed = false;
+                displayed = true;
             };
         }
 
@@ -75,6 +73,11 @@ namespace SpaceNavigatorDriver
         public new OverlayToolbar CreateVerticalToolbarContent()
         {
             return CreateToolbar();
+        }
+
+        public void TriggerRefresh()
+        {
+            RefreshLayout?.Invoke(this, EventArgs.Empty);
         }
     }
 }
