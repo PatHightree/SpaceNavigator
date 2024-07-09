@@ -1,11 +1,17 @@
 # Changelog
 
+2.0.0-pre.11
+- Added editor toolbar : switch mode, speed gear, presentation mode and open settings window
+- Cleaned up settings window
+- Added option to only navigate when Unity has focus, using PR from Jay Ott
+- Added option to toggle led when unity gains/loses focus
+
 2.0.0-pre.10
-- Merged improvement by AJ Campbell which implements framerate independent navigation.
-- Added a fix for drift + recalibration button.
+- Merged improvement by AJ Campbell which implements framerate independent navigation
+- Added a fix for drift + recalibration button
 
 2.0.0-pre.9
-- Merged fix by cpetry to prevent exception when quitting without SpaceNavigator connected.
+- Merged fix by cpetry to prevent exception when quitting without SpaceNavigator connected
 
 2.0.0-pre.8
 - Merged PR by Stefan Beer which fixes drifting (issue #29, #51)
@@ -37,7 +43,7 @@
 2.0.0-beta.1
 - Changed git package url in readme to /develop branch for beta release
 
-2.0.0-alpha.2 to 8  
+2.0.0-alpha.2 to 8
 - Package manager + git experiments
 - Prepare for beta publishing
 
@@ -60,7 +66,7 @@ Fixes
 Features
 - Added option to navigate in the editor at runtime.
 - Separate axis lock settings for navigation and manipulation modes.
-- Autosave settings every 30 seconds.
+- Autosave settings every 30 seconds.  
 Fixes
 - Fixed horizon lock, coord sys and snap setting not being saved.
 - Refactored driver settings.
