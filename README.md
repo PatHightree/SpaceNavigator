@@ -18,7 +18,7 @@ If you have feedback, please use this [thread](https://discussions.unity.com/t/s
 
 ## What's new in 2.0.0 ?
 ### 3DConnexion driver no longer required
-The driver's communicates directly with the HID device via Unity's new Input System (Unity 2019.1 and up). 
+The driver's communicates directly with the HID device via Unity's new Input System (Unity 2019.1 and up).   
 This means that it **no longer requires the 3DConnexion driver** to be running or even installed.  
 It also means that 3DConnexion devices other than the SpaceNavigator might not work correctly, the 3DConnexion SDK abstracted away a lot of differences between devices.  
 On the other hand, it allows you to use devices which 3DConnexion have stopped supporting in their driver.
@@ -43,6 +43,9 @@ With optional extra speedy speed controls.
 ### Presentation mode
 Sometimes you want to give a demo or capture a video, then you want your navigation to be as smooth as possible.  
 The new presentation mode automatically smooths out your input.
+
+### New measures against drift
+To counter the drift problem, a calibration but~~~~ton was added to the settings window. This stores the current input values, these will be subtracted from the input from then on.
 
 ### Only navigate when Unity has focus
 This comes in handy when you've got multiple applications open which use the SpaceNavigator.
