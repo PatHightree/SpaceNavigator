@@ -45,7 +45,7 @@ Sometimes you want to give a demo or capture a video, then you want your navigat
 The new presentation mode automatically smooths out your input.
 
 ### New measures against drift
-To counter the drift problem, a calibration but~~~~ton was added to the settings window. This stores the current input values, these will be subtracted from the input from then on.
+To counter the drift problem, a calibration button was added to the settings window. This stores the current input values, these will be subtracted from the input from then on.
 
 ### Only navigate when Unity has focus
 This comes in handy when you've got multiple applications open which use the SpaceNavigator.
