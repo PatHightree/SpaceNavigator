@@ -1,5 +1,8 @@
 # Changelog
 
+2.0.0-pre.12
+- Fixed UnityEditor namespace error during player build
+
 2.0.0-pre.11
 - Added editor toolbar : switch mode, speed gear, presentation mode and open settings window
 - Cleaned up settings window
