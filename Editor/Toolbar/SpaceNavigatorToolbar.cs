@@ -1,7 +1,7 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.EditorTools;
 using UnityEditor.Overlays;
 using UnityEditor.Toolbars;
 using UnityEngine;
@@ -81,3 +81,4 @@ namespace SpaceNavigatorDriver
         }
     }
 }
+#endif

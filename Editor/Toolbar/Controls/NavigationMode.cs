@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using UnityEditor;
 using UnityEditor.Toolbars;
@@ -68,3 +69,4 @@ namespace SpaceNavigatorDriver
         }
     }
 }
+#endif
