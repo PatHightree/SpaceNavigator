@@ -9,9 +9,6 @@ public class TorusController : MonoBehaviour {
 
 	public void Awake()
 	{
-		Settings.PlayTransSens = 1;
-		Settings.PlayRotSens = 1;
-
 		_camera = Camera.main.transform;
 		_LookAtTarget = GameObject.FindGameObjectWithTag("Torus look at target").transform;
 	}

@@ -14,17 +14,41 @@ In **GrabMove** mode the stuff will be linked to your camera so you can take it 
 Translation can be snapped to a grid and rotation can be angle-snapped.  
 
 If you encounter issues, please report them via the project's [Github Issues](https://github.com/PatHightree/SpaceNavigator/issues) page.  
-If you have feedback, please use this [thread](http://forum.unity3d.com/threads/182382-SpaceNavigator-driver-OpenSource) on the Unity forums.  
-The source code is available on [Github](https://github.com/PatHightree/SpaceNavigator).
+If you have feedback, please use this [thread](https://discussions.unity.com/t/spacenavigator-driver-opensource/504914) on the Unity Discussions site.
 
 ## What's new in 2.0.0 ?
-### New foundation, new requirements
-The driver's foundation has been rebuilt and it is now compatible with Unity 2019.1 and up.   
-It communicates directly with the HID device via Unity's new Input System.  
+### 3DConnexion driver no longer required
+The driver's communicates directly with the HID device via Unity's new Input System (Unity 2019.1 and up).   
 This means that it **no longer requires the 3DConnexion driver** to be running or even installed.  
-It also means that **your project is required to have the new Input System enabled**.  
+It also means that 3DConnexion devices other than the SpaceNavigator might not work correctly, the 3DConnexion SDK abstracted away a lot of differences between devices.  
+On the other hand, it allows you to use devices which 3DConnexion have stopped supporting in their driver.
+https://3dconnexion.com/nl/support/faq/3dconnexion-discontinued-devices/
+
+Your project must have the new Input System enabled.  
 You can have both the old and new Input System active, see this [tip](#tip_project_settings).  
-(this [page](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html) can help with upgrading to the new Input System)
+This [page](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html) can help with upgrading to the new Input System.
+
+### Editor toolbar
+![](Documentation~/Toolbar-default.png)  
+Makes common operations available in the scene view.  
+- Navigation mode switching  
+- Speed switching
+- Presentation mode  
+- Opening the settings window  
+
+With optional extra speedy speed controls.  
+
+![](Documentation~/Toolbar-speed.png)
+
+### Presentation mode
+Sometimes you want to give a demo or capture a video, then you want your navigation to be as smooth as possible.  
+The new presentation mode automatically smooths out your input.
+
+### New measures against drift
+To counter the drift problem, a calibration button was added to the settings window. This stores the current input values, these will be subtracted from the input from then on.
+
+### Only navigate when Unity has focus
+This comes in handy when you've got multiple applications open which use the SpaceNavigator.
 
 ### SpaceNavigator driver as a package
 The driver is structured as a UPM package and can be added to your project via the Project Manager.  
@@ -108,15 +132,3 @@ After installation you can find the tool in the pull-down menu under _Window/Spa
 
 ## <a name="tip_project_settings"></a>Tip : You can switch input systems in Project Settings
 ![](Documentation~/ProjectSettings_ActiveInputHandling.png)
-
-## Tip : Disable 3DConnexion KMJ Emulator
-If you're using the 3dconnexion driver, it comes with a keyboard, mouse, joystick emulator.  
-Personally I have never needed it and it interferes with some games and applications.  
-Here's how to disable it on Windows 10:
-- Open the device manager by pressing Windows-X and choosing Device Manager
-- Navigate to Human Interface Devices/HID-compliant game controller
-- Select it and click the down arrow button
-- If there are more entries called HID-compliant game controller,  
-  disable the one which properties say Location: on #Dconnexion KMJ Emulator
-
-![](Documentation~/Disable_KMJ_emulator.png)

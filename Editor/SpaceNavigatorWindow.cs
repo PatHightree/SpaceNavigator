@@ -11,7 +11,7 @@ namespace SpaceNavigatorDriver {
 		/// <summary>
 		/// Initializes the window.
 		/// </summary>
-		[MenuItem("Window/SpaceNavigator/SpaceNavigator &s", false, 1)]
+		[MenuItem("Window/SpaceNavigator/Settings &s", false, 1)]
 		public static void Init() {
 			SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
 			if (window) {
@@ -40,7 +40,8 @@ namespace SpaceNavigatorDriver {
 		}
 
 		public void OnGUI() {
-			Settings.OnGUI();
+			if (Settings.OnGUI())
+				SpaceNavigatorToolbar.Instance.TriggerRefresh();
 		}
 
 		public void Dispose() {
