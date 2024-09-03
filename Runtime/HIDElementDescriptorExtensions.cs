@@ -169,26 +169,21 @@ namespace SpaceNavigatorDriver
                 switch (e.usage)
                 {
                     case (int)GenericDesktop.X:
+                    case (int)GenericDesktop.Y:
                     case (int)GenericDesktop.Z:
                     case (int)GenericDesktop.Rx:
+                    case (int)GenericDesktop.Ry:
                     case (int)GenericDesktop.Rz:
                     case (int)GenericDesktop.Vx:
+                    case (int)GenericDesktop.Vy:
                     case (int)GenericDesktop.Vz:
                     case (int)GenericDesktop.Vbrx:
+                    case (int)GenericDesktop.Vbry:
                     case (int)GenericDesktop.Vbrz:
                     case (int)GenericDesktop.Slider:
                     case (int)GenericDesktop.Dial:
                     case (int)GenericDesktop.Wheel:
                         return e.DetermineAxisNormalizationParameters();
-
-                    // Our Ys tend to be the opposite of what most HIDs do. We can't be sure and may well
-                    // end up inverting a value here when we shouldn't but as always with the HID fallback,
-                    // let's try to do what *seems* to work with the majority of devices.
-                    case (int)GenericDesktop.Y:
-                    case (int)GenericDesktop.Ry:
-                    case (int)GenericDesktop.Vy:
-                    case (int)GenericDesktop.Vbry:
-                        return StringHelpers.Join(",", "invert", e.DetermineAxisNormalizationParameters());
                 }
             }
 
