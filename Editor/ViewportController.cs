@@ -57,7 +57,10 @@ namespace SpaceNavigatorDriver
 
         static void Update()
         {
-            if (SpaceNavigatorHID.current == null) return;
+            //return;
+
+            if (SpaceNavigatorHID.current == null || SpaceNavigatorHID.current.added == false)
+                return;
 
             // Autosave settings.
             if (!Application.isPlaying && DateTime.Now.Second - _lastSaveTime > _saveInterval)
