@@ -1,4 +1,3 @@
-using UnityEditor;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,50 +5,65 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.Utilities;
+using System.Runtime.InteropServices;
 
 namespace SpaceNavigatorDriver
 {
+
+    [StructLayout(LayoutKind.Explicit)]
     struct SpaceNavigatorHIDState : IInputStateTypeInfo
     {
         public FourCC format => new FourCC('H', 'I', 'D');
 
-        public struct ReportFormat1
-        {
-            public Vector3 translation;
-        }
-
-        public struct ReportFormat2
-        {
-            public Vector3 rotation;
-        }
-
-        public struct ReportFormat3
-        {
-            public byte buttons;
-        }
+        [FieldOffset(0)]
+        public byte reportId;
 
         // 1st report
-        [InputControl(name = "translation", format = "VC3S", layout = "Vector3", displayName = "Translation")] 
-        [InputControl(name = "translation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=10")] 
-        [InputControl(name = "translation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
-        [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
-        public ReportFormat1 report1;
+        // Normalize min/max values: Incoming values are in the range of [-350, 350], so we just use 350/Int16.MaxValue ~= 0.0106
+        [InputControl(name = "translation", format = "VC3S", layout = "Vector3", displayName = "Translation")]
+        [InputControl(name = "translation/x", offset = 0, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1")]
+        [InputControl(name = "translation/y", offset = 4, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1, invert=true")]
+        [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1, invert=true")]
+        [FieldOffset(1)]
+        public short translationX;
+        [FieldOffset(3)]
+        public short translationY;
+        [FieldOffset(5)]
+        public short translationZ;
 
-        // 2nd report
-        [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
-        [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "scale=true, scaleFactor=-80")] 
-        [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
-        [InputControl(name = "rotation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
-        public ReportFormat2 report2;
+        [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")]
+        [InputControl(name = "rotation/x", offset = 0, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1, invert=true")]
+        [InputControl(name = "rotation/y", offset = 4, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1")]
+        [InputControl(name = "rotation/z", offset = 2, format = "SHRT", parameters = "normalize=true,normalizeMin=-0.0106,normalizeMax=0.0106,normalizeZero=0.0, clamp=2,clampMin=-1,clampMax=1")]
+        [FieldOffset(7)]
+        public short rotationX;
+        [FieldOffset(9)]
+        public short rotationY;
+        [FieldOffset(11)]
+        public short rotationZ;
 
         // 3rd report
-        [InputControl(name = "button1", bit = 0, format = "BIT", layout = "Button", displayName = "Button 1")] 
+        [InputControl(name = "button1", bit = 0, format = "BIT", layout = "Button", displayName = "Button 1")]
         [InputControl(name = "button2", bit = 1, format = "BIT", layout = "Button", displayName = "Button 2")]
-        public ReportFormat3 report3;
+        [FieldOffset(13)]
+        public ButtonReport buttonsState;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct ButtonReport
+        {
+            [FieldOffset(0)]
+            public byte reportId;
+
+            [FieldOffset(1)]
+            public bool button1;
+
+            [FieldOffset(2)]
+            public bool button2;
+        }
     }
 
 #if UNITY_EDITOR
-    [InitializeOnLoad] // Make sure static constructor is called during startup.
+    [UnityEditor.InitializeOnLoad] // Make sure static constructor is called during startup.
 #endif
     [InputControlLayout(stateType = typeof(SpaceNavigatorHIDState))]
     public class SpaceNavigatorHID : InputDevice, IInputStateCallbackReceiver
@@ -88,10 +102,10 @@ namespace SpaceNavigatorDriver
             base.FinishSetup();
 
             displayName = GetType().Name;
+            Translation = GetChildControl<Vector3Control>("translation");
+            Rotation = GetChildControl<Vector3Control>("rotation");
             Button1 = GetChildControl<ButtonControl>("button1");
             Button2 = GetChildControl<ButtonControl>("button2");
-            Rotation = GetChildControl<Vector3Control>("rotation");
-            Translation = GetChildControl<Vector3Control>("translation");
 
             DebugLog("SpaceNavigatorHID : FinishSetup");
         }
@@ -103,6 +117,8 @@ namespace SpaceNavigatorDriver
         public override void MakeCurrent()
         {
             base.MakeCurrent();
+            if (current == this)
+                return;
             current = this;
             DebugLog("SpaceNavigatorHID : MakeCurrent");
         }
@@ -116,6 +132,7 @@ namespace SpaceNavigatorDriver
                 current = null;
             DebugLog("SpaceNavigatorHID : OnRemoved");
         }
+
         public void OnNextUpdate()
         {
         }
@@ -140,21 +157,30 @@ namespace SpaceNavigatorDriver
 
             var newState = default(SpaceNavigatorHIDState);
             // Can opt to only copy the state that we won't override. We don't bother here.
-            UnsafeUtility.MemCpy(&newState, (byte*) currentStatePtr + stateBlock.byteOffset, sizeof(SpaceNavigatorHIDState));
-
+            UnsafeUtility.MemCpy(&newState, (byte*)currentStatePtr + stateBlock.byteOffset, sizeof(SpaceNavigatorHIDState));
+            
             if (reportId == 1)
             {
-                UnsafeUtility.MemCpy(&newState.report1, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat1));
+                var reportLength = stateEventPtr->stateSizeInBytes;
+
+                //only contains translation
+                if (reportLength == 7)
+                    UnsafeUtility.MemCpy(&newState, reportPtr, 7);
+                // contains translation and rotation
+                else if (reportLength == 13)
+                    UnsafeUtility.MemCpy(&newState, reportPtr, 13);
+
                 DebugLog("SpaceNavigatorHID : Copied report1");
             }
             else if (reportId == 2)
             {
-                UnsafeUtility.MemCpy(&newState.report2, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat2));
+                UnsafeUtility.MemCpy(((byte*)&newState) + 7, reportPtr + 1, 6);
+
                 DebugLog("SpaceNavigatorHID : Copied report2");
             }
             else if (reportId == 3)
             {
-                UnsafeUtility.MemCpy(&newState.report3, reportStatePtr, sizeof(SpaceNavigatorHIDState.ReportFormat3));
+                UnsafeUtility.MemCpy(&newState.buttonsState, reportStatePtr, sizeof(SpaceNavigatorHIDState.ButtonReport));
                 DebugLog("SpaceNavigatorHID : Copied report3");
             }
 
