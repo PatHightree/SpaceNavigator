@@ -102,12 +102,14 @@ namespace SpaceNavigatorDriver
                 InputSystem.RemoveLayout(existingLayout);
             }
 
-            //foreach(var device in devices)
-            //{
-            //    DebugLog("Device used removed layout: " + device);
+            /*
+            foreach (var device in devices)
+            {
+                DebugLog("Device used removed layout: " + device);
 
-            //    InputSystem.EnableDevice(device);
-            //}
+                InputSystem.EnableDevice(device);
+            }
+            */
         }
 
         /// <summary>
