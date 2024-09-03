@@ -131,6 +131,10 @@ namespace SpaceNavigatorDriver
             if (hidDescriptor.vendorId != 0x256f)
                 return false;
 
+            // Universal receiver: We need to find the actual device by usagePage and usage.
+            if (hidDescriptor.productId == 0xc652 && (hidDescriptor.usagePage != (UsagePage)1 || hidDescriptor.usage != 8))
+                return false;
+
             return true;
         }
 
@@ -156,7 +160,11 @@ namespace SpaceNavigatorDriver
                 return false;
             }
 
+            // TODO: Have a look at the skipped data, maybe we can use some of it.
             var reportSizeMap = hidDescriptor.elements
+                .Where(e => 
+                    e.usagePage < UsagePage.VendorDefined && // Skip vendor-specific elements
+                    e.reportId <= SpaceNavigatorHID.ReportCountMax) // Skip less interesting reports (observed: 23, 27)
                 .GroupBy(e => e.reportId)
                 .OrderBy(g => g.Key)
                 .ToDictionary(
@@ -197,7 +205,12 @@ namespace SpaceNavigatorDriver
             }
 #endif
 
-            var deviceMatcher = InputDeviceMatcher.FromDeviceDescription(description);
+            // Try to also match usage and usagePage to exclude receiver devices
+            var deviceMatcher = InputDeviceMatcher
+                .FromDeviceDescription(description)
+                .WithCapability("usagePage", (int)hidDescriptor.usagePage)
+                .WithCapability("usage", hidDescriptor.usage);
+
             var layoutName = $"SPACEMOUSE::{description.manufacturer} {description.product}";
             var baseType = typeof(SpaceNavigatorHID);
 
