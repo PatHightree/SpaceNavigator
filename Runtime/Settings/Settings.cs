@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -16,6 +16,8 @@ namespace SpaceNavigatorDriver {
 	public static class Settings {
 		public static OperationMode Mode;
 		public static CoordinateSystem CoordSys;
+		public static bool PresentationMode;
+		public static float PresentationDamping = 0.015f;
 
 		// Snapping
 		public static bool SnapRotation;
@@ -33,17 +35,16 @@ namespace SpaceNavigatorDriver {
 		// Sensitivity
 		private static int Gears = 3;
 		public static int CurrentGear = 1;
+		public static bool ShowSpeedGearsAsRadioButtons = false;
 
 		public static List<float> TransSensDefault = new List<float> { 50, 1, 0.05f };
 		public static List<float> TransSensMinDefault = new List<float>() { 1, 0.1f, 0.01f };
 		public static List<float> TransSensMaxDefault = new List<float>() { 100, 10, 1 };
-		public static float PlayTransSens = TransSensDefault[1];
 		public static List<float> TransSens = new List<float>(TransSensDefault);
 		public static List<float> TransSensMin = new List<float>(TransSensMinDefault);
 		public static List<float> TransSensMax = new List<float>(TransSensMaxDefault);
 
 		public const float RotSensDefault = 1, RotSensMinDefault = 0, RotSensMaxDefault = 5f;
-		public static float PlayRotSens = RotSensDefault;
 		public static float RotSens = RotSensDefault;
 		public static float RotSensMin = RotSensMinDefault;
 		public static float RotSensMax = RotSensMaxDefault;
@@ -60,6 +61,10 @@ namespace SpaceNavigatorDriver {
 	public static float TransDeadMax = TransDeadMaxDefault;
 #endif
 
+		// Focus
+		public static bool OnlyNavWhenUnityHasFocus = true;
+		public static bool ToggleLedWhenFocusChanged;
+
 		// Runtime editor navigation
 		public static bool RuntimeEditorNav = true;
 		public static bool RuntimeEditorNavSuspendOnGameViewFocus;
@@ -70,124 +75,32 @@ namespace SpaceNavigatorDriver {
 		public static Vector3 TelekinesisInvertTranslation, TelekinesisInvertRotation;
 		public static Vector3 GrabMoveInvertTranslation, GrabMoveInvertRotation;
 
-		private static Vector2 _scrollPos;
+		// Calibration
+		public const float TransSensEpsilonDefault = 5f;
+		public static float TransSensEpsilon = TransSensEpsilonDefault;
+		public const float RotSensEpsilonDefault = 5f;
+		public static float RotSensEpsilon = RotSensEpsilonDefault;
+		public static Vector3? TranslationDrift;
+		public static Vector3? RotationDrift;
 
-		static Settings() {
-			//Debug.Log("New Settings()");
-			NavTranslationLock = new Locks("Navigation Translation");
-			NavRotationLock = new Locks("Navigation Rotation");
-			ManipulateTranslationLock = new Locks("Manipulation Translation");
-			ManipulateRotationLock = new Locks("Manipulation Rotation");
-		}
-
-		public static void OnGUI() {
+		public static bool OnGUI()
+		{
+			bool triggerToolbarRefresh = false;
 #if UNITY_EDITOR
 			EditorGUI.BeginChangeCheck();
 
 			_scrollPos = GUILayout.BeginScrollView(_scrollPos);
 			GUILayout.BeginVertical();
 
-			#region - Operation mode -
-			GUILayout.Label("Operation mode");
-			GUIContent[] modes = new[] {
-				new GUIContent("Fly", "Where do you want to fly today?"),
-				new GUIContent("Orbit", "Round, round, round we go"),
-				new GUIContent("Telekinesis", "Watch where you're levitating that piano!"),
-				new GUIContent("Grab Move", "Excuse me, yes. HDS coming through. I've got a package people")
-			};
-			Mode = (OperationMode)GUILayout.SelectionGrid((int)Mode, modes, 4);
-			#endregion - Operation mode -
-
-			#region - Coordinate system -
-			// Enable the coordsys only in Telekinesis mode.
-			GUI.enabled = Mode == OperationMode.Telekinesis;
-			GUILayout.Label("Coordinate system");
-			string[] coordSystems = new[] { "Camera", "World", "Parent", "Local" };
-			CoordSys = (CoordinateSystem)GUILayout.SelectionGrid((int)CoordSys, coordSystems, 4);
-			#endregion - Coordinate system -
-
-			#region - Snapping -
-			// Disable the constraint controls in Fly and Orbit mode.
-			GUI.enabled = Settings.Mode != OperationMode.Fly && Settings.Mode != OperationMode.Orbit;
-
-			GUILayout.Space(10);
-			GUILayout.Label("Snap");
-			GUILayout.Space(4);
-			GUILayout.BeginHorizontal();
-			SnapTranslation = GUILayout.Toggle(SnapTranslation, "Grid snap");
-			SnapDistance = EditorGUILayout.FloatField(SnapDistance);
-			GUILayout.EndHorizontal();
-
-			GUILayout.BeginHorizontal();
-			SnapRotation = GUILayout.Toggle(SnapRotation, "Angle snap");
-			SnapAngle = EditorGUILayout.IntField(SnapAngle);
-			GUILayout.EndHorizontal();
-
-			// Re-enable gui.
-			GUI.enabled = true;
-			#endregion- Snapping -
-
-			#region - Locking -
-
-			GUILayout.Space(10);
-			GUILayout.Label("Lock");
-			GUILayout.Space(4);
-			LockHorizon = GUILayout.Toggle(LockHorizon, "Horizon");
-
-			#region - Translation -
-			GUILayout.BeginHorizontal();
-			if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
-				NavTranslationLock.All = GUILayout.Toggle(NavTranslationLock.All, "Translation", GUILayout.Width(100));
-				GUI.enabled = !NavTranslationLock.All;
-				NavTranslationLock.X = GUILayout.Toggle(NavTranslationLock.X, "X");
-				NavTranslationLock.Y = GUILayout.Toggle(NavTranslationLock.Y, "Y");
-				NavTranslationLock.Z = GUILayout.Toggle(NavTranslationLock.Z, "Z");
-				GUI.enabled = true;
-			} else {
-				ManipulateTranslationLock.All = GUILayout.Toggle(ManipulateTranslationLock.All, "Translation", GUILayout.Width(100));
-				GUI.enabled = !ManipulateTranslationLock.All;
-				ManipulateTranslationLock.X = GUILayout.Toggle(ManipulateTranslationLock.X, "X");
-				ManipulateTranslationLock.Y = GUILayout.Toggle(ManipulateTranslationLock.Y, "Y");
-				ManipulateTranslationLock.Z = GUILayout.Toggle(ManipulateTranslationLock.Z, "Z");
-				GUI.enabled = true;
-			}
-			GUILayout.EndHorizontal();
-			#endregion - Translation -
-
-			#region - Rotation -
-			GUILayout.BeginHorizontal();
-			if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
-				NavRotationLock.All = GUILayout.Toggle(NavRotationLock.All, "Rotation", GUILayout.Width(100));
-				GUI.enabled = !NavRotationLock.All;
-				NavRotationLock.X = GUILayout.Toggle(NavRotationLock.X, "X");
-				NavRotationLock.Y = GUILayout.Toggle(NavRotationLock.Y, "Y");
-				NavRotationLock.Z = GUILayout.Toggle(NavRotationLock.Z, "Z");
-				GUI.enabled = true;
-			} else {
-				ManipulateRotationLock.All = GUILayout.Toggle(ManipulateRotationLock.All, "Rotation", GUILayout.Width(100));
-				GUI.enabled = !ManipulateRotationLock.All;
-				ManipulateRotationLock.X = GUILayout.Toggle(ManipulateRotationLock.X, "X");
-				ManipulateRotationLock.Y = GUILayout.Toggle(ManipulateRotationLock.Y, "Y");
-				ManipulateRotationLock.Z = GUILayout.Toggle(ManipulateRotationLock.Z, "Z");
-				GUI.enabled = true;
-			}
-			GUILayout.EndHorizontal();
-			#endregion - Rotation -
-
-			#endregion - Locking -
-
 			#region - Sensitivity + gearbox -
-			GUILayout.Space(10);
 			GUILayout.BeginHorizontal();
 
 			#region - Sensitivity -
 			GUILayout.BeginVertical();
 			GUILayout.Label("Sensitivity");
-			GUILayout.Space(4);
 
-
-			#region - Translation + rotation -
 			GUILayout.BeginVertical();
+			
 			#region - Translation -
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Translation", GUILayout.Width(67));
@@ -207,8 +120,16 @@ namespace SpaceNavigatorDriver {
 			RotSensMax = EditorGUILayout.FloatField(RotSensMax, GUILayout.Width(30));
 			GUILayout.EndHorizontal();
 			#endregion - Rotation -
+
+			#region - Radio buttons -
+			GUILayout.BeginHorizontal();
+			EditorGUI.BeginChangeCheck();
+			ShowSpeedGearsAsRadioButtons = GUILayout.Toggle(ShowSpeedGearsAsRadioButtons, "Show as radio buttons");
+			triggerToolbarRefresh = EditorGUI.EndChangeCheck();
+			GUILayout.EndHorizontal();
+			#endregion - Radio buttons -
+			
 			GUILayout.EndVertical();
-			#endregion - Translation + rotation -
 
 			GUILayout.EndVertical();
 			#endregion - Sensitivity -
@@ -216,7 +137,7 @@ namespace SpaceNavigatorDriver {
 			#region - Gearbox -
 			GUILayout.BeginVertical();
 			GUILayout.Label("Scale", GUILayout.Width(65));
-			modes = new GUIContent[] {
+			GUIContent[] modes = new GUIContent[] {
 				new GUIContent("Huge", "Galactic scale"),
 				new GUIContent("Human", "What people consider 'normal'"),
 				new GUIContent("Minuscule", "Itsy-bitsy-scale")
@@ -228,18 +149,155 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Sensitivity + gearbox -
 
+			#region - Presentation Mode -
+
+			GUILayout.Space(10);
+			GUILayout.Label("Presentation Mode");
 			GUILayout.BeginHorizontal();
-			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
-			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
-			RuntimeEditorNavSuspendOnGameViewFocus = GUILayout.Toggle(RuntimeEditorNavSuspendOnGameViewFocus, "Suspend on GameView focus");
-			EditorGUI.EndDisabledGroup();
+			GUILayout.Label("Damping", GUILayout.Width(120));
+			PresentationDamping = GUILayout.HorizontalSlider(PresentationDamping, 0, 0.1f);
 			GUILayout.EndHorizontal();
+
+			#endregion
+
+			#region - Deadzone -
+			GUILayout.BeginVertical();
+			GUILayout.Space(10);
+			GUILayout.Label("Deadzone");
+
+			#region - Translation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Translation", GUILayout.Width(120));
+			int epsilonMax = 12;
+			int deadzone = epsilonMax - Mathf.RoundToInt(TransSensEpsilon);
+			TransSensEpsilon = epsilonMax - EditorGUILayout.IntSlider(deadzone, 0, epsilonMax);
+			GUILayout.EndHorizontal();			
+			#endregion - Translation Epsilon -
 			
+			#region - Rotation Epsilon -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rotation", GUILayout.Width(120));
+			deadzone = epsilonMax - Mathf.RoundToInt(RotSensEpsilon);
+			RotSensEpsilon = epsilonMax - EditorGUILayout.IntSlider(deadzone, 0, epsilonMax); 
+			GUILayout.EndHorizontal();
+			#endregion - Rotation Epsilon -
+
+			if (GUILayout.Button("Recalibrate Drift"))
+			{
+				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
+				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+			}
+			
+			GUILayout.EndVertical();			
+			#endregion - Deadzone -
+
+			#region - Dead Zone -
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+			GUILayout.BeginVertical();
+			GUILayout.Label("Dead Zone");
+
+			#region - Translation + rotation -
+			GUILayout.BeginVertical();
+			#region - Translation -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Translation", GUILayout.Width(67));
+			TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
+			TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
+			TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
+			TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
+			GUILayout.EndHorizontal();
+			#endregion - Translation -
+
+			#region - Rotation -
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Rotation", GUILayout.Width(67));
+			RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
+			RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
+			RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
+			RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
+			GUILayout.EndHorizontal();
+			#endregion - Rotation -
+
+			if (GUILayout.Button("Recalibrate Drift"))
+			{
+				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
+				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+			}
+
+			GUILayout.EndVertical();
+			#endregion - Translation + rotation -
+			GUILayout.EndVertical();
+#endif
+			#endregion - Deadzone -
+
+			#region - Snapping -
+
+			GUILayout.Space(10);
+			GUILayout.Label("Snap");
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Grid Snap size", GUILayout.Width(120));
+			SnapDistance = EditorGUILayout.FloatField(SnapDistance);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Angle Snap angle", GUILayout.Width(120));
+			SnapAngle = EditorGUILayout.IntField(SnapAngle);
+			GUILayout.EndHorizontal();
+
+			#endregion- Snapping -
+
+			#region - Locking -
+
+			GUILayout.Space(10);
+			GUILayout.Label("Lock");
+			LockHorizon = GUILayout.Toggle(LockHorizon, "Horizon", GUILayout.Width(120));
+
+			#region - Translation -
+			GUILayout.BeginHorizontal();
+			if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
+				NavTranslationLock.All = GUILayout.Toggle(NavTranslationLock.All, "Translation", GUILayout.Width(120));
+				GUI.enabled = !NavTranslationLock.All;
+				NavTranslationLock.X = GUILayout.Toggle(NavTranslationLock.X, "X", GUILayout.Width(60));
+				NavTranslationLock.Y = GUILayout.Toggle(NavTranslationLock.Y, "Y", GUILayout.Width(60));
+				NavTranslationLock.Z = GUILayout.Toggle(NavTranslationLock.Z, "Z", GUILayout.Width(60));
+				GUI.enabled = true;
+			} else {
+				ManipulateTranslationLock.All = GUILayout.Toggle(ManipulateTranslationLock.All, "Translation", GUILayout.Width(120));
+				GUI.enabled = !ManipulateTranslationLock.All;
+				ManipulateTranslationLock.X = GUILayout.Toggle(ManipulateTranslationLock.X, "X", GUILayout.Width(60));
+				ManipulateTranslationLock.Y = GUILayout.Toggle(ManipulateTranslationLock.Y, "Y", GUILayout.Width(60));
+				ManipulateTranslationLock.Z = GUILayout.Toggle(ManipulateTranslationLock.Z, "Z", GUILayout.Width(60));
+				GUI.enabled = true;
+			}
+			GUILayout.EndHorizontal();
+			#endregion - Translation -
+
+			#region - Rotation -
+			GUILayout.BeginHorizontal();
+			if (Mode == OperationMode.Fly || Mode == OperationMode.Orbit) {
+				NavRotationLock.All = GUILayout.Toggle(NavRotationLock.All, "Rotation", GUILayout.Width(120));
+				GUI.enabled = !NavRotationLock.All;
+				NavRotationLock.X = GUILayout.Toggle(NavRotationLock.X, "X", GUILayout.Width(60));
+				NavRotationLock.Y = GUILayout.Toggle(NavRotationLock.Y, "Y", GUILayout.Width(60));
+				NavRotationLock.Z = GUILayout.Toggle(NavRotationLock.Z, "Z", GUILayout.Width(60));
+				GUI.enabled = true;
+			} else {
+				ManipulateRotationLock.All = GUILayout.Toggle(ManipulateRotationLock.All, "Rotation", GUILayout.Width(120));
+				GUI.enabled = !ManipulateRotationLock.All;
+				ManipulateRotationLock.X = GUILayout.Toggle(ManipulateRotationLock.X, "X", GUILayout.Width(60));
+				ManipulateRotationLock.Y = GUILayout.Toggle(ManipulateRotationLock.Y, "Y", GUILayout.Width(60));
+				ManipulateRotationLock.Z = GUILayout.Toggle(ManipulateRotationLock.Z, "Z", GUILayout.Width(60));
+				GUI.enabled = true;
+			}
+			GUILayout.EndHorizontal();
+			#endregion - Rotation -
+
+			#endregion - Locking -
+
 			#region - Axes inversion per mode -
+
 			GUILayout.Space(10);
 			GUILayout.Label("Invert axes in " + Settings.Mode.ToString() + " mode");
-			GUILayout.Space(4);
-
 			bool tx, ty, tz, rx, ry, rz;
 			switch (Settings.Mode) {
 				case OperationMode.Fly:
@@ -263,11 +321,11 @@ namespace SpaceNavigatorDriver {
 			}
 
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Translation", GUILayout.Width(100));
+			GUILayout.Label("Translation", GUILayout.Width(120));
 			EditorGUI.BeginChangeCheck();
-			tx = GUILayout.Toggle(tx, "X");
-			ty = GUILayout.Toggle(ty, "Y");
-			tz = GUILayout.Toggle(tz, "Z");
+			tx = GUILayout.Toggle(tx, "X", GUILayout.Width(60));
+			ty = GUILayout.Toggle(ty, "Y", GUILayout.Width(60));
+			tz = GUILayout.Toggle(tz, "Z", GUILayout.Width(60));
 			if (EditorGUI.EndChangeCheck()) {
 				switch (Settings.Mode) {
 					case OperationMode.Fly:
@@ -289,12 +347,12 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Rotation", GUILayout.Width(100));
+			GUILayout.Label("Rotation", GUILayout.Width(120));
 			EditorGUI.BeginChangeCheck();
 
-			rx = GUILayout.Toggle(rx, "X");
-			ry = GUILayout.Toggle(ry, "Y");
-			rz = GUILayout.Toggle(rz, "Z");
+			rx = GUILayout.Toggle(rx, "X", GUILayout.Width(60));
+			ry = GUILayout.Toggle(ry, "Y", GUILayout.Width(60));
+			rz = GUILayout.Toggle(rz, "Z", GUILayout.Width(60));
 			if (EditorGUI.EndChangeCheck()) {
 				switch (Settings.Mode) {
 					case OperationMode.Fly:
@@ -316,59 +374,57 @@ namespace SpaceNavigatorDriver {
 			GUILayout.EndHorizontal();
 			#endregion - Axes inversion per mode -
 
-			#region - Dead Zone -
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-		GUILayout.BeginVertical();
-		GUILayout.Label("Dead Zone");
-		GUILayout.Space(4);
+			#region - Focus behavior -
 
+			GUILayout.Space(10);
+			GUILayout.Label("Focus Behavior");
+			OnlyNavWhenUnityHasFocus = GUILayout.Toggle(OnlyNavWhenUnityHasFocus, "Only navigate when Unity has focus");
+			EditorGUI.BeginDisabledGroup(!OnlyNavWhenUnityHasFocus);
+			ToggleLedWhenFocusChanged = GUILayout.Toggle(ToggleLedWhenFocusChanged, "Toggle LED when Unity gains/loses");
+			EditorGUI.EndDisabledGroup();
 
-			#region - Translation + rotation -
-		GUILayout.BeginVertical();
-			#region - Translation -
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Translation", GUILayout.Width(67));
-		TransDead = EditorGUILayout.FloatField(TransDead, GUILayout.Width(30));
-		TransDeadMin = EditorGUILayout.FloatField(TransDeadMin, GUILayout.Width(30));
-		TransDead = GUILayout.HorizontalSlider(TransDead, TransDeadMin, TransDeadMax);
-		TransDeadMax = EditorGUILayout.FloatField(TransDeadMax, GUILayout.Width(30));
-		GUILayout.EndHorizontal();
-			#endregion - Translation -
+			#endregion
+			
+			#region - Runtime editor navigation -
 
-			#region - Rotation -
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Rotation", GUILayout.Width(67));
-		RotDead = EditorGUILayout.FloatField(RotDead, GUILayout.Width(30));
-		RotDeadMin = EditorGUILayout.FloatField(RotDeadMin, GUILayout.Width(30));
-		RotDead = GUILayout.HorizontalSlider(RotDead, RotDeadMin, RotDeadMax);
-		RotDeadMax = EditorGUILayout.FloatField(RotDeadMax, GUILayout.Width(30));
-		GUILayout.EndHorizontal();
-			#endregion - Rotation -
-		GUILayout.EndVertical();
-			#endregion - Translation + rotation -
+			GUILayout.Space(10);
+			GUILayout.Label("Runtime Behavior");
+			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
+			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
+			RuntimeEditorNavSuspendOnGameViewFocus = GUILayout.Toggle(RuntimeEditorNavSuspendOnGameViewFocus, "Suspend on GameView focus");
+			EditorGUI.EndDisabledGroup();
 
-		GUILayout.EndVertical();
-#endif
-			#endregion - Deadzone -
-
+			#endregion
+			
 			GUILayout.EndVertical();
 			GUILayout.EndScrollView();
 
 			if (EditorGUI.EndChangeCheck())
 				Write();
 #endif
+			return triggerToolbarRefresh;
+		}
+
+		private static Vector2 _scrollPos;
+
+		static Settings() {
+			NavTranslationLock = new Locks("Navigation Translation");
+			NavRotationLock = new Locks("Navigation Rotation");
+			ManipulateTranslationLock = new Locks("Manipulation Translation");
+			ManipulateRotationLock = new Locks("Manipulation Rotation");
 		}
 
 		/// <summary>
 		/// Write settings to PlayerPrefs.
 		/// </summary>
 		public static void Write() {
-			//Debug.Log("Write settings");
-
 			// Navigation Mode
 			PlayerPrefs.SetInt("Navigation mode", (int)Mode);
 			// Coordinate System
 			PlayerPrefs.SetInt("Coordinate System", (int)CoordSys);
+			// Presentation Mode
+			PlayerPrefs.SetInt("Presentation Mode", PresentationMode ? 1 : 0);
+			PlayerPrefs.SetFloat("Presentation Damping", PresentationDamping);
 			// Snap
 			PlayerPrefs.SetInt("Snap Translation", SnapTranslation ? 1 : 0);
 			PlayerPrefs.SetFloat("Snap Distance", SnapDistance);
@@ -390,6 +446,10 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetFloat("Rotation sensitivity", RotSens);
 			PlayerPrefs.SetFloat("Rotation sensitivity minimum", RotSensMin);
 			PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
+			PlayerPrefs.SetInt("Show sensitivity as radio buttons", ShowSpeedGearsAsRadioButtons ? 1 : 0);
+			// Focus
+			PlayerPrefs.SetInt("OnlyNavWhenUnityHasFocus", OnlyNavWhenUnityHasFocus ? 1 : 0);
+			PlayerPrefs.SetInt("ToggleLedWhenFocusChanged", ToggleLedWhenFocusChanged ? 1 : 0);
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
 			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavSuspendOnGameViewFocus ? 1 : 0);
@@ -398,18 +458,22 @@ namespace SpaceNavigatorDriver {
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
 			WriteAxisInversions(TelekinesisInvertTranslation, TelekinesisInvertRotation, "Telekinesis");
 			WriteAxisInversions(GrabMoveInvertTranslation, GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			PlayerPrefs.SetFloat("Translation sensitivity epsilon", TransSensEpsilon);
+			PlayerPrefs.SetFloat("Rotation sensitivity epsilon", RotSensEpsilon);
 		}
 
 		/// <summary>
 		/// Read settings from PlayerPrefs.
 		/// </summary>
 		public static void Read() {
-			//Debug.Log("Read settings");
-
 			// Navigation Mode
 			Mode = (OperationMode)PlayerPrefs.GetInt("Navigation mode", (int)OperationMode.Fly);
 			// Coordinate System
 			CoordSys = (CoordinateSystem)PlayerPrefs.GetInt("Coordinate System", (int)CoordinateSystem.Camera);
+			// Presentation Mode
+			PresentationMode = PlayerPrefs.GetInt("Presentation Mode", 0) == 1;
+			PresentationDamping = PlayerPrefs.GetFloat("Presentation Damping", 0.015f);
 			// Snap
 			SnapTranslation = PlayerPrefs.GetInt("Snap Translation", 0) == 1;
 			SnapDistance = PlayerPrefs.GetFloat("Snap Distance", 0.1f);
@@ -431,6 +495,10 @@ namespace SpaceNavigatorDriver {
 			RotSens = PlayerPrefs.GetFloat("Rotation sensitivity", RotSensDefault);
 			RotSensMin = PlayerPrefs.GetFloat("Rotation sensitivity minimum", RotSensMinDefault);
 			RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);
+			ShowSpeedGearsAsRadioButtons = PlayerPrefs.GetInt("Show sensitivity as radio buttons", 0) == 1;
+			// Focus
+			OnlyNavWhenUnityHasFocus = PlayerPrefs.GetInt("OnlyNavWhenUnityHasFocus", 1) == 1;
+			ToggleLedWhenFocusChanged = PlayerPrefs.GetInt("ToggleLedWhenFocusChanged", 0) == 1;
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
 			RuntimeEditorNavSuspendOnGameViewFocus = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;
@@ -439,6 +507,9 @@ namespace SpaceNavigatorDriver {
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
 			ReadAxisInversions(ref TelekinesisInvertTranslation, ref TelekinesisInvertRotation, "Telekinesis");
 			ReadAxisInversions(ref GrabMoveInvertTranslation, ref GrabMoveInvertRotation, "Grab move");
+			// Calibration
+			TransSensEpsilon = PlayerPrefs.GetFloat("Translation sensitivity epsilon", TransSensEpsilonDefault);
+			RotSensEpsilon = PlayerPrefs.GetFloat("Rotation sensitivity epsilon", RotSensEpsilonDefault);
 		}
 
 		/// <summary>
