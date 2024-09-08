@@ -82,7 +82,7 @@ namespace SpaceNavigatorDriver
             bool hasFocus = EditorApplication.isFocused;
             if (Settings.ToggleLedWhenFocusChanged && _hadFocus != hasFocus)
             {
-                SpaceNavigatorHID.current.SetLEDStatus(hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off);
+                // SpaceNavigatorHID.current.SetLEDStatus(hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off);
                 _hadFocus = hasFocus;
             }
             // Don't navigate if the Unity Editor doesn't have focus.
