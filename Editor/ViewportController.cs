@@ -27,8 +27,8 @@ namespace SpaceNavigatorDriver
         private const string CameraName = "Scene camera dummy";
 
         private static bool _wasHorizonLocked;
-        private const float _saveInterval = 30;
-        private static float _lastSaveTime;
+        private static TimeSpan _saveInterval = new TimeSpan(0, 0, 30);
+        private static DateTime _lastSaveTime;
         private static Type GameView;
 
 		private static double _lastRefreshTime;
@@ -69,10 +69,10 @@ namespace SpaceNavigatorDriver
             if (SpaceNavigatorHID.current == null) return;
 
             // Autosave settings.
-            if (!Application.isPlaying && DateTime.Now.Second - _lastSaveTime > _saveInterval)
+            if (!Application.isPlaying && DateTime.Now - _lastSaveTime > _saveInterval)
             {
                 Settings.Write();
-                _lastSaveTime = DateTime.Now.Second;
+                _lastSaveTime = DateTime.Now;
             }
 
             // Toggle led when Unity editor gains/loses focus
