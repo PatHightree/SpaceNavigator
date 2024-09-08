@@ -14,6 +14,11 @@ namespace SpaceNavigatorDriver
 #endif
     internal static class SpaceMouseHIDSetup
     {
+        private const int VID_Logitech = 0x46d;
+        private const int VID_3Dconnexion = 0x256f;
+        private const int PID_LogitechUsbReceiver = 0xc52b;
+        private const int PID_UniversalReceiver = 0xc652;
+
         private static bool _isInited;
         private static int _waitCounter = 0;
 
@@ -128,11 +133,13 @@ namespace SpaceNavigatorDriver
             var hidDescriptor = HIDDeviceDescriptor.FromJson(description.capabilities);
 
             // TODO: Match against list of compatible vendor and product ids, maybe from https://github.com/openantz/antz/wiki/3D-Mouse#developers
-            if (hidDescriptor.vendorId != 0x256f)
+            if (hidDescriptor.vendorId != VID_Logitech && hidDescriptor.vendorId != VID_3Dconnexion)
                 return false;
-
+            
             // Universal receiver: We need to find the actual device by usagePage and usage.
-            if (hidDescriptor.productId == 0xc652 && (hidDescriptor.usagePage != (UsagePage)1 || hidDescriptor.usage != 8))
+            // if (hidDescriptor.productId == PID_UniversalReceiver && (hidDescriptor.usagePage != (UsagePage)1 || hidDescriptor.usage != 8))
+            
+            if (hidDescriptor.productId is PID_UniversalReceiver or PID_LogitechUsbReceiver)
                 return false;
 
             return true;
