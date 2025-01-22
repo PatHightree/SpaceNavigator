@@ -115,7 +115,11 @@ After installation you can find the tool in the pull-down menu under _Window/Spa
 
 ## Known bugs and limitations
 - The New Input System package must be active for this driver to work
-- Grab Mode only works in the camera coordinate system
+- Grab Mode only works in the camera coordinate system  
+- Runtime editor navigation works but has the following requirements 
+  - The scene view must have focus
+  - The project settings for the input system must be configured like this:
+  ![ProjectSettings_RuntimeEditorNavigation.png](Documentation%7E/ProjectSettings_RuntimeEditorNavigation.png)
 
 ## Credits
 - Felix Herbst for the input helper and adding scene focus to runtime navigation
