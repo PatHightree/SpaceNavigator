@@ -93,8 +93,6 @@ namespace SpaceNavigatorDriver
                 GameView = assembly.GetType("UnityEditor.GameView");
             }
 
-            if (Application.isPlaying && Settings.RuntimeEditorNav && Settings.RuntimeEditorNavSuspendOnGameViewFocus && GameView.IsAssignableFrom(EditorWindow.focusedWindow?.GetType())) return;
-
             SceneView sceneView = SceneView.lastActiveSceneView;
             if (!sceneView) return;
 

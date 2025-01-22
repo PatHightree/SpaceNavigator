@@ -67,7 +67,6 @@ namespace SpaceNavigatorDriver {
 
 		// Runtime editor navigation
 		public static bool RuntimeEditorNav = true;
-		public static bool RuntimeEditorNavSuspendOnGameViewFocus;
 
 		// Inversion
 		public static Vector3 FlyInvertTranslation, FlyInvertRotation;
@@ -380,7 +379,7 @@ namespace SpaceNavigatorDriver {
 			GUILayout.Label("Focus Behavior");
 			OnlyNavWhenUnityHasFocus = GUILayout.Toggle(OnlyNavWhenUnityHasFocus, "Only navigate when Unity has focus");
 			EditorGUI.BeginDisabledGroup(!OnlyNavWhenUnityHasFocus);
-			ToggleLedWhenFocusChanged = GUILayout.Toggle(ToggleLedWhenFocusChanged, "Toggle LED when Unity gains/loses");
+			ToggleLedWhenFocusChanged = GUILayout.Toggle(ToggleLedWhenFocusChanged, "Toggle LED when Unity gains/loses focus");
 			EditorGUI.EndDisabledGroup();
 
 			#endregion
@@ -390,8 +389,8 @@ namespace SpaceNavigatorDriver {
 			GUILayout.Space(10);
 			GUILayout.Label("Runtime Behavior");
 			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
-			EditorGUI.BeginDisabledGroup(!RuntimeEditorNav);
-			RuntimeEditorNavSuspendOnGameViewFocus = GUILayout.Toggle(RuntimeEditorNavSuspendOnGameViewFocus, "Suspend on GameView focus");
+			EditorGUI.BeginDisabledGroup(true);
+			GUILayout.TextArea("Only works when scene view has focus and requires\n'Project Settings/Input System Package/Settings/Play Mode Input Behavior'\nto be set to\n'All Devices Respect Game View Focus'");
 			EditorGUI.EndDisabledGroup();
 
 			#endregion
@@ -452,7 +451,6 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetInt("ToggleLedWhenFocusChanged", ToggleLedWhenFocusChanged ? 1 : 0);
 			// Runtime Editor Navigation
 			PlayerPrefs.SetInt("RuntimeEditorNav", RuntimeEditorNav ? 1 : 0);
-			PlayerPrefs.SetInt("RuntimeEditorNavWithFocussedGameView", RuntimeEditorNavSuspendOnGameViewFocus ? 1 : 0);
 			// Axis Inversions
 			WriteAxisInversions(FlyInvertTranslation, FlyInvertRotation, "Fly");
 			WriteAxisInversions(OrbitInvertTranslation, OrbitInvertRotation, "Orbit");
@@ -501,7 +499,6 @@ namespace SpaceNavigatorDriver {
 			ToggleLedWhenFocusChanged = PlayerPrefs.GetInt("ToggleLedWhenFocusChanged", 0) == 1;
 			// Runtime Editor Navigation
 			RuntimeEditorNav = PlayerPrefs.GetInt("RuntimeEditorNav", 1) == 1;
-			RuntimeEditorNavSuspendOnGameViewFocus = PlayerPrefs.GetInt("RuntimeEditorNavWithFocussedGameView", 1) == 1;
 			// Axis Inversions
 			ReadAxisInversions(ref FlyInvertTranslation, ref FlyInvertRotation, "Fly");
 			ReadAxisInversions(ref OrbitInvertTranslation, ref OrbitInvertRotation, "Orbit");
