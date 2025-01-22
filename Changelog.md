@@ -1,5 +1,11 @@
 # Changelog
 
+2.0.0-pre.13
+- Applied Jonathan Owen's fixes for SpaceMouse Wireless
+- Added note how to get runtime editor navigation working
+- Fixed timer for auto-saving settings
+- Fixed more UnityEditor namespace causing errors in build
+
 2.0.0-pre.12
 - Fixed UnityEditor namespace error during player build
 
