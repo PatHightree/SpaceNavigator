@@ -32,8 +32,8 @@ namespace SpaceNavigatorDriver
         [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
         [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
         [InputControl(name = "rotation/x", offset = 6, format = "SHRT", parameters = "scale=true, scaleFactor=-80")] 
-        [InputControl(name = "rotation/y", offset = 8, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
-        [InputControl(name = "rotation/z", offset = 10, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
+        [InputControl(name = "rotation/y", offset = 10, format = "SHRT", parameters = "scale=true, scaleFactor=80")] 
+        [InputControl(name = "rotation/z", offset = 8, format = "SHRT", parameters = "scale=true, scaleFactor=80")]
         public ReportFormat1 report1;
 
         // 3rd report
@@ -55,10 +55,16 @@ namespace SpaceNavigatorDriver
                 matches: new InputDeviceMatcher()
                     .WithInterface("HID")
                     .WithManufacturer("3Dconnexion.*")
-                    .WithCapability("productId", 0xC652));
-            DebugLog("SpaceNavigatorWirelessHID : Register layout for SpaceNavigator Wireless productId:0xC652");
+                    .WithCapability("productId", 0xc652));         // 3DConnexion Universal Receiver
+            DebugLog("SpaceNavigatorWirelessHID : Register layout for SpaceNavigator/SpaceMouse Wireless via 3DConnexion Universal Receiver productId:0xc652");
+    
+            InputSystem.RegisterLayout<SpaceNavigatorWirelessHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc62e)); // SpaceMouse Wireless (cabled)
+            DebugLog("SpaceNavigatorWirelessHID : Register layout for SpaceNavigator/SpaceMouse Wireless (cabled) productId:0xc62e");
         }
-
         // When one of our custom devices is removed, we want to make sure that if
         // it is the '.current' device, we null out '.current'.
         public override unsafe void OnStateEvent(InputEventPtr eventPtr)

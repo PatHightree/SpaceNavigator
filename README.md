@@ -122,6 +122,7 @@ After installation you can find the tool in the pull-down menu under _Window/Spa
   ![ProjectSettings_RuntimeEditorNavigation.png](Documentation%7E/ProjectSettings_RuntimeEditorNavigation.png)
 
 ## Credits
+- Jonathan Owen for SpaceMouse Wireless fixes 
 - Felix Herbst for the input helper and adding scene focus to runtime navigation
 - William Iturzaeta from Canon Medical Systems USA, for hiring me to make this project compatible with Unity 2020  
   The proceeds of this job have been donated to cancer research
