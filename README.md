@@ -65,8 +65,7 @@ See the [download](#download) section for details.
     - Download the driver from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases)
     - Click the + button in the top left of the Package Manager window
     - Choose *Add package from disk...*
-- ~~The full [package](http://u3d.as/51X) is available on the Unity asset store.~~  
-  *Todo: Update asset store package to v2.0.0*  
+- The full [package](http://u3d.as/51X) is available on the Unity asset store.  
   
 If you want to install a specific version, download it from the github [releases page](https://github.com/PatHightree/SpaceNavigator/releases) and install it via the *From Disk* method.
 

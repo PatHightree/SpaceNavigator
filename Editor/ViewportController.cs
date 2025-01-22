@@ -109,7 +109,7 @@ namespace SpaceNavigatorDriver
             _lastRefreshTime = EditorApplication.timeSinceStartup;
             // Debug.Log($"Unity delta time: {Time.deltaTime} diy deltTime: {_diyDeltaTime}");
             
-            ReadDeviceData2(Settings.Mode, out Vector3 translation, out Vector3 rotation);
+            ReadDeviceData(Settings.Mode, out Vector3 translation, out Vector3 rotation);
             
             // Return if device is idle.
             if (ApproximatelyEqual(translation, Vector3.zero, Settings.TransSensEpsilon) &&
@@ -305,38 +305,7 @@ namespace SpaceNavigatorDriver
             Fly(sceneView, translation, rotation);
         }
 
-        // private static void ReadDeviceData(Vector3 translationInversion, Vector3 rotationInversion, out Vector3 translation, out Vector3 rotation)
-        // {
-        //     // Read data from device
-        //     translation = SpaceNavigatorHID.current.Translation.ReadValue();
-        //     rotation = SpaceNavigatorHID.current.Rotation.ReadValue();
-        //     
-        //     if (Settings.PresentationMode)
-        //     {
-        //         translation = Damp(_oldTranslation, translation, Settings.PresentationDamping, (float)_diyDeltaTime);
-        //         rotation = Damp(_oldRotation, rotation, Settings.PresentationDamping, (float)_diyDeltaTime);
-        //         _oldTranslation = translation;
-        //         _oldRotation = rotation;
-        //     }
-        //     
-        //     // Apply inversion of axes for fly/grabmove mode.
-        //     translation = Vector3.Scale(translation, translationInversion);
-        //     rotation = Vector3.Scale(rotation, rotationInversion);
-        //
-        //     // Make navigation framerate independent
-        //     translation *= (float)_diyDeltaTime * _deltaTimeFactor;
-        //     rotation *= (float)_diyDeltaTime * _deltaTimeFactor;
-        //     
-        //     // Apply sensitivity
-        //     translation *= Settings.TransSens[Settings.CurrentGear];
-        //     rotation *= Settings.RotSens;
-        //     
-        //     // Apply locks
-        //     translation.Scale(Settings.GetLocks(DoF.Translation));
-        //     rotation.Scale(Settings.GetLocks(DoF.Rotation));
-        // }
-
-        private static void ReadDeviceData2(OperationMode mode, out Vector3 translation, out Vector3 rotation)
+        private static void ReadDeviceData(OperationMode mode, out Vector3 translation, out Vector3 rotation)
         {
             // Read data from device
             translation = SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value;
