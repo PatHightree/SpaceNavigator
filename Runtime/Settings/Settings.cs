@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Assembly = System.Reflection.Assembly;
 #if UNITY_EDITOR
 using UnityEditor;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 #endif
 
 namespace SpaceNavigatorDriver {
@@ -392,6 +394,16 @@ namespace SpaceNavigatorDriver {
 			EditorGUI.BeginDisabledGroup(true);
 			GUILayout.TextArea("Only works when scene view has focus and requires\n'Project Settings/Input System Package/Settings/Play Mode Input Behavior'\nto be set to\n'All Devices Respect Game View Focus'");
 			EditorGUI.EndDisabledGroup();
+
+			#endregion
+			
+			#region - Version number -
+
+			GUILayout.Space(10);
+			Assembly assembly = typeof(SpaceNavigatorHID).Assembly;
+			PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly);
+			string version = packageInfo.version;
+			GUILayout.Label($"Version {version}");
 
 			#endregion
 			
