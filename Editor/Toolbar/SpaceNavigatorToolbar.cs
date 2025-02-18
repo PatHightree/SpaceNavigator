@@ -36,6 +36,8 @@ namespace SpaceNavigatorDriver
         {
             OverlayToolbar toolbar = new OverlayToolbar();
             toolbar.Add(new NavigationMode());
+            if (Settings.Mode == OperationMode.Telekinesis)
+                toolbar.Add(new CoordinateSystem());
             if (Settings.ShowSpeedGearsAsRadioButtons)
             {
                 m_speedGearButtons.Clear();
