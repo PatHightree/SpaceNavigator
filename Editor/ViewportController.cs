@@ -250,10 +250,21 @@ namespace SpaceNavigatorDriver
                 else
                 {
                     // Move the object in the reference coordinate system.
-                    Vector3 worldTranslation = reference.TransformPoint(translation) -
-                                               reference.position;
+                    Vector3 worldTranslation = reference.TransformPoint(translation) - reference.position;
                     _unsnappedTranslations[transform] += worldTranslation;
-                    _unsnappedRotations[transform] = (reference.rotation * euler * Quaternion.Inverse(reference.rotation)) * _unsnappedRotations[transform];
+                    
+                    if (Settings.LockHorizon)
+                    {
+                        // Apply yaw in world space
+                        Quaternion yaw = Quaternion.Euler(0f, rotation.y, 0f);
+                        _unsnappedRotations[transform] = yaw * _unsnappedRotations[transform];
+                        // Apply pitch in reference coordinate system
+                        Quaternion pitch = Quaternion.Euler(rotation.x, 0f, 0f);
+                        _unsnappedRotations[transform] = (transform.rotation * pitch * Quaternion.Inverse(transform.rotation)) * _unsnappedRotations[transform];
+                    }
+                    else
+                        // Rotate object in reference coordinate system.
+                        _unsnappedRotations[transform] = (reference.rotation * euler * Quaternion.Inverse(reference.rotation)) * _unsnappedRotations[transform];
                 }
 
                 // Perform rotation with or without snapping.
