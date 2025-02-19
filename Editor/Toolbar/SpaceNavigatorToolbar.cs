@@ -50,6 +50,7 @@ namespace SpaceNavigatorDriver
                 toolbar.Add(new SpeedGearDropdown());
 
             toolbar.Add(new PresentationMode());
+            toolbar.Add(new HorizonLock());
             bool showSnapButtons = Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove;
             if (showSnapButtons)
             {

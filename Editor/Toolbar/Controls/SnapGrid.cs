@@ -18,7 +18,7 @@ namespace SpaceNavigatorDriver
                 icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "Snap Grid.psd");
                 tooltip = "Snap Grid";
                 this.RegisterValueChangedCallback(Test);
-                MayBeVisibe();
+                MayBeVisible();
             }
             
             private void Test(ChangeEvent<bool> evt)
@@ -26,7 +26,7 @@ namespace SpaceNavigatorDriver
                 Settings.SnapTranslation = evt.newValue;
             }
 
-            private void MayBeVisibe()
+            private void MayBeVisible()
             {
                 SetEnabled(Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove);
             }

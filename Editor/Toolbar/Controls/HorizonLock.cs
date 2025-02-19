@@ -9,25 +9,27 @@ namespace SpaceNavigatorDriver
     public partial class SpaceNavigatorToolbar
     {
         [EditorToolbarElement(ID, typeof(SceneView))]
-        private class SnapAngle : EditorToolbarToggle
+        private class HorizonLock : EditorToolbarToggle
         {
-            public const string ID = "SpaceNavigator/SnapAngle";
+            public const string ID = "SpaceNavigator/HorizonLock";
 
-            public SnapAngle()
+            public HorizonLock()
             {
-                icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "Snap Angle.psd");
-                tooltip = "Snap Angle";
+                icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "Horizon Lock.psd");
+                tooltip = "Horizon Lock";
+                value = Settings.LockHorizon;
                 this.RegisterValueChangedCallback(Test);
                 MayBeVisible();
             }
+            
             private void Test(ChangeEvent<bool> evt)
             {                
-                Settings.SnapRotation = evt.newValue;
+                Settings.LockHorizon = evt.newValue;
             }
 
             private void MayBeVisible()
             {
-                SetEnabled(Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove);
+                SetEnabled(!(Settings.Mode == OperationMode.Telekinesis && Settings.CoordSys == SpaceNavigatorDriver.CoordinateSystem.World));
             }
         }
     }

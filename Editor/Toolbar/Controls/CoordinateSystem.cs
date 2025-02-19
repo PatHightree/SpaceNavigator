@@ -33,21 +33,25 @@ namespace SpaceNavigatorDriver
                 {
                     text = "Camera";
                     Settings.CoordSys = SpaceNavigatorDriver.CoordinateSystem.Camera;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                 });
                 menu.AddItem(new GUIContent("World"), Settings.CoordSys == SpaceNavigatorDriver.CoordinateSystem.World, () =>
                 {
                     text = "World";
                     Settings.CoordSys = SpaceNavigatorDriver.CoordinateSystem.World;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                 });
                 menu.AddItem(new GUIContent("Parent"), Settings.CoordSys == SpaceNavigatorDriver.CoordinateSystem.Parent, () =>
                 {
                     text = "Parent";
                     Settings.CoordSys = SpaceNavigatorDriver.CoordinateSystem.Parent;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                 });
                 menu.AddItem(new GUIContent("Local"), Settings.CoordSys == SpaceNavigatorDriver.CoordinateSystem.Local, () =>
                 {
                     text = "Local";
                     Settings.CoordSys = SpaceNavigatorDriver.CoordinateSystem.Local;
+                    RefreshLayout.Invoke(this, EventArgs.Empty);
                 });
                 menu.ShowAsContext();
             }

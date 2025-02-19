@@ -251,7 +251,6 @@ namespace SpaceNavigatorDriver {
 
 			GUILayout.Space(10);
 			GUILayout.Label("Lock");
-			LockHorizon = GUILayout.Toggle(LockHorizon, "Horizon", GUILayout.Width(120));
 
 			#region - Translation -
 			GUILayout.BeginHorizontal();
