@@ -17,14 +17,14 @@ namespace SpaceNavigatorDriver
             {
                 icon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconPath + "Horizon Lock.psd");
                 tooltip = "Horizon Lock";
-                value = Settings.LockHorizon;
+                value = Settings.HorizonLock;
                 this.RegisterValueChangedCallback(Test);
                 MayBeVisible();
             }
             
             private void Test(ChangeEvent<bool> evt)
             {                
-                Settings.LockHorizon = evt.newValue;
+                Settings.HorizonLock = evt.newValue;
             }
 
             private void MayBeVisible()

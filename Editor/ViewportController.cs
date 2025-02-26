@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Object = UnityEngine.Object;
 
 namespace SpaceNavigatorDriver
@@ -19,6 +20,7 @@ namespace SpaceNavigatorDriver
         private static Dictionary<Transform, Quaternion> _unsnappedRotations = new Dictionary<Transform, Quaternion>();
         private static Dictionary<Transform, Vector3> _unsnappedTranslations = new Dictionary<Transform, Vector3>();
         private static bool _wasIdle;
+        private static Vector2 _lastCursorPosition;
 
         // Rig components
         private static GameObject _pivotGO, _cameraGO;
@@ -98,9 +100,9 @@ namespace SpaceNavigatorDriver
 
             SyncRigWithScene();
 
-            if (Settings.LockHorizon && !_wasHorizonLocked)
+            if (Settings.HorizonLock && !_wasHorizonLocked)
                 StraightenHorizon();
-            _wasHorizonLocked = Settings.LockHorizon;
+            _wasHorizonLocked = Settings.HorizonLock;
 
             Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
             Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
@@ -139,6 +141,7 @@ namespace SpaceNavigatorDriver
                     throw new ArgumentOutOfRangeException();
             }
             
+            CursorLock();
             _wasIdle = false;
         }
 
@@ -153,7 +156,7 @@ namespace SpaceNavigatorDriver
                 sceneView.size -= translation.z;
             else
             {
-                if (Settings.LockHorizon)
+                if (Settings.HorizonLock)
                 {
                     // Perform yaw in world coordinates.
                     _camera.Rotate(Vector3.up, rotation.y, Space.World);
@@ -186,7 +189,7 @@ namespace SpaceNavigatorDriver
             
             _camera.Translate(translation, Space.Self);
 
-            if (Settings.LockHorizon)
+            if (Settings.HorizonLock)
             {
                 _camera.RotateAround(Tools.handlePosition, Vector3.up, rotation.y);
                 _camera.RotateAround(Tools.handlePosition, _camera.right, rotation.x);
@@ -253,7 +256,7 @@ namespace SpaceNavigatorDriver
                     Vector3 worldTranslation = reference.TransformPoint(translation) - reference.position;
                     _unsnappedTranslations[transform] += worldTranslation;
                     
-                    if (Settings.LockHorizon)
+                    if (Settings.HorizonLock)
                     {
                         // Apply yaw in world space
                         Quaternion yaw = Quaternion.Euler(0f, rotation.y, 0f);
@@ -471,6 +474,20 @@ namespace SpaceNavigatorDriver
             float num3 = lhs.z - rhs.z;
             float num4 = num * num + num2 * num2 + num3 * num3;
             return num4 < (9.99999944f * Mathf.Pow(10, -epsilon));
+        }
+
+        /// <summary>
+        /// On MacOS 3dconnexion pitch & roll input always moves the mouse pointer.
+        /// This method locks the pointer in place while input is being received.
+        /// </summary>
+        private static void CursorLock()
+        {
+            if (Application.platform != RuntimePlatform.OSXEditor) return;
+            if (_wasIdle)
+                _lastCursorPosition = Mouse.current.position.ReadValue();
+            else
+                if (EditorApplication.isFocused)
+                    Mouse.current.WarpCursorPosition(_lastCursorPosition);
         }
 
         #endregion - Deadzone -

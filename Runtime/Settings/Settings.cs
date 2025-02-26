@@ -28,7 +28,8 @@ namespace SpaceNavigatorDriver {
 		public static float SnapDistance = 0.1f;
 
 		// Locking
-		public static bool LockHorizon = true;
+		public static bool HorizonLock = true;
+		public static bool MacOSCursorLock = true;
 		public static Locks NavTranslationLock;
 		public static Locks NavRotationLock;
 		public static Locks ManipulateTranslationLock;
@@ -290,6 +291,9 @@ namespace SpaceNavigatorDriver {
 				GUI.enabled = true;
 			}
 			GUILayout.EndHorizontal();
+			if (Application.platform == RuntimePlatform.OSXEditor)
+				MacOSCursorLock = GUILayout.Toggle(MacOSCursorLock, "Lock mouse pointer while navigating", GUILayout.Width(300));
+			
 			#endregion - Rotation -
 
 			#endregion - Locking -
@@ -441,7 +445,9 @@ namespace SpaceNavigatorDriver {
 			PlayerPrefs.SetInt("Snap Rotation", SnapRotation ? 1 : 0);
 			PlayerPrefs.SetInt("Snap Angle", SnapAngle);
 			// Lock Horizon
-			PlayerPrefs.SetInt("LockHorizon", LockHorizon ? 1 : 0);
+			PlayerPrefs.SetInt("LockHorizon", HorizonLock ? 1 : 0);
+			// Lock Cursor on MacOS
+			PlayerPrefs.SetInt("MacOSCursorLock", MacOSCursorLock ? 1 : 0);
 			// Lock Axis
 			NavTranslationLock.Write();
 			NavRotationLock.Write();
@@ -489,7 +495,9 @@ namespace SpaceNavigatorDriver {
 			SnapRotation = PlayerPrefs.GetInt("Snap Rotation", 0) == 1;
 			SnapAngle = PlayerPrefs.GetInt("Snap Angle", 45);
 			// Lock Horizon
-			LockHorizon = PlayerPrefs.GetInt("LockHorizon", 1) == 1;
+			HorizonLock = PlayerPrefs.GetInt("LockHorizon", 1) == 1;
+			// Lock Cursor on MacOS
+			MacOSCursorLock = PlayerPrefs.GetInt("MacOSCursorLock", 1) == 1;
 			// Lock Axis
 			NavTranslationLock.Read();
 			NavRotationLock.Read();
