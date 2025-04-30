@@ -1,5 +1,13 @@
 # Changelog
 
+2.0.0
+- Lock mouse cursor while navigating on MacOS (the 3dconnexion driver normally prevents the device from moving the mouse cursor)
+- Horizon lock works in telekinesis mode (not in world space though)
+- Reenabled coordinate system dropdown in toolbar in telekinesis mode
+
+2.0.0-pre.14
+- Added version number to settings window
+
 2.0.0-pre.13
 - Applied Jonathan Owen's fixes for SpaceMouse Wireless
 - Added note how to get runtime editor navigation working

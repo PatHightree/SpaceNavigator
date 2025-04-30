@@ -29,16 +29,12 @@ You can have both the old and new Input System active, see this [tip](#tip_proje
 This [page](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Migration.html) can help with upgrading to the new Input System.
 
 ### Editor toolbar
-![](Documentation~/Toolbar-default.png)  
+![](Documentation~/Toolbar-speed.png)  
 Makes common operations available in the scene view.  
 - Navigation mode switching  
 - Speed switching
 - Presentation mode  
-- Opening the settings window  
-
-With optional extra speedy speed controls.  
-
-![](Documentation~/Toolbar-speed.png)
+- Opening the settings window
 
 ### Presentation mode
 Sometimes you want to give a demo or capture a video, then you want your navigation to be as smooth as possible.  
