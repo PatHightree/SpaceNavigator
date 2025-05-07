@@ -18,7 +18,7 @@ namespace SpaceNavigatorDriver
         private const bool Debug = true;
         private const string IconPath = "Packages/com.pathightree.spacenavigator-driver/Editor/Toolbar/Icons/";
         private static List<SpeedGearButton> m_speedGearButtons = new List<SpeedGearButton>();
-
+        private static PresentationMode m_presentationMode;
         public static event EventHandler RefreshLayout;
         
         SpaceNavigatorToolbar()
@@ -29,6 +29,8 @@ namespace SpaceNavigatorDriver
                 // Toggling the 'displayed' property causes the internal method 'RebuildContent' to be called
                 displayed = false;
                 displayed = true;
+                // For some reason, this toggle's value gets cleared when nav mode is changed 
+                m_presentationMode.SetValueWithoutNotify(Settings.PresentationMode);
             };
         }
 
@@ -49,7 +51,8 @@ namespace SpaceNavigatorDriver
             else
                 toolbar.Add(new SpeedGearDropdown());
 
-            toolbar.Add(new PresentationMode());
+            m_presentationMode = new PresentationMode();
+            toolbar.Add(m_presentationMode);
             bool showSnapButtons = Settings.Mode == OperationMode.Telekinesis || Settings.Mode == OperationMode.GrabMove;
             if (showSnapButtons)
             {
