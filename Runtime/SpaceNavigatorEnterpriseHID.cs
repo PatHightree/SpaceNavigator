@@ -68,6 +68,13 @@ namespace SpaceNavigatorDriver
             DebugLog("SpaceNavigatorEnterpriseHID : Register layout for SpaceNavigator Enterprise productId:0x????");
         }
 
+        // In the player, trigger the calling of our static constructor
+        // by having an empty method annotated with RuntimeInitializeOnLoadMethod.
+        [RuntimeInitializeOnLoadMethod]
+        private static void Init()
+        {
+        }
+        
         // When one of our custom devices is removed, we want to make sure that if
         // it is the '.current' device, we null out '.current'.
         public override unsafe void OnStateEvent(InputEventPtr eventPtr)
