@@ -38,16 +38,19 @@ namespace SpaceNavigatorDriver
                 {
                     icon = m_gearMinuscule;
                     Settings.CurrentGear = 2;
+                    Settings.Write();
                 });
                 menu.AddItem(new GUIContent("Human"), Settings.CurrentGear == 1, () =>
                 {
                     icon = m_gearHuman;
                     Settings.CurrentGear = 1;
+                    Settings.Write();
                 });
                 menu.AddItem(new GUIContent("Huge"), Settings.CurrentGear == 0, () =>
                 {
                     icon = m_gearHuge;
                     Settings.CurrentGear = 0;
+                    Settings.Write();
                 });
                 menu.ShowAsContext();
             }

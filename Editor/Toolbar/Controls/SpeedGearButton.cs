@@ -29,6 +29,7 @@ namespace SpaceNavigatorDriver
             private void Test(ChangeEvent<bool> evt)
             {
                 Settings.CurrentGear = Gear;
+                Settings.Write();
                 m_buttons.ForEach(b => b.SetValueWithoutNotify(b.Gear == Gear));
             }
         }

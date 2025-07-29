@@ -24,6 +24,7 @@ namespace SpaceNavigatorDriver
             private void Test(ChangeEvent<bool> evt)
             {                
                 Settings.SnapTranslation = evt.newValue;
+                Settings.Write();
             }
 
             private void MayBeVisible()
