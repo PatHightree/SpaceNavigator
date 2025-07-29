@@ -31,6 +31,7 @@ namespace SpaceNavigatorDriver
                 displayed = true;
                 // For some reason, this toggle's value gets cleared when nav mode is changed 
                 m_presentationMode.SetValueWithoutNotify(Settings.PresentationMode);
+                Settings.Write();
             };
         }
 

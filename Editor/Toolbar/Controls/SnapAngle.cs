@@ -23,6 +23,7 @@ namespace SpaceNavigatorDriver
             private void Test(ChangeEvent<bool> evt)
             {                
                 Settings.SnapRotation = evt.newValue;
+                Settings.Write();
             }
 
             private void MayBeVisible()

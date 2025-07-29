@@ -460,6 +460,7 @@ namespace SpaceNavigatorDriver {
 				PlayerPrefs.SetFloat("Translation sensitivity minimum" + gear, TransSensMin[gear]);
 				PlayerPrefs.SetFloat("Translation sensitivity maximum" + gear, TransSensMax[gear]);
 			}
+			PlayerPrefs.SetInt("CurrentGear", CurrentGear);
 			PlayerPrefs.SetFloat("Rotation sensitivity", RotSens);
 			PlayerPrefs.SetFloat("Rotation sensitivity minimum", RotSensMin);
 			PlayerPrefs.SetFloat("Rotation sensitivity maximum", RotSensMax);
@@ -510,6 +511,7 @@ namespace SpaceNavigatorDriver {
 				TransSensMin[gear] = PlayerPrefs.GetFloat("Translation sensitivity minimum" + gear, TransSensMinDefault[gear]);
 				TransSensMax[gear] = PlayerPrefs.GetFloat("Translation sensitivity maximum" + gear, TransSensMaxDefault[gear]);
 			}
+			CurrentGear = PlayerPrefs.GetInt("CurrentGear", 1);
 			RotSens = PlayerPrefs.GetFloat("Rotation sensitivity", RotSensDefault);
 			RotSensMin = PlayerPrefs.GetFloat("Rotation sensitivity minimum", RotSensMinDefault);
 			RotSensMax = PlayerPrefs.GetFloat("Rotation sensitivity maximum", RotSensMaxDefault);

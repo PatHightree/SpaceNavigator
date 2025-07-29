@@ -23,6 +23,7 @@ namespace SpaceNavigatorDriver
             private void Test(ChangeEvent<bool> evt)
             {
                 Settings.PresentationMode = evt.newValue;
+                Settings.Write();
             }
         }
     }
