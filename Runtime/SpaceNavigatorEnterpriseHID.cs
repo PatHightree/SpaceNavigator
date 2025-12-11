@@ -36,9 +36,9 @@ namespace SpaceNavigatorDriver
         [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
 
         [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
-        [InputControl(name = "rotation/x", offset = 7, format = "SHRT", parameters = "scale=true, scaleFactor=-10")] 
-        [InputControl(name = "rotation/y", offset = 9, format = "SHRT", parameters = "scale=true, scaleFactor=10")] 
-        [InputControl(name = "rotation/z", offset = 11, format = "SHRT", parameters = "scale=true, scaleFactor=10")]
+        [InputControl(name = "rotation/x", offset = 6, format = "SHRT", parameters = "")] 
+        [InputControl(name = "rotation/y", offset = 10, format = "SHRT", parameters = "")] 
+        [InputControl(name = "rotation/z", offset = 8, format = "SHRT", parameters = "")]
 
         public ReportFormat1 report1;
 
@@ -74,7 +74,7 @@ namespace SpaceNavigatorDriver
         private static void Init()
         {
         }
-        
+
         // When one of our custom devices is removed, we want to make sure that if
         // it is the '.current' device, we null out '.current'.
         public override unsafe void OnStateEvent(InputEventPtr eventPtr)
