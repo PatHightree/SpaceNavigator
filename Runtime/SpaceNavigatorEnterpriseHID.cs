@@ -36,9 +36,9 @@ namespace SpaceNavigatorDriver
         [InputControl(name = "translation/z", offset = 2, format = "SHRT", parameters = "scale=true, scaleFactor=-10")]
 
         [InputControl(name = "rotation", format = "VC3S", layout = "Vector3", displayName = "Rotation")] 
-        [InputControl(name = "rotation/x", offset = 6, format = "SHRT", parameters = "")] 
-        [InputControl(name = "rotation/y", offset = 10, format = "SHRT", parameters = "")] 
-        [InputControl(name = "rotation/z", offset = 8, format = "SHRT", parameters = "")]
+        [InputControl(name = "rotation/x", offset = 6, format = "SHRT", parameters = "scale=true, scaleFactor=-10")] 
+        [InputControl(name = "rotation/y", offset = 10, format = "SHRT", parameters = "scale=true, scaleFactor=10")] 
+        [InputControl(name = "rotation/z", offset = 8, format = "SHRT", parameters = "scale=true, scaleFactor=10")]
 
         public ReportFormat1 report1;
 
