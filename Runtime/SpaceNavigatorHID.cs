@@ -68,13 +68,50 @@ namespace SpaceNavigatorDriver
             Debug.LogError("SpaceNavigator Driver cannot function because the <b>New Input System Package</b> is not active !\n" +
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
-            // Wirelessデバイスのみ使用する場合、汎用マッチャーは無効化
-            // （SpaceNavigatorWirelessHIDが特定のproductIdで処理）
-            // InputSystem.RegisterLayout<SpaceNavigatorHID>(
-            //     matches: new InputDeviceMatcher()
-            //         .WithInterface("HID")
-            //         .WithManufacturer("3Dconnexion.*")
-            // );
+            // 有線デバイス用のレイアウトを個別に登録
+            // （WirelessのproductIdはSpaceNavigatorWirelessHIDで処理するため除外）
+
+            // SpaceNavigator (有線)
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc626));
+
+            // SpacePilot
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc627));
+
+            // SpaceExplorer
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc628));
+
+            // SpaceMouse Pro
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc62b));
+
+            // SpaceMouse Compact
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc635));
+
+            // SpaceMouse Enterprise
+            InputSystem.RegisterLayout<SpaceNavigatorHID>(
+                matches: new InputDeviceMatcher()
+                    .WithInterface("HID")
+                    .WithManufacturer("3Dconnexion.*")
+                    .WithCapability("productId", 0xc633));
 #if UNITY_EDITOR
             EditorApplication.quitting += Quit;
 #else
