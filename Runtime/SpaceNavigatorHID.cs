@@ -68,12 +68,13 @@ namespace SpaceNavigatorDriver
             Debug.LogError("SpaceNavigator Driver cannot function because the <b>New Input System Package</b> is not active !\n" +
                            "Please enable it in <i>Project Settings/Player/Active Input Handling</i>.");
 #endif
-            // If no layout with a matching product ID is found, this will be the default. 
-            InputSystem.RegisterLayout<SpaceNavigatorHID>(
-                matches: new InputDeviceMatcher()
-                    .WithInterface("HID")
-                    .WithManufacturer("3Dconnexion.*")
-            );
+            // Wirelessデバイスのみ使用する場合、汎用マッチャーは無効化
+            // （SpaceNavigatorWirelessHIDが特定のproductIdで処理）
+            // InputSystem.RegisterLayout<SpaceNavigatorHID>(
+            //     matches: new InputDeviceMatcher()
+            //         .WithInterface("HID")
+            //         .WithManufacturer("3Dconnexion.*")
+            // );
 #if UNITY_EDITOR
             EditorApplication.quitting += Quit;
 #else
