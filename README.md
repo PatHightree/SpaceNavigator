@@ -6,7 +6,7 @@ It can also be used at runtime via scripting.
 
 The default mode is **Fly** mode and when you're flying around, this driver keeps your horizon horizontal.  
 So you don't have to worry about ending up upside down, just go where you want and get some work done.  
-To comfortably navigate large areas and minute details, you can easilly switch between 3 customizable sensitivity presets.  
+To comfortably navigate large areas and minute details, you can easily switch between 3 customizable sensitivity presets.  
 To move stuff around, you can use 2 modes: Telekinesis and GrabMove.  
 In **Telekinesis** mode, you can move the stuff you selected with the SpaceNavigator, while your camera stays put.  
 (this mode can be operated in Camera-, World-, Parent- and Local coordinates)  
@@ -15,6 +15,9 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 
 If you encounter issues, please report them via the project's [Github Issues](https://github.com/PatHightree/SpaceNavigator/issues) page.  
 If you have feedback, please use this [thread](https://discussions.unity.com/t/spacenavigator-driver-opensource/504914) on the Unity Discussions site.
+
+## Linux Support
+SpaceNavigator works on Linux. Click [here](./linux.md) for setup instructions.
 
 ## What's new in 2.0.0 ?
 ### 3DConnexion driver no longer required
