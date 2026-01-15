@@ -395,9 +395,11 @@ namespace SpaceNavigatorDriver {
 			GUILayout.Space(10);
 			GUILayout.Label("Runtime Behavior");
 			RuntimeEditorNav = GUILayout.Toggle(RuntimeEditorNav, "Runtime Editor Navigation");
+#if !UNITY_EDITOR_LINUX
 			EditorGUI.BeginDisabledGroup(true);
 			GUILayout.TextArea("Only works when scene view has focus and requires\n'Project Settings/Input System Package/Settings/Play Mode Input Behavior'\nto be set to\n'All Devices Respect Game View Focus'");
 			EditorGUI.EndDisabledGroup();
+#endif
 
 			#endregion
 			
@@ -406,8 +408,11 @@ namespace SpaceNavigatorDriver {
 			GUILayout.Space(10);
 			Assembly assembly = typeof(SpaceNavigatorHID).Assembly;
 			PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly);
-			string version = packageInfo.version;
-			GUILayout.Label($"Version {version}");
+			if (packageInfo != null)
+			{
+				string version = packageInfo.version;
+				GUILayout.Label($"Version {version}");
+			}
 
 			#endregion
 			
