@@ -6,9 +6,9 @@ so we can rely on it instead.
 
 ## Installation
 
-### 1. Install [spacenavd](https://github.com/FreeSpacenav/spacenavd).
+### 1. Install [spacenavd](https://github.com/FreeSpacenav/spacenavd) and libspnav0.
 
-For Ubuntu and other Debian-like systems, you can just `apt install spacenavd`.
+For Ubuntu and other Debian-like systems, you can just `sudo apt install spacenavd libspnav0`.
 
 Before you continue, make sure the driver works by trying it out in another application like Blender.
 
