@@ -4,11 +4,21 @@ Unity's Input System does not support HID devices on Linux, so we cannot use it.
 a good open-source driver for 3DConnexion 6DOF devices called [spacenavd](https://github.com/FreeSpacenav/spacenavd), 
 so we can rely on it instead.
 
+## Sandboxing
+
+If you've installed Unity from snap or flatpak, then SpaceNavigator will not work.
+Install Unity via [Unity Hub](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux) instead.
+See [this guide](https://www.reddit.com/r/Fedora/comments/wupxy7/comment/md4yrch/) for RPM-based distros.
+
+If you insist on using a sandboxed environment, please configure it so that the file `/var/run/spnav.sock`
+is exposed to the sandbox.
+
 ## Installation
 
 ### 1. Install [spacenavd](https://github.com/FreeSpacenav/spacenavd) and libspnav0.
 
 For Ubuntu and other Debian-like systems, you can just `sudo apt install spacenavd libspnav0`.
+For Fedora, it's `sudo dnf install spacenavd libspnav`.
 
 Before you continue, make sure the driver works by trying it out in another application like Blender.
 
