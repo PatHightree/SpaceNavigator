@@ -15,7 +15,7 @@ is exposed to the sandbox.
 
 ## Installation
 
-### 1. Install [spacenavd](https://github.com/FreeSpacenav/spacenavd) and libspnav0.
+### 1. Install [spacenavd](https://github.com/FreeSpacenav/spacenavd) and [libspnav](https://github.com/FreeSpacenav/libspnav).
 
 For Ubuntu and other Debian-like systems, you can just `sudo apt install spacenavd libspnav0`.
 For Fedora, it's `sudo dnf install spacenavd libspnav`.
@@ -28,13 +28,17 @@ Create a file under `/etc/spnavrc` with the following contents:
 
     socket=/var/run/spnav.sock
 
-Then restart the spacenavd service.
+### 3. Set up the spacenavd service
+
+Enable the service with `sudo systemctl enable spacenavd`  
+Then start the spacenavd service with `sudo systemctl start spacenavd`, the blue light on the device should now come on.
 
 If you are successful, the output of `file /var/run/spnav.sock` will look like this:
 
     /var/run/spnav.sock: socket
 
-### 3. Install SpaceNavigator normally
+### 4. Install the SpaceNavigator Driver package in Unity
 
 ... as per instructions in the main [README](./README.md) file. Your 6DOF device should now work in the editor.
 If it doesn't, try unchecking the "Only navigate when Unity has focus" option.
+
