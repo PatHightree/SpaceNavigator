@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -179,6 +180,7 @@ namespace SpaceNavigatorDriver
             if (result == -1)
             {
                 Debug.LogError($"Failed to connect to spacenavd");
+                return;
             }
 
             isConnected = true;
@@ -204,4 +206,3 @@ namespace SpaceNavigatorDriver
 
     }
 }
-#endif
