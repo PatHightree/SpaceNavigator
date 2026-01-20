@@ -159,9 +159,9 @@ namespace SpaceNavigatorDriver
                 sliderX = ev.motion.x;
                 sliderY = ev.motion.y;
                 sliderZ = ev.motion.z;
-                sliderRX = ev.motion.rx;
-                sliderRY = ev.motion.ry;
-                sliderRZ = ev.motion.rz;
+                sliderRX = -ev.motion.rx;
+                sliderRY = -ev.motion.ry;
+                sliderRZ = -ev.motion.rz;
             }
             else
             {
