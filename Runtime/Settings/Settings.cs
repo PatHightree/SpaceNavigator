@@ -483,6 +483,7 @@ namespace SpaceNavigatorDriver {
 			// Calibration
 			PlayerPrefs.SetFloat("Translation sensitivity epsilon", TransSensEpsilon);
 			PlayerPrefs.SetFloat("Rotation sensitivity epsilon", RotSensEpsilon);
+			PlayerPrefs.Save();
 		}
 
 		/// <summary>
