@@ -20,6 +20,19 @@ namespace SpaceNavigatorDriver {
 			}
 		}
 
+		[MenuItem("Window/SpaceNavigator/Reset Window Position", false, 2)]
+		public static void ResetPosition() {
+			SpaceNavigatorWindow window = GetWindow(typeof(SpaceNavigatorWindow)) as SpaceNavigatorWindow;
+			if (window)
+			{
+				Rect rect = window.position;
+				rect.x = Screen.currentResolution.width / 2;
+				rect.y = Screen.currentResolution.height / 2;
+				window.position = rect; 
+				window.Show();
+			}
+		}
+
 		public static void OnDisable() {
 			// Write settings to PlayerPrefs when EditorWindow is closed.
 			Settings.Write();
