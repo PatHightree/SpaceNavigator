@@ -1,6 +1,6 @@
 {
   "name": "com.pathightree.spacenavigator-driver",
-  "version": "2.0.0",
+  "version": "2.1.0-pre.1",
   "displayName": "SpaceNavigator Driver",
   "description": "Driver for 3DConnexion devices\nThis driver lets you fly around your scene and allows you to move items around.\nIt can also be used at runtime via scripting.",
   "unity": "2019.1",
@@ -10,7 +10,7 @@
  "repository": {
     "type": "git",
     "url": "https://github.com/PatHightree/SpaceNavigator.git",
-    "revision": "220141cef5bc34da382552a32447b53ecda0ed6a"
+    "revision": "8937e56476e97f0dc614ce00deaa6e0f67084a85"
   },
   "keywords": [
     "3DConnexion",
