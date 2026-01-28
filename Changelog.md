@@ -1,5 +1,12 @@
 # Changelog
 
+2.1.0-pre.1
+- @AshaTheSorceress added Linux support based on spacenavd and libspnav
+- A menu option to retrieve the settings window if it gets positioned outside of the visible desktop
+- @pfcwuenscher fixed a rotation issue for the Spacemouse Enterprise
+- @Jo-Solem fixed an initialization bug for SpaceNavigatorWirelessHID
+- Misc. bug fixes
+
 2.0.0
 - Lock mouse cursor while navigating on MacOS (the 3dconnexion driver normally prevents the device from moving the mouse cursor)
 - Horizon lock works in telekinesis mode (not in world space though)

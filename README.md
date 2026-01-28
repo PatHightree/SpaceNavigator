@@ -16,7 +16,7 @@ Translation can be snapped to a grid and rotation can be angle-snapped.
 If you encounter issues, please report them via the project's [Github Issues](https://github.com/PatHightree/SpaceNavigator/issues) page.  
 If you have feedback, please use this [thread](https://discussions.unity.com/t/spacenavigator-driver-opensource/504914) on the Unity Discussions site.
 
-## Linux Support
+## Linux Support in 2.1.0
 SpaceNavigator works on Linux. Click [here](./linux.md) for setup instructions.
 
 ## What's new in 2.0.0 ?
@@ -120,6 +120,10 @@ After installation you can find the tool in the pull-down menu under _Window/Spa
   ![ProjectSettings_RuntimeEditorNavigation.png](Documentation%7E/ProjectSettings_RuntimeEditorNavigation.png)
 
 ## Credits
+Thanks to all these people for contributing to this project :
+- @AshaTheSorceress for adding Linux support
+- @pfcwuenscher for fixing a rotation issue for the Spacemouse Enterprise
+- @Jo-Solem for fixing an initialization bug for SpaceNavigatorWirelessHID
 - Jonathan Owen for SpaceMouse Wireless fixes 
 - Felix Herbst for the input helper and adding scene focus to runtime navigation
 - William Iturzaeta from Canon Medical Systems USA, for hiring me to make this project compatible with Unity 2020  
