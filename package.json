@@ -7,7 +7,10 @@
   "dependencies": {
     "com.unity.inputsystem": "1.0.2"
   },
- "repository": {
+  "_upm": {
+    "changelog": "### Added\n- @AshaTheSorceress added Linux support based on spacenavd and libspnav\n- A menu option to retrieve the settings window if it gets positioned outside of the visible desktop\n\n### Fixed\n- @pfcwuenscher fixed a rotation issue for the Spacemouse Enterprise\n- @Jo-Solem fixed an initialization bug for SpaceNavigatorWirelessHID\n- Misc. bug fixes"
+  },
+  "repository": {
     "type": "git",
     "url": "https://github.com/PatHightree/SpaceNavigator.git",
     "revision": "8937e56476e97f0dc614ce00deaa6e0f67084a85"
@@ -20,19 +23,23 @@
   "license": "MIT license",
   "author": {
     "name": "Patrick Hogenboom",
-    "email": "spacenavigator.driver@pm.me",
-    "url": "https://github.com/PatHightree/SpaceNavigator"
+    "url": "https://github.com/PatHightree/SpaceNavigator",
+    "email": "spacenavigator.driver@pm.me"
   },
-  "samples":[
-  {
-    "displayName": "Runtime samples",
-    "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
-    "path": "Samples~/Runtime samples"
-  },
-  {
-    "displayName": "Input Device Helper",
-    "description": "Tool which writes all HID device descriptors to disk.\nPlease supply this data when reporting an issue with an unsupported 3dconnexion device.",
-    "path": "Samples~/Input Device Helper"
-  }],
-  "type": "tool"
+  "samples": [
+    {
+      "displayName": "Runtime samples",
+      "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
+      "path": "Samples~/Runtime samples"
+    },
+    {
+      "displayName": "Input Device Helper",
+      "description": "Tool which writes all HID device descriptors to disk.\nPlease supply this data when reporting an issue with an unsupported 3dconnexion device.",
+      "path": "Samples~/Input Device Helper"
+    }
+  ],
+  "type": "tool",
+  "changelogUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/Changelog.md",
+  "documentationUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/README.md",
+  "licensesUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/License.md"
 }
