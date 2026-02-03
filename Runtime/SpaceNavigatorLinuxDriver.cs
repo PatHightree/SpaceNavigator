@@ -10,7 +10,7 @@ namespace SpaceNavigatorDriver
 {
     [Serializable]
     [InitializeOnLoad]
-    public class SpaceNavigatorLinuxDriver
+    public class SpaceNavigatorLinuxDriver : IDisposable
     {
         [DllImport("libspnav.so.0")]
         private static extern int spnav_open();
@@ -122,9 +122,26 @@ namespace SpaceNavigatorDriver
 
         static SpaceNavigatorLinuxDriver()
         {
-            Init();
+            AssemblyReloadEvents.beforeAssemblyReload += Instance.OnBeforeAssemblyReload;
+            AssemblyReloadEvents.afterAssemblyReload += Instance.OnAfterAssemblyReload;
         }
 
+        public void Dispose()
+        {
+            AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
+            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
+        }
+        
+        public void OnBeforeAssemblyReload()
+        {
+            Disconnect();
+        }
+        
+        public void OnAfterAssemblyReload()
+        {
+            Init();
+        }
+        
         static void Init()
         {
             Connect();
@@ -134,14 +151,6 @@ namespace SpaceNavigatorDriver
                 EditorApplication.update += Poll;
             }
         }
-
-        [DidReloadScripts]
-        static void OnReload()
-        {
-            Disconnect();
-            Init();
-        }
-
 
         public static void SetLEDStatus(SpaceNavigatorHID.LedStatus status)
         {
