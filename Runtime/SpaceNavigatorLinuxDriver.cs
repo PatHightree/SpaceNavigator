@@ -1,3 +1,4 @@
+#if UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -215,3 +216,4 @@ namespace SpaceNavigatorDriver
 
     }
 }
+#endif
