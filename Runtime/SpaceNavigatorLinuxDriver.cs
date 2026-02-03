@@ -1,4 +1,5 @@
-#if UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
+#if LINUX
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
