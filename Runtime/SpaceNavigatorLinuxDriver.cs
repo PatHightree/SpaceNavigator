@@ -1,5 +1,3 @@
-#if LINUX
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -121,15 +119,18 @@ namespace SpaceNavigatorDriver
         public static bool IsConnected => isConnected;
         public static Vector3 Translation => new Vector3(sliderX, sliderY, sliderZ) / 350f;
         public static Vector3 Rotation => new Vector3(sliderRX, sliderRY, sliderRZ) / 350f;
+		public static bool IsLinux = Application.platform == RuntimePlatform.LinuxEditor;
 
         static SpaceNavigatorLinuxDriver()
         {
+            if (!IsLinux) return;
             AssemblyReloadEvents.beforeAssemblyReload += Instance.OnBeforeAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += Instance.OnAfterAssemblyReload;
         }
 
         public void Dispose()
         {
+            if (!IsLinux) return;
             AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
         }
@@ -217,4 +218,3 @@ namespace SpaceNavigatorDriver
 
     }
 }
-#endif
