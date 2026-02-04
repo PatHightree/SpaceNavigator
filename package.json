@@ -1,6 +1,6 @@
 {
   "name": "com.pathightree.spacenavigator-driver",
-  "version": "2.1.0-pre.1",
+  "version": "2.1.0-pre.2",
   "displayName": "SpaceNavigator Driver",
   "description": "Driver for 3DConnexion devices\nThis driver lets you fly around your scene and allows you to move items around.\nIt can also be used at runtime via scripting.",
   "unity": "2019.1",
@@ -8,12 +8,12 @@
     "com.unity.inputsystem": "1.0.2"
   },
   "_upm": {
-    "changelog": "### Added\n- @AshaTheSorceress added Linux support based on spacenavd and libspnav\n- A menu option to retrieve the settings window if it gets positioned outside of the visible desktop\n\n### Fixed\n- @pfcwuenscher fixed a rotation issue for the Spacemouse Enterprise\n- @Jo-Solem fixed an initialization bug for SpaceNavigatorWirelessHID\n- Misc. bug fixes"
+    "changelog": "- Fixed losing connection to spacenavd during domain reload on Linux\n- Fixed `DllNotFoundException: libspnav.so.0` error message on Windows\n"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/PatHightree/SpaceNavigator.git",
-    "revision": "8937e56476e97f0dc614ce00deaa6e0f67084a85"
+    "revision": "2c788866aefd82c0e6d4321b65adb2dc65690636"
   },
   "keywords": [
     "3DConnexion",
