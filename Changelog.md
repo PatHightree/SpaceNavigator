@@ -1,12 +1,15 @@
 # Changelog
 
-## [2.1.0-pre.1] - 2026-01-29
+## [2.1.0-pre.2] - 2026-02-04
+- Fixed losing connection to spacenavd during domain reload on Linux
+- Fixed `DllNotFoundException: libspnav.so.0` error message on Windows
 
-### Added
+## [2.1.0-pre.1] - 2026-01-29
+Added
 - @AshaTheSorceress added Linux support based on spacenavd and libspnav
 - A menu option to retrieve the settings window if it gets positioned outside of the visible desktop
 
-### Fixed
+Fixed
 - @pfcwuenscher fixed a rotation issue for the Spacemouse Enterprise
 - @Jo-Solem fixed an initialization bug for SpaceNavigatorWirelessHID
 - Misc. bug fixes
@@ -80,22 +83,22 @@
 - Restructured project as a Unity custom package.
 
 ## [1.5.2] 2017-01-03
-### Fixes
+Fixes
 - Fixed sceneview camera pos/rot being reset on play/stop.
 - Settings are now saved immediately after any modification.
 
 ## [1.5.1] - 2016-02-28
-### Fixes
+Fixes
 - Merged Stephen Wolter's deadzone fix for drifting on mac.
 - Added SpaceNavigatorDriver namespace.
 - Renamed a script that was conflicting with another sdk.
 
 ## [1.5] - 2016-02-10
-### Features
+Features
 - Added option to navigate in the editor at runtime.
 - Separate axis lock settings for navigation and manipulation modes.
 - Autosave settings every 30 seconds.  
-### Fixes
+Fixes
 - Fixed horizon lock, coord sys and snap setting not being saved.
 - Refactored driver settings.
 
