@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.1.0] - 2026-02-05
+- Released to Unity Asset Store
+
 ## [2.1.0-pre.2] - 2026-02-04
 - Fixed losing connection to spacenavd during domain reload on Linux
 - Fixed `DllNotFoundException: libspnav.so.0` error message on Windows
