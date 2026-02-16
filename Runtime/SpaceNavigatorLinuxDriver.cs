@@ -1,10 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
-#endif
+using UnityEditor.Callbacks;
 using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
-using UnityEditor.Callbacks;
 
 namespace SpaceNavigatorDriver
 {
@@ -218,3 +217,4 @@ namespace SpaceNavigatorDriver
 
     }
 }
+#endif
