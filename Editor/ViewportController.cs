@@ -169,6 +169,8 @@ namespace SpaceNavigatorDriver
 
         private static void Fly(SceneView sceneView, Vector3 translation, Vector3 rotation)
         {
+            if (sceneView.in2DMode) return;
+            
             SyncRigWithScene();
 
             _camera.Translate(translation, Space.Self);
